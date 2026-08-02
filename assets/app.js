@@ -2,7 +2,7 @@
 (function(){
 "use strict";
 const DATA = window.DATA;
-const LS_KEY = "jennie_story_v3";
+const LS_KEY = "jennie_story_v4";
 const EVENTS = DATA.events;
 const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const byId = {};
@@ -10,19 +10,32 @@ DATA.videos.forEach(v=>{v.type="video";byId[v.id]=v;});
 DATA.images.forEach(m=>{m.type="image";byId[m.id]=m;});
 let anaType = "video";
 
-/* ---------- state ---------- */
+/* ---------- state (two switchable story versions) ---------- */
 let state = load();
-function defaultState(){
-  const meta={}, chapters=[];
-  DATA.story.forEach((ch,i)=>{
-    const items=[];
-    ch.items.forEach(b=>{ items.push(b.item); meta[b.item]={beat:b.beat||"",dur:b.dur|0}; });
-    chapters.push({id:"ch"+i, title:ch.title, collapsed:false, items:items});
-  });
-  return {chapters:chapters, meta:meta, ratings:{}, seq:chapters.length, theme:"light", version:3};
+function buildVersion(chapters){
+  const meta={}, chs=[];
+  chapters.forEach((ch,i)=>{ const items=[]; ch.items.forEach(b=>{ items.push(b.item); meta[b.item]={beat:b.beat||"",dur:b.dur|0}; }); chs.push({id:"ch"+i,title:ch.title,collapsed:false,items:items}); });
+  return {chapters:chs, meta:meta};
 }
-function load(){ try{const s=JSON.parse(localStorage.getItem(LS_KEY)); if(s&&s.version===3) return s;}catch(e){} return defaultState(); }
-function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function defaultState(){
+  const saved={}; Object.keys(DATA.stories).forEach(k=>{ saved[k]=buildVersion(DATA.stories[k].chapters); });
+  const active = saved.jennie ? "jennie" : Object.keys(saved)[0];
+  const st={saved:saved, active:active, ratings:{}, seq:99, theme:"light", version:4};
+  st.chapters=saved[active].chapters; st.meta=saved[active].meta; return st;
+}
+function load(){
+  try{ const s=JSON.parse(localStorage.getItem(LS_KEY));
+    if(s&&s.version===4&&s.saved){ if(!s.saved[s.active]) s.active=Object.keys(s.saved)[0]; s.chapters=s.saved[s.active].chapters; s.meta=s.saved[s.active].meta; return s; }
+  }catch(e){}
+  // migrate an older single-story save into "First draft"
+  try{ const old=JSON.parse(localStorage.getItem("jennie_story_v3"));
+    if(old&&old.version===3&&old.chapters){ const st=defaultState(); st.saved.draft1={chapters:old.chapters,meta:old.meta||{}}; st.active="draft1"; st.chapters=st.saved.draft1.chapters; st.meta=st.saved.draft1.meta; if(old.ratings)st.ratings=old.ratings; if(old.theme)st.theme=old.theme; return st; }
+  }catch(e){}
+  return defaultState();
+}
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify({saved:state.saved,active:state.active,ratings:state.ratings,theme:state.theme,seq:state.seq,version:4})); }
+function loadVersion(v){ if(!state.saved[v])return; state.active=v; state.chapters=state.saved[v].chapters; state.meta=state.saved[v].meta; save(); updateVersionButtons(); renderAll(); const nm=DATA.stories[v]?DATA.stories[v].name:v; toast("Now editing: "+nm); }
+function updateVersionButtons(){ $$(".verbtn").forEach(b=>b.classList.toggle("active",b.dataset.ver===state.active)); }
 function ratingOf(id){ return state.ratings[id]!=null ? state.ratings[id] : (byId[id]?byId[id].rating:0); }
 
 /* ---------- helpers ---------- */
@@ -115,7 +128,6 @@ function renderStory(){
   state.chapters.forEach((ch,idx)=>{
     // header + body are DIRECT children of the scroller so headers stack (sticky) as you scroll past acts
     const head=document.createElement("div"); head.className="ch-head"+(ch.collapsed?" is-collapsed":""); head.dataset.ch=ch.id;
-    head.style.top=(idx*HEAD_H)+"px"; head.style.zIndex=String(200-idx);
     head.innerHTML=`<button class="ch-toggle" aria-label="Collapse or expand">${ch.collapsed?"▸":"▾"}</button>
       <span class="ch-pie" title="share of total runtime" style="background:${pieFor(idx)}"></span>
       <input class="ch-title" value="${(ch.title||"").replace(/"/g,'&quot;')}">
@@ -257,15 +269,19 @@ function toggleTheme(){ state.theme=(state.theme==="dark"?"light":"dark"); apply
 
 /* ---------- import / export ---------- */
 function exportStory(){
-  const blob=new Blob([JSON.stringify({chapters:state.chapters,meta:state.meta,ratings:state.ratings,theme:state.theme,version:3,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="jennie-gunnar-story.json"; a.click(); URL.revokeObjectURL(a.href);
-  toast("Story exported — send this file back to collaborate.");
+  const nm=DATA.stories[state.active]?DATA.stories[state.active].name:state.active;
+  const blob=new Blob([JSON.stringify({storyName:nm,active:state.active,chapters:state.chapters,meta:state.meta,ratings:state.ratings,theme:state.theme,version:4,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=("jennie-gunnar-"+state.active+".json"); a.click(); URL.revokeObjectURL(a.href);
+  toast("Exported “"+nm+"” — send this file back to collaborate.");
 }
 function importStory(file){
   const r=new FileReader();
   r.onload=()=>{ try{ const s=JSON.parse(r.result);
-    state.chapters=s.chapters||[]; state.meta=s.meta||{}; state.ratings=s.ratings||{}; if(s.theme)state.theme=s.theme; state.seq=(s.chapters||[]).length; state.version=3;
-    save(); applyTheme(state.theme||"light"); renderAll(); toast("Story imported ✔");
+    const chapters = s.chapters || (s.saved && s.active && s.saved[s.active] && s.saved[s.active].chapters);
+    const meta = s.meta || (s.saved && s.active && s.saved[s.active] && s.saved[s.active].meta) || {};
+    if(chapters){ state.saved[state.active]={chapters:chapters,meta:meta}; state.chapters=chapters; state.meta=meta; }
+    if(s.ratings)state.ratings=s.ratings; if(s.theme){state.theme=s.theme;applyTheme(state.theme);}
+    save(); renderAll(); toast("Imported into “"+(DATA.stories[state.active]?DATA.stories[state.active].name:state.active)+"” ✔");
   }catch(e){ toast("Could not read that file."); } };
   r.readAsText(file);
 }
@@ -275,6 +291,7 @@ function renderAbout(){
   $("#aboutBody").innerHTML=`<h2>How to use this together 💛</h2>
     <p>A shared workspace for shaping Jennie &amp; Gunnar's wedding film. Everything you change autosaves in your browser.</p>
     <h3>Story Builder</h3>
+    <p><strong>Two versions</strong> up top: <em>① First draft</em> (my initial arc) and <em>② Jennie's story</em> (built from Jennie's storyline doc, grouped into bigger chapters). Switch anytime — each keeps its own edits. We're now working on Jennie's story.</p>
     <ol><li>The left panel is every clip &amp; photo — the <em>content pool</em> (small thumbnails; hover a video to preview, click any for full notes).</li>
     <li>Drag items into the <em>chapters</em> on the right. Each chapter lays its beats out left-to-right and scrolls horizontally; the header shows the chapter's running time. Collapse a chapter (▾) to just its thumbnails.</li>
     <li>Each beat has an editable caption and a duration. The top bar tracks total runtime vs our ~2¼ min target.</li></ol>
@@ -295,12 +312,13 @@ function bind(){
   $$(".subtab").forEach(t=>t.addEventListener("click",()=>{ anaType=t.dataset.atype; $$(".subtab").forEach(x=>x.classList.toggle("active",x===t)); renderAnalysis(); }));
   $("#btnExport").addEventListener("click",exportStory);
   $("#importFile").addEventListener("change",e=>{ if(e.target.files[0])importStory(e.target.files[0]); e.target.value=""; });
-  $("#btnReset").addEventListener("click",()=>{ if(confirm("Reset the story and all ratings back to the original draft?")){ localStorage.removeItem(LS_KEY); const th=state.theme; state=defaultState(); state.theme=th; save(); renderAll(); toast("Reset to the original draft."); }});
+  $("#btnReset").addEventListener("click",()=>{ const nm=DATA.stories[state.active]?DATA.stories[state.active].name:state.active; if(confirm("Reset “"+nm+"” back to its original? (The other version and your ratings are kept.)")){ const fresh=buildVersion(DATA.stories[state.active].chapters); state.saved[state.active]=fresh; state.chapters=fresh.chapters; state.meta=fresh.meta; save(); renderAll(); toast("Reset “"+nm+"”."); }});
   $("#btnTheme").addEventListener("click",toggleTheme);
+  $$(".verbtn").forEach(b=>b.addEventListener("click",()=>loadVersion(b.dataset.ver)));
   $("#btnAddChapter").addEventListener("click",()=>{ state.chapters.push({id:"ch"+(state.seq++),title:"New chapter",collapsed:false,items:[]}); save(); renderStory(); $("#storyList").scrollTop=$("#storyList").scrollHeight; });
   $("#btnCollapseAll").addEventListener("click",()=>{ const anyOpen=state.chapters.some(c=>!c.collapsed); state.chapters.forEach(c=>c.collapsed=anyOpen); save(); renderStory(); $("#btnCollapseAll").textContent=anyOpen?"⊞ Expand all":"⊟ Collapse all"; });
   $$("[data-close]").forEach(el=>el.addEventListener("click",closeModal));
   document.addEventListener("keydown",e=>{ if(e.key==="Escape")closeModal(); });
 }
-applyTheme(state.theme||"light"); fillEventSelects(); bind(); renderAbout(); initPoolSortable(); renderAll();
+applyTheme(state.theme||"light"); fillEventSelects(); bind(); renderAbout(); initPoolSortable(); updateVersionButtons(); renderAll();
 })();

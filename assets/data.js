@@ -190,8 +190,10 @@ DATA.videos.forEach(function(v){
   else { v.date = DATA.eventDate[v.event] || EVENT_FALLBACK[v.event] || ""; v.dateApprox=true; }
 });
 
-/* ---- FIRST-DRAFT STORY as collapsible chapters (a relationship arc to the summits) ---- */
-DATA.story = [
+/* ---- STORY VERSIONS: pick one in the Story Builder ---- */
+DATA.stories = {};
+/* -- First draft (Claude's arc to the summits) -- */
+DATA.stories.draft1 = { name:"First draft", chapters:[
  {title:"Act I · Where it began", items:[
    {item:"i081",beat:"Where it all began — one profile, one 'serious pasta addiction'.",dur:4},
    {item:"v02", beat:"“Happy to have found you.”",dur:5},
@@ -236,7 +238,65 @@ DATA.story = [
  {title:"Act VI · Forever starts now", items:[
    {item:"v24", beat:"This view — with you, always.",dur:5}
  ]}
-];
+]};
+
+/* -- Jennie's story (from her storyline doc + breakdown; grouped into bigger chunks) -- */
+DATA.stories.jennie = { name:"Jennie's story", chapters:[
+ {title:"Act I · How we met (2023)", items:[
+   {item:"i081", beat:"How it started — one Bumble profile, and a new flat that happened to be 1 km from his.", dur:4},
+   {item:"i003", beat:"Castle dates became our thing — Ulriksdal on the 2nd date, then Drottningholm.", dur:4},
+   {item:"i006", beat:"A month in — after painting each other's nails — he asked her to be his girlfriend.", dur:4},
+   {item:"v02", beat:"“Happy to have found you.”", dur:4}
+ ]},
+ {title:"Act II · First trips — Poland & the far north (Christmas 2023)", items:[
+   {item:"i009", beat:"Our first trip together — Christmas in Kraków.", dur:4},
+   {item:"i069", beat:"Gdańsk old town.", dur:3},
+   {item:"i034", beat:"Then the far north — a night inside the ICEHOTEL,", dur:3},
+   {item:"v17", beat:"under the Arctic lights in Kiruna,", dur:3},
+   {item:"v12", beat:"and island days on Gotland.", dur:3}
+ ]},
+ {title:"Act III · Moving in — life at home (June 2024)", items:[
+   {item:"v14", beat:"June 2024 — we move in together.", dur:3},
+   {item:"v08", beat:"Cooking became our daily ritual…", dur:3},
+   {item:"v18", beat:"…the baking, the 1500-piece puzzles, the Watermelon Fund. 🍉", dur:3},
+   {item:"i036", beat:"Zombie walk in Uppsala — we even made the local paper. 🧟", dur:4},
+   {item:"i132", beat:"Cheering him on at football.", dur:3},
+   {item:"i103", beat:"Friends round the table, always something on the stove.", dur:3}
+ ]},
+ {title:"Act IV · Castles, occasions & family", items:[
+   {item:"v37", beat:"Castles all over Sweden — she's got a jump for every one. 🏰", dur:4},
+   {item:"i110", beat:"Showing his family around Stockholm,", dur:3},
+   {item:"i109", beat:"long dinners with family,", dur:3},
+   {item:"v33", beat:"Midsummer, first anniversary, every little occasion.", dur:4}
+ ]},
+ {title:"Act V · Back to Vietnam — & engaged (Dec 2024 → Jan 2025)", items:[
+   {item:"v31", beat:"Dec 2024 — she's sent home to Vietnam. He follows. (A stop in Doha.)", dur:4},
+   {item:"v35", beat:"On a swing at sunset in Phú Quốc he knelt: “Will you be my one Bubu forever?” 💍  ⟨swap in the real proposal clip⟩", dur:5},
+   {item:"i012", beat:"Engaged. 🌅", dur:3}
+ ]},
+ {title:"Act VI · Exploring Vietnam together", items:[
+   {item:"v38", beat:"Say yes to everything — even a python. 🐍", dur:4},
+   {item:"i163", beat:"Meeting her brother, family in Đà Nẵng, Tết together.  ⟨+ the Củ Chi tunnel & shooting-range clips⟩", dur:4},
+   {item:"i007", beat:"Boat rides through the karsts,", dur:3},
+   {item:"v46", beat:"the Hà Giang loop — always up for a laugh,", dur:3},
+   {item:"v45", beat:"…then sending him off again.", dur:3}
+ ]},
+ {title:"Act VII · Long distance → conquering peaks (2025)", items:[
+   {item:"v41", beat:"A year of long distance — but we found our way back, three times over.", dur:4},
+   {item:"v55", beat:"When he visited, we climbed — in the dark,", dur:3},
+   {item:"v54", beat:"one step at a time,", dur:3},
+   {item:"v56", beat:"above the clouds.", dur:4},
+   {item:"v27", beat:"the highest peak in Vietnam —", dur:3},
+   {item:"v50", beat:"— and the highest in Taiwan.", dur:3},
+   {item:"v01", beat:"On top of the world, together.", dur:4},
+   {item:"v53", beat:"Taiwan and Thailand, reunited.", dur:3}
+ ]},
+ {title:"Act VIII · Back to Sweden — the next chapter", items:[
+   {item:"v39", beat:"Back to Sweden — this summer, still exploring.", dur:3},
+   {item:"v24", beat:"Ready for the next chapter. 💛", dur:5}
+ ]}
+]};
+DATA.story = DATA.stories.draft1.chapters; /* back-compat */
 
 window.DATA = DATA;
 })();
