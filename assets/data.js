@@ -173,56 +173,69 @@ const O = {
  i178:[3,"SE-HOME","Gunnar","Stockholm","A silly selfie"]
 };
 DATA.images = (window.IMG_BASE||[]).map(function(b){
-  const id=b[0], o=O[id];
-  if(o) return {id:id,file:b[1],orient:b[2],rating:o[0],event:o[1],people:o[2],loc:o[3],ctx:o[4],beat:o[5]||""};
-  return {id:id,file:b[1],orient:b[2],rating:1,event:"MISC",people:"—",loc:"Camera-roll misc",ctx:"Accidental / low-quality capture",beat:""};
+  const id=b[0], o=O[id], date=b[3]||"";
+  if(o) return {id:id,file:b[1],orient:b[2],date:date,rating:o[0],event:o[1],people:o[2],loc:o[3],ctx:o[4],beat:o[5]||""};
+  return {id:id,file:b[1],orient:b[2],date:date,rating:1,event:"MISC",people:"—",loc:"Camera-roll misc",ctx:"Accidental / low-quality capture",beat:""};
 });
 
-/* ---- FIRST-DRAFT STORY (a relationship arc climbing to the summits) ---- */
+/* ---- timeline: real dates from photo EXIF; videos inherit their trip's date ---- */
+const _byEv={};
+DATA.images.forEach(function(m){ if(m.date && m.event!=="MISC"){ (_byEv[m.event]=_byEv[m.event]||[]).push(m.date); } });
+DATA.eventDate={};
+Object.keys(_byEv).forEach(function(k){ const a=_byEv[k].sort(); DATA.eventDate[k]=a[Math.floor(a.length/2)]; });
+const EVENT_FALLBACK={ "QA-DOHA":"2025-11-14","SE-LAPLAND":"2025-01-30","SE-GOTLAND":"2024-07-15","SPECIAL":"2023-11-01","EU":"2023-12-31" };
+const VID_DATE={ v06:"2025-04-30", v01:"2025-04-30", v26:"2025-04-30", v27:"2025-04-30", v05:"2025-04-27", v23:"2025-04-27", v24:"2025-04-27" };
+DATA.videos.forEach(function(v){
+  if(VID_DATE[v.id]){ v.date=VID_DATE[v.id]; v.dateApprox=false; }
+  else { v.date = DATA.eventDate[v.event] || EVENT_FALLBACK[v.event] || ""; v.dateApprox=true; }
+});
+
+/* ---- FIRST-DRAFT STORY as collapsible chapters (a relationship arc to the summits) ---- */
 DATA.story = [
- {section:"Act I · Where it began"},
- {item:"i081",beat:"Where it all began — one profile, one 'serious pasta addiction'.",dur:4},
- {item:"v02", beat:"“Happy to have found you.”",dur:5},
- {item:"v14", beat:"The everyday joy of us.",dur:3},
-
- {section:"Act II · Home & everyday (Stockholm)"},
- {item:"v08", beat:"Sunday means cooking together.",dur:3},
- {item:"v10", beat:"",dur:2},
- {item:"v18", beat:"Baking through the long dark winter.",dur:3},
- {item:"i019",beat:"Little gestures — flowers, for no reason.",dur:3},
- {item:"i006",beat:"Dressed up, just the two of them.",dur:3},
-
- {section:"Act III · Our Sweden, season by season"},
- {item:"v15", beat:"Warm water, frozen lake.",dur:4},
- {item:"i034",beat:"A night inside the ICEHOTEL.",dur:3},
- {item:"v17", beat:"Under the Arctic lights.",dur:2},
- {item:"v33", beat:"Midsummer — flower crowns and all.",dur:4},
- {item:"i008",beat:"A rooftop kiss over the city.",dur:3},
- {item:"v39", beat:"Every summer, somewhere new.",dur:3},
-
- {section:"Act IV · We go everywhere together"},
- {item:"v20", beat:"Paddling through paradise — Ha Long Bay.",dur:4},
- {item:"v21", beat:"Jump first, think later.",dur:3},
- {item:"v38", beat:"Say yes to (almost) everything.",dur:4},
- {item:"v46", beat:"Always up for a laugh.",dur:3},
- {item:"v32", beat:"Walking on air in Sapa.",dur:3},
- {item:"v34", beat:"Swinging over the edge —",dur:3},
- {item:"v35", beat:"— her turn.",dur:3},
- {item:"v43", beat:"Dancing down the road, because why not.",dur:3},
- {item:"v41", beat:"Night-market joy.",dur:3},
- {item:"v53", beat:"Golden Bangkok.",dur:3},
-
- {section:"Act V · Reaching the top"},
- {item:"v55", beat:"Some climbs you do in the dark —",dur:3},
- {item:"v54", beat:"— one step at a time, together —",dur:3},
- {item:"v56", beat:"— until you're above the clouds.",dur:4},
- {item:"v50", beat:"Sunrise, earned.",dur:3},
- {item:"v26", beat:"We made it.",dur:3},
- {item:"v27", beat:"Proof: they reach every summit together.",dur:4},
- {item:"v01", beat:"On top of the world.",dur:4},
-
- {section:"Act VI · Forever starts now"},
- {item:"v24", beat:"This view — with you, always.",dur:5}
+ {title:"Act I · Where it began", items:[
+   {item:"i081",beat:"Where it all began — one profile, one 'serious pasta addiction'.",dur:4},
+   {item:"v02", beat:"“Happy to have found you.”",dur:5},
+   {item:"v14", beat:"The everyday joy of us.",dur:3}
+ ]},
+ {title:"Act II · Home & everyday", items:[
+   {item:"v08", beat:"Sunday means cooking together.",dur:3},
+   {item:"v10", beat:"",dur:2},
+   {item:"v18", beat:"Baking through the long dark winter.",dur:3},
+   {item:"i019",beat:"Little gestures — flowers, for no reason.",dur:3},
+   {item:"i006",beat:"Dressed up, just the two of them.",dur:3}
+ ]},
+ {title:"Act III · Our Sweden, season by season", items:[
+   {item:"v15", beat:"Warm water, frozen lake.",dur:4},
+   {item:"i034",beat:"A night inside the ICEHOTEL.",dur:3},
+   {item:"v17", beat:"Under the Arctic lights.",dur:2},
+   {item:"v33", beat:"Midsummer — flower crowns and all.",dur:4},
+   {item:"i008",beat:"A rooftop kiss over the city.",dur:3},
+   {item:"v39", beat:"Every summer, somewhere new.",dur:3}
+ ]},
+ {title:"Act IV · We go everywhere together", items:[
+   {item:"v20", beat:"Paddling through paradise — Ha Long Bay.",dur:4},
+   {item:"v21", beat:"Jump first, think later.",dur:3},
+   {item:"v38", beat:"Say yes to (almost) everything.",dur:4},
+   {item:"v46", beat:"Always up for a laugh.",dur:3},
+   {item:"v32", beat:"Walking on air in Sapa.",dur:3},
+   {item:"v34", beat:"Swinging over the edge —",dur:3},
+   {item:"v35", beat:"— her turn.",dur:3},
+   {item:"v43", beat:"Dancing down the road, because why not.",dur:3},
+   {item:"v41", beat:"Night-market joy.",dur:3},
+   {item:"v53", beat:"Golden Bangkok, Christmas 2025.",dur:3}
+ ]},
+ {title:"Act V · Reaching the top", items:[
+   {item:"v55", beat:"Some climbs you do in the dark —",dur:3},
+   {item:"v54", beat:"— one step at a time, together —",dur:3},
+   {item:"v56", beat:"— until you're above the clouds.",dur:4},
+   {item:"v50", beat:"Sunrise, earned.",dur:3},
+   {item:"v26", beat:"We made it.",dur:3},
+   {item:"v27", beat:"Proof: they reach every summit together.",dur:4},
+   {item:"v01", beat:"On top of the world.",dur:4}
+ ]},
+ {title:"Act VI · Forever starts now", items:[
+   {item:"v24", beat:"This view — with you, always.",dur:5}
+ ]}
 ];
 
 window.DATA = DATA;
