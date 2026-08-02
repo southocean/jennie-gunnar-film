@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Jennie & Gunnar — Wedding Film Story Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="rings">💍</span>
+    <div>
+      <h1>Jennie &amp; Gunnar</h1>
+      <p class="sub">Wedding film — collaborative story builder</p>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="story">Story Builder</button>
+    <button class="tab" data-tab="analysis">Content Analysis</button>
+    <button class="tab" data-tab="about">How this works</button>
+  </nav>
+  <div class="toolbar">
+    <button id="btnExport" class="btn">⬇ Export story</button>
+    <label class="btn" for="importFile">⬆ Import</label>
+    <input id="importFile" type="file" accept="application/json" hidden />
+    <button id="btnReset" class="btn ghost" title="Reset everything to the draft I made">↺ Reset to draft</button>
+  </div>
+</header>
+
+<!-- ============ STORY BUILDER ============ -->
+<main id="tab-story" class="tabpane active">
+  <section class="pool" aria-label="Content pool">
+    <div class="pool-head">
+      <h2>Content pool <span id="poolCount" class="pill">0</span></h2>
+      <p class="hint">Drag any card into the story on the right. Click a card for full notes. Frames cycle on hover.</p>
+      <div class="filters">
+        <input id="poolSearch" type="search" placeholder="Search location, context…" />
+        <select id="poolType">
+          <option value="">All media</option>
+          <option value="video">🎬 Video only</option>
+          <option value="image">🖼 Photo only</option>
+        </select>
+        <select id="poolEvent"><option value="">All events</option></select>
+        <select id="poolRating">
+          <option value="0">Any ★</option>
+          <option value="3">★★★+</option>
+          <option value="4">★★★★+</option>
+          <option value="5">★★★★★</option>
+        </select>
+        <select id="poolSort">
+          <option value="rating">Sort: rating</option>
+          <option value="event">Sort: event</option>
+          <option value="dur">Sort: length</option>
+          <option value="id">Sort: id</option>
+        </select>
+      </div>
+    </div>
+    <div id="poolList" class="pool-list"></div>
+  </section>
+
+  <section class="story" aria-label="Story timeline">
+    <div class="story-head">
+      <div class="runtime">
+        <div class="runtime-nums">
+          <strong id="runTotal">0:00</strong>
+          <span>of ~<span id="runTarget">2:00</span> target · <span id="beatCount">0</span> beats</span>
+        </div>
+        <div class="runbar"><div id="runFill" class="runfill"></div><div class="runmark" style="left:100%"></div></div>
+        <p id="runHint" class="hint"></p>
+      </div>
+      <button id="btnAddSection" class="btn small">+ Section break</button>
+    </div>
+    <div id="storyList" class="story-list"></div>
+    <div class="story-empty" id="storyEmpty" hidden>Drag clips here to start building the film.</div>
+  </section>
+</main>
+
+<!-- ============ CONTENT ANALYSIS ============ -->
+<section id="tab-analysis" class="tabpane">
+  <div class="analysis-head">
+    <div class="filters">
+      <input id="anaSearch" type="search" placeholder="Search…" />
+      <select id="anaType">
+        <option value="video">🎬 Videos (56)</option>
+        <option value="image">🖼 Photos</option>
+      </select>
+      <select id="anaEvent"><option value="">All events</option></select>
+      <select id="anaRating">
+        <option value="0">Any ★</option><option value="3">★★★+</option>
+        <option value="4">★★★★+</option><option value="5">★★★★★</option>
+      </select>
+      <select id="anaSort">
+        <option value="rating">Sort: rating</option>
+        <option value="event">Sort: event</option>
+        <option value="dur">Sort: length</option>
+        <option value="id">Sort: id</option>
+      </select>
+    </div>
+    <p class="hint">Star ratings are my first-pass defaults — <strong>click the stars to change any of them.</strong> Your edits save automatically and travel in the Export file.</p>
+  </div>
+  <div id="anaGrid" class="ana-grid"></div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="tab-about" class="tabpane about">
+  <div class="about-card" id="aboutBody"></div>
+</section>
+
+<!-- detail modal -->
+<div id="modal" class="modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <button class="modal-x" data-close>✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="assets/sortable.min.js"></script>
+<script src="assets/img_base.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
