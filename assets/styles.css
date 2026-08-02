@@ -171,6 +171,17 @@ button{font:inherit;cursor:pointer}
 .mbody h3{font-size:17px}
 .mrow{display:flex;gap:8px;margin:9px 0;font-size:13.5px}
 .mrow .k{flex:0 0 96px;color:var(--muted);font-weight:600}
+.mtlrow{align-items:flex-start}
+.mtl{flex:1 1 auto;min-width:0}
+.mtl-scale{position:relative;padding-top:22px}
+.mtl-flag{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.mtl-flag span{background:var(--accent);color:#fff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;display:inline-block}
+.mtl-flag::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--accent)}
+.mtl-track{position:relative;height:6px;border-radius:3px;background:var(--line)}
+.mtl-fill{position:absolute;left:0;top:0;bottom:0;background:var(--gold);border-radius:3px}
+.mtl-dot{position:absolute;top:50%;width:13px;height:13px;border-radius:50%;background:#fff;border:2.5px solid var(--accent);transform:translate(-50%,-50%);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.mtl-ends{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted);font-weight:600}
+.mtl-note{font-size:11px;color:var(--muted);margin-top:5px;font-style:italic}
 .mframes{display:flex;gap:5px;margin-top:10px;overflow-x:auto}
 .mframes img{height:88px;border-radius:7px;border:1px solid var(--line)}
 

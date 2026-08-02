@@ -70,6 +70,16 @@ function posOf(m){ if(!m||!m.date) return null; const s=dnum(REL_START),e=dnum(R
 function timelineBar(m){ const p=posOf(m); if(p==null) return ""; const pc=(p*100).toFixed(1);
   return `<div class="tl" title="${dateLabel(m)}"><div class="tl-fill" style="width:${pc}%"></div><div class="tl-dot" style="left:${pc}%"></div></div>`; }
 function typeTag(m){ return m.type==="video" ? "🎬" : "🖼"; }
+function modalTimeline(m){ // labeled scale: first date --> now, with this clip marked at its date
+  const p=posOf(m), startLbl=monYear(REL_START)||"the start";
+  if(p==null) return `<div class="mtl"><div class="mtl-scale"><div class="mtl-track"><div class="mtl-fill" style="width:0"></div></div><div class="mtl-ends"><span>First date · ${startLbl}</span><span>Now</span></div></div><div class="mtl-note">no date on this clip</div></div>`;
+  const pc=(p*100).toFixed(1), fpc=Math.max(9,Math.min(91,p*100)).toFixed(1), lbl=dateLabel(m);
+  return `<div class="mtl"><div class="mtl-scale">
+    <div class="mtl-flag" style="left:${fpc}%"><span>${lbl}</span></div>
+    <div class="mtl-track"><div class="mtl-fill" style="width:${pc}%"></div><div class="mtl-dot" style="left:${pc}%"></div></div>
+    <div class="mtl-ends"><span>First date · ${startLbl}</span><span>Now</span></div>
+  </div></div>`;
+}
 const HEAD_H=36;
 function pieFor(idx){ const times=state.chapters.map(chapterTime); const total=times.reduce((a,b)=>a+b,0)||1; let acc=0,segs=[];
   times.forEach((t,i)=>{ const a=acc/total*360, b=(acc+t)/total*360; segs.push(`${i===idx?"var(--accent)":"var(--pie-dim)"} ${a.toFixed(1)}deg ${b.toFixed(1)}deg`); acc+=t; });
@@ -222,7 +232,7 @@ function openModal(id){
     <div class="mbody"><h3>${m.loc||"-"}</h3>
       <div class="mrow"><span class="k">Rating</span><span class="starhost"></span></div>
       <div class="mrow"><span class="k">Type</span><span>${m.type==="video"?"🎬 Video · "+m.dur+"s · "+m.orient:"🖼 Photo · "+m.orient}</span></div>
-      <div class="mrow"><span class="k">When</span><span>${dl?dl+(m.dateApprox?"  (approx - from the trip)":"  (from photo EXIF)"):"-"}</span></div>
+      <div class="mrow mtlrow"><span class="k">When</span>${modalTimeline(m)}</div>
       <div class="mrow"><span class="k">Trip / event</span><span><span class="a-badge" style="background:${ev.color};color:#fff;padding:1px 7px;border-radius:6px">${ev.label}</span></span></div>
       <div class="mrow"><span class="k">Who</span><span>${m.people||"-"}</span></div>
       <div class="mrow"><span class="k">What</span><span>${m.ctx||"-"}</span></div>
