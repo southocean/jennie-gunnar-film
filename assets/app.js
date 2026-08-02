@@ -23,15 +23,27 @@ function defaultState(){
   const st={saved:saved, active:active, ratings:{}, seq:99, theme:"light", version:4};
   st.chapters=saved[active].chapters; st.meta=saved[active].meta; return st;
 }
+function scrub(s){ return typeof s==="string" ? s.replace(/[—–]/g,"-") : s; }
+function sanitizeState(st){ // strip any em/en dashes left in already-saved captions & titles
+  if(st&&st.saved) Object.keys(st.saved).forEach(k=>{ const v=st.saved[k];
+    if(v.chapters) v.chapters.forEach(ch=>{ ch.title=scrub(ch.title); });
+    if(v.meta) Object.keys(v.meta).forEach(id=>{ if(v.meta[id]) v.meta[id].beat=scrub(v.meta[id].beat); });
+  });
+  return st;
+}
 function load(){
+  let st=null;
   try{ const s=JSON.parse(localStorage.getItem(LS_KEY));
-    if(s&&s.version===4&&s.saved){ if(!s.saved[s.active]) s.active=Object.keys(s.saved)[0]; s.chapters=s.saved[s.active].chapters; s.meta=s.saved[s.active].meta; return s; }
+    if(s&&s.version===4&&s.saved){ if(!s.saved[s.active]) s.active=Object.keys(s.saved)[0]; st=s; }
   }catch(e){}
-  // migrate an older single-story save into "First draft"
-  try{ const old=JSON.parse(localStorage.getItem("jennie_story_v3"));
-    if(old&&old.version===3&&old.chapters){ const st=defaultState(); st.saved.draft1={chapters:old.chapters,meta:old.meta||{}}; st.active="draft1"; st.chapters=st.saved.draft1.chapters; st.meta=st.saved.draft1.meta; if(old.ratings)st.ratings=old.ratings; if(old.theme)st.theme=old.theme; return st; }
-  }catch(e){}
-  return defaultState();
+  if(!st){ try{ const old=JSON.parse(localStorage.getItem("jennie_story_v3"));
+    if(old&&old.version===3&&old.chapters){ st=defaultState(); st.saved.draft1={chapters:old.chapters,meta:old.meta||{}}; st.active="draft1"; if(old.ratings)st.ratings=old.ratings; if(old.theme)st.theme=old.theme; }
+  }catch(e){} }
+  if(!st) st=defaultState();
+  sanitizeState(st);
+  st.chapters=st.saved[st.active].chapters; st.meta=st.saved[st.active].meta;
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({saved:st.saved,active:st.active,ratings:st.ratings,theme:st.theme,seq:st.seq,version:4})); }catch(e){}
+  return st;
 }
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify({saved:state.saved,active:state.active,ratings:state.ratings,theme:state.theme,seq:state.seq,version:4})); }
 function loadVersion(v){ if(!state.saved[v])return; state.active=v; state.chapters=state.saved[v].chapters; state.meta=state.saved[v].meta; save(); updateVersionButtons(); renderAll(); const nm=DATA.stories[v]?DATA.stories[v].name:v; toast("Now editing: "+nm); }

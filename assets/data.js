@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"1.0", appUpdated:"2026-08-02 18:34 WEST" };
+const DATA = { targetSec:135, appVersion:"1.0", appUpdated:"2026-08-02 18:44 WEST" };
 
 /* ---- event groups (code -> label + colour) ---- */
 DATA.events = {
