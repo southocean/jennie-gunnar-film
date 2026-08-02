@@ -1,4 +1,4 @@
-/* Jennie & Gunnar — wedding film story builder (v3: chapters, dark mode, timeline) */
+/* Jennie & Gunnar - wedding film story builder (v3: chapters, dark mode, timeline) */
 (function(){
 "use strict";
 const DATA = window.DATA;
@@ -35,7 +35,8 @@ function load(){
 }
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify({saved:state.saved,active:state.active,ratings:state.ratings,theme:state.theme,seq:state.seq,version:4})); }
 function loadVersion(v){ if(!state.saved[v])return; state.active=v; state.chapters=state.saved[v].chapters; state.meta=state.saved[v].meta; save(); updateVersionButtons(); renderAll(); const nm=DATA.stories[v]?DATA.stories[v].name:v; toast("Now editing: "+nm); }
-function updateVersionButtons(){ const vs=$("#verSelect"); if(vs) vs.value=state.active; }
+function shortVerName(v){ const n=(DATA.stories[v]?DATA.stories[v].name:v)||v; return n.split("(")[0].trim(); }
+function updateVersionButtons(){ const vs=$("#verSelect"); if(vs) vs.value=state.active; const rb=$("#btnReset"); if(rb){ rb.textContent="↺ Reset "+shortVerName(state.active); rb.title="Reset "+shortVerName(state.active)+" back to its original"; } }
 function ratingOf(id){ return state.ratings[id]!=null ? state.ratings[id] : (byId[id]?byId[id].rating:0); }
 
 /* ---------- helpers ---------- */
@@ -44,7 +45,7 @@ const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 function fmt(t){t=Math.max(0,Math.round(t));return Math.floor(t/60)+":"+String(t%60).padStart(2,"0");}
 function posterOf(m){ return m.type==="video" ? `media/vid/${m.id}/poster.jpg` : `media/img/${m.id}.jpg`; }
 function framesOf(m){ return m.type==="video" ? [1,2,3,4,5].map(n=>`media/vid/${m.id}/f${n}.jpg`) : [posterOf(m)]; }
-function evOf(m){ return EVENTS[m.event] || {label:m.event||"—",color:"#999"}; }
+function evOf(m){ return EVENTS[m.event] || {label:m.event||"-",color:"#999"}; }
 function monYear(d){ if(!d||d.length<7) return ""; return MON[+d.slice(5,7)-1]+" "+d.slice(0,4); }
 function dateLabel(m){ if(!m.date) return ""; return (m.dateApprox?"~":"")+monYear(m.date); }
 function defaultDur(m){ return m.type==="video" ? (m.dur>8?6:(m.dur||5)) : 3; }
@@ -85,7 +86,7 @@ function starsEl(id,readonly){
     if(!readonly) s.addEventListener("click",e=>{e.stopPropagation();setRating(id,n);}); el.appendChild(s); }
   return el;
 }
-function setRating(id,n){ state.ratings[id]=n; save(); $$('.stars[data-for="'+id+'"]').forEach(el=>{const c=ratingOf(id);$$(".s",el).forEach(s=>s.classList.toggle("on",+s.dataset.n<=c));}); renderPoolRatings(id); toast("Rating updated — saved."); }
+function setRating(id,n){ state.ratings[id]=n; save(); $$('.stars[data-for="'+id+'"]').forEach(el=>{const c=ratingOf(id);$$(".s",el).forEach(s=>s.classList.toggle("on",+s.dataset.n<=c));}); renderPoolRatings(id); toast("Rating updated - saved."); }
 function renderPoolRatings(id){ $$('#poolList .pcard[data-id="'+id+'"] .prate').forEach(e=>e.textContent="★".repeat(ratingOf(id))); }
 
 /* ---------- pool ---------- */
@@ -98,7 +99,7 @@ function poolCard(m){
      <span class="ptype">${typeTag(m)}</span>
      ${m.type==="video"?`<span class="pdur">${m.dur}s</span>`:""}
      <div class="pbot">
-       <div class="pln">📍 ${m.loc||"—"}</div>
+       <div class="pln">📍 ${m.loc||"-"}</div>
        ${timelineBar(m)}
        <div class="prate">${"★".repeat(ratingOf(m.id))}<span class="proff">${"★".repeat(5-ratingOf(m.id))}</span></div>
      </div></div>`;
@@ -158,7 +159,7 @@ function beatCard(m,num){
   const el=document.createElement("div"); el.className="beat"; el.dataset.id=m.id;
   el.innerHTML=`<div class="bthumb"><img src="${posterOf(m)}" loading="lazy" alt="">
       <span class="bnum">${num}</span><span class="btype">${typeTag(m)} ${m.type==="video"?meta.dur+"s":"photo"}</span>
-      <div class="bbot"><div class="bln">📍 ${m.loc||"—"}</div>${timelineBar(m)}</div></div>
+      <div class="bbot"><div class="bln">📍 ${m.loc||"-"}</div>${timelineBar(m)}</div></div>
     <div class="bbody">
       <textarea placeholder="beat / caption…">${(meta.beat||"").replace(/</g,"&lt;")}</textarea>
       <div class="bctrl">⏱<input class="bdurin" type="number" min="1" max="60" value="${meta.dur}">s
@@ -179,7 +180,7 @@ function updateRuntime(){
   const fill=$("#runFill"); fill.style.width=Math.min(100,total/target*100)+"%";
   fill.style.background= total>target*1.15 ? "linear-gradient(90deg,var(--danger),var(--gold))" : "linear-gradient(90deg,var(--accent2),var(--gold))";
   const h=$("#runHint");
-  h.textContent = total<80 ? "A touch short — room for a few more beats." : (total<=150 ? "Right in the sweet spot for a 2–2½ min film. ✨" : "Getting long — trim a few beat durations or clips.");
+  h.textContent = total<80 ? "A touch short - room for a few more beats." : (total<=150 ? "Right in the sweet spot for a 2-2½ min film. ✨" : "Getting long - trim a few beat durations or clips.");
 }
 
 /* ---------- drag/drop across chapters + pool ---------- */
@@ -206,13 +207,13 @@ function openModal(id){
   const dl=dateLabel(m);
   const b=$("#modalBody");
   b.innerHTML=`<img class="mhero" src="${posterOf(m)}" alt="">
-    <div class="mbody"><h3>${m.loc||"—"}</h3>
+    <div class="mbody"><h3>${m.loc||"-"}</h3>
       <div class="mrow"><span class="k">Rating</span><span class="starhost"></span></div>
       <div class="mrow"><span class="k">Type</span><span>${m.type==="video"?"🎬 Video · "+m.dur+"s · "+m.orient:"🖼 Photo · "+m.orient}</span></div>
-      <div class="mrow"><span class="k">When</span><span>${dl?dl+(m.dateApprox?"  (approx — from the trip)":"  (from photo EXIF)"):"—"}</span></div>
+      <div class="mrow"><span class="k">When</span><span>${dl?dl+(m.dateApprox?"  (approx - from the trip)":"  (from photo EXIF)"):"-"}</span></div>
       <div class="mrow"><span class="k">Trip / event</span><span><span class="a-badge" style="background:${ev.color};color:#fff;padding:1px 7px;border-radius:6px">${ev.label}</span></span></div>
-      <div class="mrow"><span class="k">Who</span><span>${m.people||"—"}</span></div>
-      <div class="mrow"><span class="k">What</span><span>${m.ctx||"—"}</span></div>
+      <div class="mrow"><span class="k">Who</span><span>${m.people||"-"}</span></div>
+      <div class="mrow"><span class="k">What</span><span>${m.ctx||"-"}</span></div>
       ${m.beat?`<div class="mrow"><span class="k">Story idea</span><span><em>“${m.beat}”</em></span></div>`:""}
       <div class="mrow"><span class="k">File</span><span style="font-size:12px;color:var(--muted)">${m.file}</span></div>
       ${m.type==="video"?`<div class="mframes">${frames}</div>`:""}
@@ -240,7 +241,7 @@ function anaCard(m){
       <span class="a-tl">${typeTag(m)} ${m.id}</span>
       <span class="a-tr">${m.type==="video"?`<span class="a-badge">⏱ ${m.dur}s</span>`:""}<span class="a-badge">${m.orient}</span></span>
       <div class="a-bot">
-        <div class="ln">📍 ${m.loc||"—"}</div>
+        <div class="ln">📍 ${m.loc||"-"}</div>
         ${m.ctx?`<div class="ln ctx">${m.ctx}</div>`:""}
         ${timelineBar(m)}
         <div class="a-starsrow"></div>
@@ -272,7 +273,7 @@ function exportStory(){
   const nm=DATA.stories[state.active]?DATA.stories[state.active].name:state.active;
   const blob=new Blob([JSON.stringify({storyName:nm,active:state.active,chapters:state.chapters,meta:state.meta,ratings:state.ratings,theme:state.theme,version:4,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=("jennie-gunnar-"+state.active+".json"); a.click(); URL.revokeObjectURL(a.href);
-  toast("Exported “"+nm+"” — send this file back to collaborate.");
+  toast("Exported “"+nm+"” - send this file back to collaborate.");
 }
 function importStory(file){
   const r=new FileReader();
@@ -291,16 +292,16 @@ function renderAbout(){
   $("#aboutBody").innerHTML=`<h2>How to use this together 💛</h2>
     <p>A shared workspace for shaping Jennie &amp; Gunnar's wedding film. Everything you change autosaves in your browser.</p>
     <h3>Story Builder</h3>
-    <p><strong>Two versions</strong> up top: <em>① First draft</em> (my initial arc) and <em>② Jennie's story</em> (built from Jennie's storyline doc, grouped into bigger chapters). Switch anytime — each keeps its own edits. We're now working on Jennie's story.</p>
-    <ol><li>The left panel is every clip &amp; photo — the <em>content pool</em> (small thumbnails; hover a video to preview, click any for full notes).</li>
+    <p><strong>Two versions</strong> up top: <em>① First draft</em> (my initial arc) and <em>② Jennie's story</em> (built from Jennie's storyline doc, grouped into bigger chapters). Switch anytime - each keeps its own edits. We're now working on Jennie's story.</p>
+    <ol><li>The left panel is every clip &amp; photo - the <em>content pool</em> (small thumbnails; hover a video to preview, click any for full notes).</li>
     <li>Drag items into the <em>chapters</em> on the right. Each chapter lays its beats out left-to-right and scrolls horizontally; the header shows the chapter's running time. Collapse a chapter (▾) to just its thumbnails.</li>
     <li>Each beat has an editable caption and a duration. The top bar tracks total runtime vs our ~2¼ min target.</li></ol>
     <h3>Content Analysis</h3>
-    <p>Switch between the <strong>Videos</strong> and <strong>Photos</strong> tabs. Every item shows its location and date on the thumbnail. <strong>Click the stars to re-rate</strong> — you know these moments better than I do. Sort by rating, date, location or trip.</p>
+    <p>Switch between the <strong>Videos</strong> and <strong>Photos</strong> tabs. Every item shows its location and date on the thumbnail. <strong>Click the stars to re-rate</strong> - you know these moments better than I do. Sort by rating, date, location or trip.</p>
     <h3>Collaborating</h3>
     <p>This is a static site, so it can't sync live. Edit freely, hit <code>⬇ Export story</code> (a small JSON), send it back, and the other person hits <code>⬆ Import</code>. Pass the cut back and forth until it feels right.</p>
     <h3>About the dates</h3>
-    <p>Photo dates are real (from EXIF). Video files had only export dates, so each video shows an <em>approximate</em> date (~) inherited from the trip it belongs to. The real timeline runs Dec 2023 (Poland) → 2024 home life → Vietnam Apr 2025 → the big Asia trip Nov–Dec 2025.</p>`;
+    <p>Photo dates are real (from EXIF). Video files had only export dates, so each video shows an <em>approximate</em> date (~) inherited from the trip it belongs to. The real timeline runs Dec 2023 (Poland) → 2024 home life → Vietnam Apr 2025 → the big Asia trip Nov-Dec 2025.</p>`;
 }
 
 /* ---------- boot ---------- */
@@ -320,6 +321,6 @@ function bind(){
   $$("[data-close]").forEach(el=>el.addEventListener("click",closeModal));
   document.addEventListener("keydown",e=>{ if(e.key==="Escape")closeModal(); });
 }
-function renderAppVer(){ const el=$("#appVer"); if(el) el.textContent="v"+(DATA.appVersion||"?")+" · updated "+(DATA.appUpdated||"—"); }
+function renderAppVer(){ const el=$("#appVer"); if(el) el.textContent="v"+(DATA.appVersion||"?")+" · updated "+(DATA.appUpdated||"-"); }
 applyTheme(state.theme||"light"); fillEventSelects(); bind(); renderAbout(); renderAppVer(); initPoolSortable(); updateVersionButtons(); renderAll();
 })();
