@@ -35,6 +35,19 @@ function evOf(m){ return EVENTS[m.event] || {label:m.event||"—",color:"#999"};
 function monYear(d){ if(!d||d.length<7) return ""; return MON[+d.slice(5,7)-1]+" "+d.slice(0,4); }
 function dateLabel(m){ if(!m.date) return ""; return (m.dateApprox?"~":"")+monYear(m.date); }
 function defaultDur(m){ return m.type==="video" ? (m.dur>8?6:(m.dur||5)) : 3; }
+/* relationship timeline anchors (dating screenshot has no EXIF, so earliest photo = start) */
+const REL_START="2023-10-22"; let REL_END="2026-07-20";
+(function(){ let mx=REL_START; [...DATA.videos,...DATA.images].forEach(m=>{ if(m.date&&m.date>mx) mx=m.date; });
+  let t; try{ t=new Date().toISOString().slice(0,10); }catch(e){ t=mx; } REL_END = t>mx?t:mx; })();
+function dnum(d){ return Date.parse(d+"T00:00:00"); }
+function posOf(m){ if(!m||!m.date) return null; const s=dnum(REL_START),e=dnum(REL_END),x=dnum(m.date); if(!(e>s)) return null; return Math.max(0,Math.min(1,(x-s)/(e-s))); }
+function timelineBar(m){ const p=posOf(m); if(p==null) return ""; const pc=(p*100).toFixed(1);
+  return `<div class="tl" title="${dateLabel(m)}"><div class="tl-fill" style="width:${pc}%"></div><div class="tl-dot" style="left:${pc}%"></div></div>`; }
+function typeTag(m){ return m.type==="video" ? "🎬" : "🖼"; }
+const HEAD_H=36;
+function pieFor(idx){ const times=state.chapters.map(chapterTime); const total=times.reduce((a,b)=>a+b,0)||1; let acc=0,segs=[];
+  times.forEach((t,i)=>{ const a=acc/total*360, b=(acc+t)/total*360; segs.push(`${i===idx?"var(--accent)":"var(--pie-dim)"} ${a.toFixed(1)}deg ${b.toFixed(1)}deg`); acc+=t; });
+  return `conic-gradient(${segs.join(",")})`; }
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.hidden=false; clearTimeout(t._t); t._t=setTimeout(()=>t.hidden=true,1900); }
 function hoverCycle(imgEl,frames){
   if(!imgEl||frames.length<2)return;
@@ -69,9 +82,13 @@ function poolCard(m){
   const ev=evOf(m), c=document.createElement("div"); c.className="pcard"; c.dataset.id=m.id;
   c.innerHTML=`<div class="pev" style="background:${ev.color}"></div>
    <div class="pthumb"><img src="${posterOf(m)}" loading="lazy" alt="">
-     <span class="ptype">${m.type==="video"?"🎬":"🖼"}</span>
+     <span class="ptype">${typeTag(m)}</span>
      ${m.type==="video"?`<span class="pdur">${m.dur}s</span>`:""}
-     <span class="prate">${"★".repeat(ratingOf(m.id))}</span></div>`;
+     <div class="pbot">
+       <div class="pln">📍 ${m.loc||"—"}</div>
+       ${timelineBar(m)}
+       <div class="prate">${"★".repeat(ratingOf(m.id))}<span class="proff">${"★".repeat(5-ratingOf(m.id))}</span></div>
+     </div></div>`;
   hoverCycle($("img",c),framesOf(m));
   c.addEventListener("click",()=>openModal(m.id));
   return c;
@@ -95,29 +112,30 @@ function chapterTime(ch){ return ch.items.reduce((s,id)=>s+((state.meta[id]&&sta
 function renderStory(){
   const list=$("#storyList"); list.innerHTML="";
   let globalNum=0;
-  state.chapters.forEach(ch=>{
-    const el=document.createElement("div"); el.className="chapter"+(ch.collapsed?" collapsed":""); el.dataset.ch=ch.id;
-    const head=document.createElement("div"); head.className="ch-head";
-    head.innerHTML=`<button class="ch-toggle">${ch.collapsed?"▸":"▾"}</button>
+  state.chapters.forEach((ch,idx)=>{
+    // header + body are DIRECT children of the scroller so headers stack (sticky) as you scroll past acts
+    const head=document.createElement("div"); head.className="ch-head"+(ch.collapsed?" is-collapsed":""); head.dataset.ch=ch.id;
+    head.style.top=(idx*HEAD_H)+"px"; head.style.zIndex=String(200-idx);
+    head.innerHTML=`<button class="ch-toggle" aria-label="Collapse or expand">${ch.collapsed?"▸":"▾"}</button>
+      <span class="ch-pie" title="share of total runtime" style="background:${pieFor(idx)}"></span>
       <input class="ch-title" value="${(ch.title||"").replace(/"/g,'&quot;')}">
-      <span class="ch-meta"><span class="ch-time">⏱ ${fmt(chapterTime(ch))}</span><span>${ch.items.length} clip${ch.items.length===1?"":"s"}</span></span>
+      <span class="ch-meta"><span class="ch-time" title="chapter runtime">⏱ ${fmt(chapterTime(ch))}</span><span class="ch-cnt">${ch.items.length}🎞</span></span>
       <button class="ch-x" title="Delete chapter (clips return to the pool)">✕</button>`;
     $(".ch-toggle",head).addEventListener("click",()=>{ ch.collapsed=!ch.collapsed; save(); renderStory(); });
     const ti=$(".ch-title",head); ti.addEventListener("input",()=>{ch.title=ti.value;save();});
     $(".ch-x",head).addEventListener("click",()=>{ if(ch.items.length===0||confirm('Delete "'+ch.title+'"? Its clips go back to the pool.')){ state.chapters=state.chapters.filter(c=>c.id!==ch.id); save(); renderStory(); renderPool(); }});
-    el.appendChild(head);
+    list.appendChild(head);
 
-    // strip (collapsed view)
-    const strip=document.createElement("div"); strip.className="ch-strip";
-    ch.items.slice(0,14).forEach(id=>{ const m=byId[id]; if(!m)return; const im=document.createElement("img"); im.src=posterOf(m); im.loading="lazy"; strip.appendChild(im); });
-    if(ch.items.length>14){ const s=document.createElement("span"); s.className="more"; s.textContent="+"+(ch.items.length-14); strip.appendChild(s); }
-    el.appendChild(strip);
-
-    // body (expanded view)
-    const body=document.createElement("div"); body.className="ch-body"+(ch.items.length?"":" empty");
-    ch.items.forEach(id=>{ const m=byId[id]; if(!m)return; globalNum++; body.appendChild(beatCard(m,globalNum)); });
-    el.appendChild(body);
-    list.appendChild(el);
+    if(ch.collapsed){
+      const strip=document.createElement("div"); strip.className="ch-strip"+(ch.items.length?"":" empty"); strip.dataset.ch=ch.id;
+      ch.items.slice(0,20).forEach(id=>{ const m=byId[id]; if(!m)return; const im=document.createElement("img"); im.src=posterOf(m); im.loading="lazy"; im.title=m.loc||""; strip.appendChild(im); });
+      if(ch.items.length>20){ const s=document.createElement("span"); s.className="more"; s.textContent="+"+(ch.items.length-20); strip.appendChild(s); }
+      list.appendChild(strip);
+    } else {
+      const body=document.createElement("div"); body.className="ch-body"+(ch.items.length?"":" empty"); body.dataset.ch=ch.id;
+      ch.items.forEach(id=>{ const m=byId[id]; if(!m)return; globalNum++; body.appendChild(beatCard(m,globalNum)); });
+      list.appendChild(body);
+    }
   });
   $("#storyEmpty").hidden=true;
   updateRuntime();
@@ -127,8 +145,8 @@ function beatCard(m,num){
   const meta=state.meta[m.id]||(state.meta[m.id]={beat:m.beat||"",dur:defaultDur(m)});
   const el=document.createElement("div"); el.className="beat"; el.dataset.id=m.id;
   el.innerHTML=`<div class="bthumb"><img src="${posterOf(m)}" loading="lazy" alt="">
-      <span class="bnum">${num}</span><span class="btype">${m.type==="video"?"🎬":"🖼"}</span>
-      <span class="bdur">${meta.dur}s</span></div>
+      <span class="bnum">${num}</span><span class="btype">${typeTag(m)} ${m.type==="video"?meta.dur+"s":"photo"}</span>
+      <div class="bbot"><div class="bln">📍 ${m.loc||"—"}</div>${timelineBar(m)}</div></div>
     <div class="bbody">
       <textarea placeholder="beat / caption…">${(meta.beat||"").replace(/</g,"&lt;")}</textarea>
       <div class="bctrl">⏱<input class="bdurin" type="number" min="1" max="60" value="${meta.dur}">s
@@ -136,12 +154,12 @@ function beatCard(m,num){
     </div>`;
   hoverCycle($("img",el),framesOf(m));
   const ta=$("textarea",el); ta.addEventListener("input",()=>{meta.beat=ta.value;save();});
-  const di=$(".bdurin",el); di.addEventListener("input",()=>{meta.dur=Math.max(1,+di.value||1);$(".bdur",el).textContent=meta.dur+"s";save();updateRuntime();updateChapterTimes();});
+  const di=$(".bdurin",el); di.addEventListener("input",()=>{meta.dur=Math.max(1,+di.value||1);if(m.type==="video")$(".btype",el).textContent=typeTag(m)+" "+meta.dur+"s";save();updateRuntime();updateChapterTimes();});
   $(".bi",el).addEventListener("click",()=>openModal(m.id));
   $(".bx",el).addEventListener("click",()=>{ const ch=state.chapters.find(c=>c.items.indexOf(m.id)>=0); if(ch){ch.items=ch.items.filter(x=>x!==m.id);save();renderStory();renderPool();} });
   return el;
 }
-function updateChapterTimes(){ $$("#storyList .chapter").forEach(el=>{ const ch=chById(el.dataset.ch); if(ch){ $(".ch-time",el).textContent="⏱ "+fmt(chapterTime(ch)); }}); }
+function updateChapterTimes(){ $$("#storyList .ch-head").forEach(head=>{ const idx=state.chapters.findIndex(c=>c.id===head.dataset.ch); if(idx<0)return; const ch=state.chapters[idx]; $(".ch-time",head).textContent="⏱ "+fmt(chapterTime(ch)); const pie=$(".ch-pie",head); if(pie)pie.style.background=pieFor(idx); }); }
 function updateRuntime(){
   let total=0,beats=0; state.chapters.forEach(c=>c.items.forEach(id=>{const mt=state.meta[id];if(mt){total+=mt.dur;beats++;}}));
   $("#runTotal").textContent=fmt(total); $("#beatCount").textContent=beats;
@@ -156,13 +174,13 @@ function updateRuntime(){
 let chapterSortables=[], poolSortable=null, refreshT=null;
 function scheduleRefresh(){ if(refreshT)return; refreshT=setTimeout(()=>{refreshT=null; syncFromDOM(); save(); renderStory(); renderPool();},0); }
 function syncFromDOM(){
-  $$("#storyList .chapter").forEach(el=>{ const ch=chById(el.dataset.ch); if(!ch)return; const body=$(".ch-body",el); if(!body)return;
+  $$("#storyList .ch-body").forEach(body=>{ const ch=chById(body.dataset.ch); if(!ch)return;
     ch.items=$$(":scope > .beat, :scope > .pcard",body).map(n=>n.dataset.id); });
   allStoryIds().forEach(id=>{ if(!state.meta[id]) state.meta[id]={beat:(byId[id]&&byId[id].beat)||"",dur:defaultDur(byId[id])}; });
 }
 function initStorySortables(){
   chapterSortables.forEach(s=>{try{s.destroy();}catch(e){}}); chapterSortables=[];
-  $$("#storyList .chapter:not(.collapsed) .ch-body").forEach(body=>{
+  $$("#storyList .ch-body").forEach(body=>{
     chapterSortables.push(new Sortable(body,{group:{name:"media",pull:true,put:true},draggable:".beat",animation:150,
       onAdd:scheduleRefresh,onUpdate:scheduleRefresh,onRemove:scheduleRefresh}));
   });
@@ -205,21 +223,19 @@ function renderAnalysis(){
 }
 function anaCard(m){
   const ev=evOf(m), c=document.createElement("div"); c.className="acard"; c.dataset.id=m.id;
-  const dl=dateLabel(m);
-  const l2=[]; if(dl) l2.push("📅 "+dl); if(m.people&&m.people!=="—") l2.push("👥 "+m.people);
   c.innerHTML=`<div class="aev" style="background:${ev.color}"></div>
     <div class="athumb"><img src="${posterOf(m)}" loading="lazy" alt="">
-      <span class="a-tl">${m.type==="video"?"🎬":"🖼"} ${m.id}</span>
+      <span class="a-tl">${typeTag(m)} ${m.id}</span>
       <span class="a-tr">${m.type==="video"?`<span class="a-badge">⏱ ${m.dur}s</span>`:""}<span class="a-badge">${m.orient}</span></span>
       <div class="a-bot">
         <div class="ln">📍 ${m.loc||"—"}</div>
-        ${l2.length?`<div class="ln">${l2.join("  ·  ")}</div>`:""}
         ${m.ctx?`<div class="ln ctx">${m.ctx}</div>`:""}
-      </div>
-      <div class="a-stars"></div></div>`;
-  const st=starsEl(m.id,false); st.classList.add("sm"); $(".a-stars",c).appendChild(st);
+        ${timelineBar(m)}
+        <div class="a-starsrow"></div>
+      </div></div>`;
+  const st=starsEl(m.id,false); st.classList.add("sm"); $(".a-starsrow",c).appendChild(st);
   hoverCycle($("img",c),framesOf(m));
-  $(".athumb",c).addEventListener("click",e=>{ if(e.target.closest(".a-stars"))return; openModal(m.id); });
+  $(".athumb",c).addEventListener("click",e=>{ if(e.target.closest(".a-starsrow"))return; openModal(m.id); });
   return c;
 }
 
