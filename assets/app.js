@@ -126,7 +126,7 @@ function poolCard(m){
        <div class="prate">${"★".repeat(ratingOf(m.id))}<span class="proff">${"★".repeat(5-ratingOf(m.id))}</span></div>
      </div></div>`;
   hoverCycle($("img",c),framesOf(m));
-  c.addEventListener("click",()=>openModal(m.id));
+  c.addEventListener("click",()=>{ if(clickBlocked())return; openModal(m.id); });
   return c;
 }
 function renderPool(){
@@ -191,6 +191,8 @@ function beatCard(m,num){
   const ta=$("textarea",el); ta.addEventListener("input",()=>{meta.beat=ta.value;save();});
   const di=$(".bdurin",el); di.addEventListener("input",()=>{meta.dur=Math.max(1,+di.value||1);if(m.type==="video")$(".btype",el).textContent=typeTag(m)+" "+meta.dur+"s";save();updateRuntime();updateChapterTimes();});
   $(".bi",el).addEventListener("click",()=>openModal(m.id));
+  const bt=$(".bthumb",el); bt.title="Click for info · press and drag to reorder";
+  bt.addEventListener("click",()=>{ if(clickBlocked())return; openModal(m.id); });
   $(".bx",el).addEventListener("click",()=>{ const ch=state.chapters.find(c=>c.items.indexOf(m.id)>=0); if(ch){ch.items=ch.items.filter(x=>x!==m.id);save();renderStory();renderPool();} });
   return el;
 }
@@ -206,7 +208,8 @@ function updateRuntime(){
 }
 
 /* ---------- drag/drop across chapters + pool ---------- */
-let chapterSortables=[], poolSortable=null, refreshT=null;
+let chapterSortables=[], poolSortable=null, refreshT=null, sortDragging=false, lastDragEnd=0;
+function clickBlocked(){ return sortDragging || (Date.now()-lastDragEnd)<250; } // ignore clicks during/just-after a drag
 function scheduleRefresh(){ if(refreshT)return; refreshT=setTimeout(()=>{refreshT=null; syncFromDOM(); save(); renderStory(); renderPool();},0); }
 function syncFromDOM(){
   $$("#storyList .ch-body").forEach(body=>{ const ch=chById(body.dataset.ch); if(!ch)return;
@@ -216,11 +219,13 @@ function syncFromDOM(){
 function initStorySortables(){
   chapterSortables.forEach(s=>{try{s.destroy();}catch(e){}}); chapterSortables=[];
   $$("#storyList .ch-body").forEach(body=>{
-    chapterSortables.push(new Sortable(body,{group:{name:"media",pull:true,put:true},draggable:".beat",animation:150,
+    chapterSortables.push(new Sortable(body,{group:{name:"media",pull:true,put:true},draggable:".beat",handle:".bthumb",animation:150,
+      onStart:()=>{sortDragging=true;}, onEnd:()=>{sortDragging=false;lastDragEnd=Date.now();},
       onAdd:scheduleRefresh,onUpdate:scheduleRefresh,onRemove:scheduleRefresh}));
   });
 }
-function initPoolSortable(){ poolSortable=new Sortable($("#poolList"),{group:{name:"media",pull:true,put:false},sort:false,draggable:".pcard",animation:150,onEnd:scheduleRefresh}); }
+function initPoolSortable(){ poolSortable=new Sortable($("#poolList"),{group:{name:"media",pull:true,put:false},sort:false,draggable:".pcard",animation:150,
+  onStart:()=>{sortDragging=true;}, onEnd:()=>{sortDragging=false;lastDragEnd=Date.now();scheduleRefresh();}}); }
 
 /* ---------- modal ---------- */
 function openModal(id){
