@@ -29,6 +29,7 @@
     <button id="btnReset" class="btn ghost" title="Reset everything to the draft I made">↺ Reset to draft</button>
     <button id="btnTheme" class="btn ghost" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
   </div>
+  <span class="appver" id="appVer" title="App build version and last update"></span>
 </header>
 
 <!-- ============ STORY BUILDER ============ -->
@@ -68,9 +69,11 @@
   <section class="story" aria-label="Story timeline">
     <div class="story-head">
       <div class="story-versions">
-        <span class="vlabel">Story version:</span>
-        <button class="verbtn" data-ver="draft1" title="Claude's first-draft arc">① First draft</button>
-        <button class="verbtn" data-ver="jennie" title="Built from Jennie's storyline doc">② Jennie's story</button>
+        <span class="vlabel">Story version</span>
+        <select id="verSelect" class="verselect">
+          <option value="draft1">Version 1 — first draft</option>
+          <option value="jennie" selected>Version 2 — Jennie's story</option>
+        </select>
         <span class="vhint">— switch anytime; each keeps its own edits</span>
       </div>
       <div class="runtime">

@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135 };
+const DATA = { targetSec:135, appVersion:"1.0", appUpdated:"2026-08-02 18:28 WEST" };
 
 /* ---- event groups (code -> label + colour) ---- */
 DATA.events = {
@@ -193,7 +193,7 @@ DATA.videos.forEach(function(v){
 /* ---- STORY VERSIONS: pick one in the Story Builder ---- */
 DATA.stories = {};
 /* -- First draft (Claude's arc to the summits) -- */
-DATA.stories.draft1 = { name:"First draft", chapters:[
+DATA.stories.draft1 = { name:"Version 1 (first draft)", chapters:[
  {title:"Act I · Where it began", items:[
    {item:"i081",beat:"Where it all began — one profile, one 'serious pasta addiction'.",dur:4},
    {item:"v02", beat:"“Happy to have found you.”",dur:5},
@@ -241,7 +241,7 @@ DATA.stories.draft1 = { name:"First draft", chapters:[
 ]};
 
 /* -- Jennie's story (from her storyline doc + breakdown; grouped into bigger chunks) -- */
-DATA.stories.jennie = { name:"Jennie's story", chapters:[
+DATA.stories.jennie = { name:"Version 2 (Jennie's story)", chapters:[
  {title:"Act I · How we met (2023)", items:[
    {item:"i081", beat:"How it started — one Bumble profile, and a new flat that happened to be 1 km from his.", dur:4},
    {item:"i003", beat:"Castle dates became our thing — Ulriksdal on the 2nd date, then Drottningholm.", dur:4},

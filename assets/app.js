@@ -35,7 +35,7 @@ function load(){
 }
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify({saved:state.saved,active:state.active,ratings:state.ratings,theme:state.theme,seq:state.seq,version:4})); }
 function loadVersion(v){ if(!state.saved[v])return; state.active=v; state.chapters=state.saved[v].chapters; state.meta=state.saved[v].meta; save(); updateVersionButtons(); renderAll(); const nm=DATA.stories[v]?DATA.stories[v].name:v; toast("Now editing: "+nm); }
-function updateVersionButtons(){ $$(".verbtn").forEach(b=>b.classList.toggle("active",b.dataset.ver===state.active)); }
+function updateVersionButtons(){ const vs=$("#verSelect"); if(vs) vs.value=state.active; }
 function ratingOf(id){ return state.ratings[id]!=null ? state.ratings[id] : (byId[id]?byId[id].rating:0); }
 
 /* ---------- helpers ---------- */
@@ -314,11 +314,12 @@ function bind(){
   $("#importFile").addEventListener("change",e=>{ if(e.target.files[0])importStory(e.target.files[0]); e.target.value=""; });
   $("#btnReset").addEventListener("click",()=>{ const nm=DATA.stories[state.active]?DATA.stories[state.active].name:state.active; if(confirm("Reset “"+nm+"” back to its original? (The other version and your ratings are kept.)")){ const fresh=buildVersion(DATA.stories[state.active].chapters); state.saved[state.active]=fresh; state.chapters=fresh.chapters; state.meta=fresh.meta; save(); renderAll(); toast("Reset “"+nm+"”."); }});
   $("#btnTheme").addEventListener("click",toggleTheme);
-  $$(".verbtn").forEach(b=>b.addEventListener("click",()=>loadVersion(b.dataset.ver)));
+  const vs=$("#verSelect"); if(vs) vs.addEventListener("change",()=>loadVersion(vs.value));
   $("#btnAddChapter").addEventListener("click",()=>{ state.chapters.push({id:"ch"+(state.seq++),title:"New chapter",collapsed:false,items:[]}); save(); renderStory(); $("#storyList").scrollTop=$("#storyList").scrollHeight; });
   $("#btnCollapseAll").addEventListener("click",()=>{ const anyOpen=state.chapters.some(c=>!c.collapsed); state.chapters.forEach(c=>c.collapsed=anyOpen); save(); renderStory(); $("#btnCollapseAll").textContent=anyOpen?"⊞ Expand all":"⊟ Collapse all"; });
   $$("[data-close]").forEach(el=>el.addEventListener("click",closeModal));
   document.addEventListener("keydown",e=>{ if(e.key==="Escape")closeModal(); });
 }
-applyTheme(state.theme||"light"); fillEventSelects(); bind(); renderAbout(); initPoolSortable(); updateVersionButtons(); renderAll();
+function renderAppVer(){ const el=$("#appVer"); if(el) el.textContent="v"+(DATA.appVersion||"?")+" · updated "+(DATA.appUpdated||"—"); }
+applyTheme(state.theme||"light"); fillEventSelects(); bind(); renderAbout(); renderAppVer(); initPoolSortable(); updateVersionButtons(); renderAll();
 })();
