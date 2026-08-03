@@ -159,6 +159,20 @@ button{font:inherit;cursor:pointer}
 .about-card h3{font-size:15px;margin:18px 0 4px;color:var(--accent)}
 .about-card code{background:var(--bg);padding:1px 6px;border-radius:5px;font-size:12.5px}
 .about-card ol{padding-left:20px}.about-card li{margin:5px 0}
+.about-card ul{padding-left:20px}
+.make-actions{display:flex;gap:8px;margin:8px 0 4px;flex-wrap:wrap}
+.sl-wrap{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:8px}
+.shotlist{width:100%;border-collapse:collapse;font-size:12.5px}
+.shotlist th{text-align:left;background:var(--panel2);color:var(--muted);font-size:11px;padding:7px 9px;border-bottom:1px solid var(--line);position:sticky;top:0}
+.shotlist td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+.shotlist tr:last-child td{border-bottom:none}
+.sl-act td{background:var(--bg);color:var(--accent);font-weight:800;font-size:12px;letter-spacing:.3px}
+.sl-n{color:var(--muted);font-weight:700;width:26px}
+.sl-tc{white-space:nowrap;color:var(--muted);width:52px}.sl-tc b{color:var(--ink)}
+.sl-file{font-weight:600;min-width:150px}
+.sl-loc{font-size:10.5px;color:var(--muted);font-weight:500;margin-top:2px}
+.sl-cap{line-height:1.4}
+.shotlist .muted{color:var(--muted);font-style:italic}
 
 /* modal */
 .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}

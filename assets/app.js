@@ -2,7 +2,7 @@
 (function(){
 "use strict";
 const DATA = window.DATA;
-const LS_KEY = "jennie_story_v4";
+const LS_KEY = "jennie_story_v5";
 const EVENTS = DATA.events;
 const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const byId = {};
@@ -34,18 +34,23 @@ function sanitizeState(st){ // strip any em/en dashes left in already-saved capt
 function load(){
   let st=null;
   try{ const s=JSON.parse(localStorage.getItem(LS_KEY));
-    if(s&&s.version===4&&s.saved){ if(!s.saved[s.active]) s.active=Object.keys(s.saved)[0]; st=s; }
+    if(s&&s.version===5&&s.saved){ if(!s.saved[s.active]) s.active=Object.keys(s.saved)[0]; st=s; }
   }catch(e){}
+  if(!st){ // migrate v4: keep First-draft edits + ratings/theme, refresh Jennie's story to the new template
+    try{ const s4=JSON.parse(localStorage.getItem("jennie_story_v4"));
+      if(s4&&s4.version===4&&s4.saved){ st=defaultState(); if(s4.saved.draft1) st.saved.draft1=s4.saved.draft1; if(s4.ratings)st.ratings=s4.ratings; if(s4.theme)st.theme=s4.theme; st.active=(s4.active&&st.saved[s4.active])?s4.active:"jennie"; }
+    }catch(e){}
+  }
   if(!st){ try{ const old=JSON.parse(localStorage.getItem("jennie_story_v3"));
     if(old&&old.version===3&&old.chapters){ st=defaultState(); st.saved.draft1={chapters:old.chapters,meta:old.meta||{}}; st.active="draft1"; if(old.ratings)st.ratings=old.ratings; if(old.theme)st.theme=old.theme; }
   }catch(e){} }
   if(!st) st=defaultState();
   sanitizeState(st);
   st.chapters=st.saved[st.active].chapters; st.meta=st.saved[st.active].meta;
-  try{ localStorage.setItem(LS_KEY, JSON.stringify({saved:st.saved,active:st.active,ratings:st.ratings,theme:st.theme,seq:st.seq,version:4})); }catch(e){}
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({saved:st.saved,active:st.active,ratings:st.ratings,theme:st.theme,seq:st.seq,version:5})); }catch(e){}
   return st;
 }
-function save(){ localStorage.setItem(LS_KEY, JSON.stringify({saved:state.saved,active:state.active,ratings:state.ratings,theme:state.theme,seq:state.seq,version:4})); }
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify({saved:state.saved,active:state.active,ratings:state.ratings,theme:state.theme,seq:state.seq,version:5})); }
 function loadVersion(v){ if(!state.saved[v])return; state.active=v; state.chapters=state.saved[v].chapters; state.meta=state.saved[v].meta; save(); updateVersionButtons(); renderAll(); const nm=DATA.stories[v]?DATA.stories[v].name:v; toast("Now editing: "+nm); }
 function shortVerName(v){ const n=(DATA.stories[v]?DATA.stories[v].name:v)||v; return n.split("(")[0].trim(); }
 function updateVersionButtons(){ const vs=$("#verSelect"); if(vs) vs.value=state.active; const rb=$("#btnReset"); if(rb){ rb.textContent="↺ Reset "+shortVerName(state.active); rb.title="Reset "+shortVerName(state.active)+" back to its original"; } }
@@ -289,6 +294,7 @@ function switchTab(name){
   $$(".tabpane").forEach(p=>p.classList.remove("active"));
   $("#tab-"+name).classList.add("active");
   if(name==="analysis") renderAnalysis();
+  if(name==="make") renderMake();
 }
 
 /* ---------- theme ---------- */
@@ -332,7 +338,56 @@ function renderAbout(){
 }
 
 /* ---------- boot ---------- */
-function renderAll(){ renderPool(); renderStory(); if($("#tab-analysis").classList.contains("active")) renderAnalysis(); }
+/* ---------- make the video (shot list) ---------- */
+function buildShotList(){
+  const rows=[]; let t=0,n=0;
+  state.chapters.forEach(ch=>{ rows.push({type:"act",title:ch.title});
+    ch.items.forEach(id=>{ const m=byId[id]; if(!m)return; const meta=state.meta[id]||{}; const dur=meta.dur||defaultDur(m); n++;
+      rows.push({type:"beat",n:n,tc:fmt(t),dur:dur,file:m.file,kind:m.type,cap:(meta.beat||"").trim(),loc:m.loc||""}); t+=dur; }); });
+  return {rows,total:t,beats:n};
+}
+function shotListText(){
+  const {rows,total,beats}=buildShotList(); const nm=DATA.stories[state.active]?DATA.stories[state.active].name:state.active;
+  let s="JENNIE & GUNNAR - WEDDING FILM SHOT LIST\n"+nm+"  -  "+beats+" shots, "+fmt(total)+" total\n";
+  rows.forEach(r=>{ if(r.type==="act") s+="\n== "+r.title+" ==\n";
+    else s+=String(r.n).padStart(2," ")+".  ["+r.tc+"]  "+r.dur+"s  "+(r.kind==="video"?"[VIDEO] ":"[PHOTO] ")+r.file+"\n       "+(r.cap||"(no caption)")+"\n"; });
+  return s;
+}
+function downloadShotList(){ const b=new Blob([shotListText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-shotlist-"+state.active+".txt"; a.click(); URL.revokeObjectURL(a.href); toast("Shot list downloaded."); }
+function copyShotList(){ if(navigator.clipboard) navigator.clipboard.writeText(shotListText()).then(()=>toast("Shot list copied."),()=>toast("Copy failed - use Download.")); else toast("Use Download."); }
+function renderMake(){
+  const {rows,total,beats}=buildShotList(); const nm=DATA.stories[state.active]?DATA.stories[state.active].name:state.active;
+  let list="";
+  rows.forEach(r=>{ if(r.type==="act") list+=`<tr class="sl-act"><td colspan="4">${r.title}</td></tr>`;
+    else list+=`<tr><td class="sl-n">${r.n}</td><td class="sl-tc">${r.tc}<br><b>${r.dur}s</b></td><td class="sl-file">${r.kind==="video"?"🎬":"🖼"} ${r.file}${r.loc?`<div class="sl-loc">${r.loc}</div>`:""}</td><td class="sl-cap">${r.cap||'<span class="muted">(no caption)</span>'}</td></tr>`; });
+  $("#makeBody").innerHTML=`
+    <h2>Make the video 🎬</h2>
+    <p>You're viewing <strong>${nm}</strong> - <strong>${beats} shots, ${fmt(total)}</strong>. This turns the current timeline into a shot list you can follow in any editor; it updates whenever you edit the story or switch version.</p>
+    <div class="make-actions"><button class="btn" id="btnCopySL">⧉ Copy shot list</button><button class="btn" id="btnDlSL">⬇ Download (.txt)</button></div>
+    <h3>Fastest path: CapCut (free, phone or desktop)</h3>
+    <ol>
+      <li>Open the Drive folder of clips &amp; photos - the shot list below uses the names Jennie gave them.</li>
+      <li>New project, canvas <strong>9:16 (portrait)</strong>.</li>
+      <li>Add media <strong>in the order below</strong>, trimming each to about the seconds shown. For photos, set the duration and add a slow zoom (Ken Burns).</li>
+      <li>Add each caption as a short text layer, bottom-centre.</li>
+      <li>Lay one music track across the whole edit; let the summit act land on the biggest swell.</li>
+      <li>Add 0.3-0.5s cross-dissolves; export 1080x1920.</li>
+    </ol>
+    <p class="hint">Want more control on desktop? <strong>DaVinci Resolve</strong> (free) works the same way: portrait timeline, clips in order, captions, one music bed.</p>
+    <h3>Format &amp; feel</h3>
+    <ul>
+      <li><strong>Portrait 9:16, aim ~2.5 min.</strong> ~90% of the footage is vertical. The few landscape clips (Ha Long kayak, sky-bike, trekker line) can be letterboxed or punched-in.</li>
+      <li><strong>Music:</strong> one warm, building track - gentle at the start, lifting through the trips, peaking at the summits, settling for the ending.</li>
+      <li><strong>Captions:</strong> the beat texts are written to read as on-screen lines.</li>
+    </ul>
+    <h3>Or: I can build a rough cut for you</h3>
+    <p>I have the original files. Tell me to <strong>"make the rough cut"</strong> and I'll assemble a real portrait .mp4 - clips and photos in this exact order, with the durations, cross-dissolves and burned-in captions (plus a music bed if you drop a track in the folder) - for you to refine.</p>
+    <h3>Shot list - ${nm}</h3>
+    <div class="sl-wrap"><table class="shotlist"><thead><tr><th>#</th><th>Time</th><th>Clip / photo</th><th>Caption</th></tr></thead><tbody>${list}</tbody></table></div>`;
+  $("#btnCopySL").addEventListener("click",copyShotList);
+  $("#btnDlSL").addEventListener("click",downloadShotList);
+}
+function renderAll(){ renderPool(); renderStory(); if($("#tab-analysis").classList.contains("active")) renderAnalysis(); if($("#tab-make").classList.contains("active")) renderMake(); }
 function bind(){
   $$(".tab").forEach(t=>t.addEventListener("click",()=>switchTab(t.dataset.tab)));
   ["#poolSearch","#poolType","#poolEvent","#poolRating","#poolSort"].forEach(s=>$(s).addEventListener("input",renderPool));
