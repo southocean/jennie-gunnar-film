@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"1.1", appUpdated:"2026-08-03 09:38 WEST" };
+const DATA = { targetSec:135, appVersion:"1.2", appUpdated:"2026-08-03 10:13 WEST" };
 
 /* ---- event groups (code -> label + colour) ---- */
 DATA.events = {
@@ -204,6 +204,47 @@ DATA.images = (window.IMG_BASE||[]).map(function(b){
   return {id:id,file:b[1],orient:b[2],date:date,rating:1,event:"MISC",people:"-",loc:"Camera-roll misc",ctx:"Accidental / low-quality capture",beat:""};
 });
 
+/* ---- Jennie's-doc media (regenerated straight from her named files, guaranteed-correct) ---- */
+/* [id,file,type,dur,orient,event,people,loc,ctx,rating,date] */
+const JM=[
+["jm01","Bumble 1.png","image",0,"P","SPECIAL","-","Bumble","Her Bumble profile",4,"2023-09-01"],
+["jm02","Bumble 2.png","image",0,"P","SPECIAL","-","Bumble","His Bumble profile (Gunnar, 30)",4,"2023-09-01"],
+["jm03","Date- 1st date","image",0,"L","SE-SEASONS","-","Bromma, Stockholm","First date - the neighbourhood he grew up in",4,"2023-09-15"],
+["jm04","Date- 1st date 2.mov","video",10,"P","SE-SEASONS","-","Bromma, Stockholm","First-date walk",3,"2023-09-15"],
+["jm07","Poland 2.jpg","image",0,"P","EU","-","Krakow, Poland","Kraków",4,"2023-12-24"],
+["jm08","Poland 4.jpg","image",0,"L","EU","Both","Gdansk, Poland","Gdańsk old town",4,"2023-12-27"],
+["jm09","Kiruna 2.jpg","image",0,"L","SE-LAPLAND","Both","Kiruna, Lapland","A snowy night up north",4,"2024-01-15"],
+["jm10","Kiruna 6.MOV","video",1,"P","SE-LAPLAND","Both","Kiruna, Lapland","Under the Arctic lights",4,"2024-01-15"],
+["jm11","Gotland 3","image",0,"L","SE-GOTLAND","Both","Visby, Gotland","Island days on Gotland",4,"2024-07-20"],
+["jm12","Cooking 1.MP4","video",9,"P","SE-HOME","Hands","Stockholm home","Cooking together",3,"2024-07-10"],
+["jm13","Cooking 6.MOV","video",6,"P","SE-HOME","Gunnar","Stockholm home","Baking saffron buns",3,"2024-11-01"],
+["jm14","Cooking 8.MOV","video",9,"P","SE-HOME","Hands","Stockholm home","Pad thai night",3,"2024-08-01"],
+["jm15","Puzzle 2.jpg","image",0,"L","SE-HOME","Both","Stockholm home","A 1500-piece puzzle - the Watermelon Fund",3,"2024-08-15"],
+["jm16","Errand 1.MOV","video",7,"P","SE-HOME","-","Stockholm","Returning the bottles (pant)",3,"2024-08-20"],
+["jm17","Zombie 2.HEIC","image",0,"L","SE-SEASONS","Both","Uppsala","Zombie walk - we made the local paper",4,"2023-10-28"],
+["jm19","IMG_3213.jpg","image",0,"P","SE-SEASONS","Both","Stockholm","At his football match",3,"2024-06-01"],
+["jm20","Jump 2","image",0,"L","SE-SEASONS","Jennie","Sweden, castle","A jump at every castle",3,"2024-07-01"],
+["jm21","Castle 10.HEIC","image",0,"L","SE-SEASONS","Both","Sweden, castle","Castle-date selfie",4,"2024-07-01"],
+["jm22","Friends 8.jpg","image",0,"L","SE-HOME","Friends","Stockholm","Friends over for dinner",3,"2024-11-15"],
+["jm23","First year anniversary 2.HEIC","image",0,"L","SE-SEASONS","Both","Stockholm","First-year anniversary",4,"2024-09-15"],
+["jm24","Stockholm 2.jpg","image",0,"P","SE-SEASONS","Both","Stockholm","By the water",4,"2024-06-15"],
+["jm25","Family 1.jpg","image",0,"L","SE-HOME","Family","Stockholm","Dinner with his family",3,"2024-12-01"],
+["jm26","IMG_2946.heic","image",0,"P","SE-HOME","Both","Stockholm","Christmas by the tree",4,"2024-12-24"],
+["jm27","Doha 1.HEIC","image",0,"L","QA-DOHA","Both","Doha, Qatar","A stop in Doha",3,"2024-12-20"],
+["jm28","Engage 1.HEIC","image",0,"P","VN-PHUQUOC","Both","Phu Quoc, Vietnam","On the swing: “Will you be my one Bubu forever?”",5,"2025-01-15"],
+["jm29","Engage 2.heic","image",0,"P","VN-PHUQUOC","Jennie","Phu Quoc, Vietnam","The ring",5,"2025-01-15"],
+["jm30","Phu Quoc 5.mov","video",24,"P","VN-PHUQUOC","-","Phu Quoc, Vietnam","Phú Quốc sunset",4,"2025-01-15"],
+["jm31","Brother family 1","image",0,"L","VN-DANANG","Family","Vietnam","Meeting her brother for the first time",4,"2025-01-20"],
+["jm32","Danang Family 1.HEIC","image",0,"L","VN-DANANG","Family","Da Nang, Vietnam","Her family in Đà Nẵng",4,"2025-01-25"],
+["jm33","Tet 1.HEIC","image",0,"P","VN-DANANG","Family","Da Nang, Vietnam","Tết together",4,"2025-01-29"],
+["jm34","Tet 3","image",0,"L","VN-DANANG","Gunnar","Vietnam","Tết fireworks",4,"2025-01-29"],
+["jm35","VN 10.MOV","video",6,"P","VN-MEKONG","Gunnar","Mekong Delta","Draped in a python",5,"2025-05-30"],
+["jm36","VN 13.mov","video",14,"P","VN-MEKONG","Both","Cu Chi, Vietnam","Crawling up out of the Củ Chi tunnels",5,"2025-01-22"],
+["jm38","VN 1.jpg","image",0,"L","VN-NINHBINH","Both","Ninh Binh, Vietnam","Boat through the karsts",4,"2025-05-25"],
+["jm39","Long distance 1.PNG","image",0,"P","SE-HOME","Gunnar","-","A year of long distance, three reunions",3,"2025-06-01"]
+];
+JM.forEach(function(a){ const o={id:a[0],file:a[1],orient:a[4],event:a[5],people:a[6],loc:a[7],ctx:a[8],rating:a[9],date:a[10],beat:""}; if(a[2]==="video"){o.dur=a[3];o.dateApprox=true;DATA.videos.push(o);} else {DATA.images.push(o);} });
+
 /* ---- timeline: real dates from photo EXIF; videos inherit their trip's date ---- */
 const _byEv={};
 DATA.images.forEach(function(m){ if(m.date && m.event!=="MISC"){ (_byEv[m.event]=_byEv[m.event]||[]).push(m.date); } });
@@ -212,6 +253,7 @@ Object.keys(_byEv).forEach(function(k){ const a=_byEv[k].sort(); DATA.eventDate[
 const EVENT_FALLBACK={ "QA-DOHA":"2025-11-14","SE-LAPLAND":"2025-01-30","SE-GOTLAND":"2024-07-15","SPECIAL":"2023-11-01","EU":"2023-12-31","VN-PHUQUOC":"2025-01-15","VN-DANANG":"2025-01-25" };
 const VID_DATE={ v06:"2025-04-30", v01:"2025-04-30", v26:"2025-04-30", v27:"2025-04-30", v05:"2025-04-27", v23:"2025-04-27", v24:"2025-04-27", v68:"2025-01-15" };
 DATA.videos.forEach(function(v){
+  if(v.date){ return; } /* jm items already have an explicit date */
   if(VID_DATE[v.id]){ v.date=VID_DATE[v.id]; v.dateApprox=false; }
   else { v.date = DATA.eventDate[v.event] || EVENT_FALLBACK[v.event] || ""; v.dateApprox=true; }
 });
@@ -269,69 +311,71 @@ DATA.stories.draft1 = { name:"Version 1 (first draft)", chapters:[
 /* -- Jennie's story (from her storyline doc + breakdown; grouped into bigger chunks) -- */
 DATA.stories.jennie = { name:"Version 2 (Jennie's story)", chapters:[
  {title:"Act I · How we met (Sep 2023)", items:[
-   {item:"i081", beat:"How it started - one Bumble profile, and a new flat that happened to be 1 km from his.", dur:4},
-   {item:"i209", beat:"First date in Bromma - the neighbourhood he grew up in.", dur:3},
-   {item:"i003", beat:"Castle dates became our thing - Ulriksdal on the 2nd date, then Drottningholm.", dur:4},
-   {item:"i006", beat:"A month in, after painting each other's nails, he asked her to be his girlfriend.  ⟨swap in the nail photo IMG_1014 - not in the folder yet⟩", dur:4},
-   {item:"v02", beat:"“Happy to have found you.”", dur:4}
+   {item:"jm01", beat:"How it started - one Bumble profile,", dur:3},
+   {item:"jm02", beat:"and his (Gunnar, 30).", dur:3},
+   {item:"jm03", beat:"First date in Bromma - the neighbourhood he grew up in.", dur:4},
+   {item:"jm04", beat:"", dur:3},
+   {item:"jm21", beat:"Castle dates became our thing. A month in, after painting each other's nails, he asked her to be his girlfriend.  ⟨Drottningholm selfie IMG_0889 & nail photo IMG_1014 are in Jennie's Drive - add when downloaded⟩", dur:5}
  ]},
- {title:"Act II · First trips - Poland & the far north (Christmas 2023)", items:[
-   {item:"i009", beat:"Our first trip together - Christmas in Kraków.", dur:4},
-   {item:"i069", beat:"Gdańsk old town.", dur:3},
-   {item:"i034", beat:"Then the far north - a night inside the ICEHOTEL,", dur:3},
-   {item:"v17", beat:"under the Arctic lights in Kiruna,", dur:3},
-   {item:"v66", beat:"out on the frozen lake,", dur:3},
-   {item:"i213", beat:"and island days on Gotland.", dur:3}
+ {title:"Act II · First trip - Poland & the far north (Christmas 2023)", items:[
+   {item:"jm07", beat:"Our first trip together - Christmas in Kraków.", dur:4},
+   {item:"jm08", beat:"Gdańsk old town.", dur:3},
+   {item:"jm09", beat:"Then the far north - Kiruna,", dur:3},
+   {item:"jm10", beat:"under the Arctic lights,", dur:3},
+   {item:"jm11", beat:"and island days on Gotland.", dur:3}
  ]},
  {title:"Act III · Moving in - life at home (June 2024)", items:[
-   {item:"v08", beat:"June 2024 - we move in together. Cooking becomes the daily ritual.", dur:3},
-   {item:"v58", beat:"", dur:2},
-   {item:"v18", beat:"The baking, the 1500-piece puzzles, the Watermelon Fund. 🍉", dur:3},
-   {item:"i047", beat:"", dur:2},
-   {item:"v61", beat:"Even the errands, together.", dur:3},
-   {item:"v63", beat:"Friends piling onto the couch.", dur:3}
+   {item:"jm12", beat:"June 2024 - we move in together. Cooking becomes the daily ritual.", dur:4},
+   {item:"jm13", beat:"", dur:2},
+   {item:"jm14", beat:"", dur:2},
+   {item:"jm15", beat:"The 1500-piece puzzles, the Watermelon Fund.", dur:3},
+   {item:"jm16", beat:"Even the errands, together.", dur:3}
  ]},
- {title:"Act IV · Castles, occasions & family", items:[
-   {item:"v37", beat:"Castles all over Sweden - a jump for every one. 🏰", dur:4},
-   {item:"v65", beat:"a horse-and-carriage ride,", dur:3},
-   {item:"i217", beat:"the Uppsala zombie walk - we made the local paper. 🧟", dur:4},
-   {item:"i132", beat:"cheering him on at football,", dur:3},
-   {item:"v33", beat:"Midsummer,", dur:3},
-   {item:"i082", beat:"our first anniversary,", dur:3},
-   {item:"i110", beat:"showing his family around Stockholm.", dur:3}
+ {title:"Act IV · Occasions, friends & family", items:[
+   {item:"jm17", beat:"Zombie walk in Uppsala - we made the local paper.", dur:4},
+   {item:"jm19", beat:"cheering him on at football,", dur:3},
+   {item:"jm20", beat:"a jump at every castle,", dur:3},
+   {item:"jm23", beat:"our first anniversary,", dur:3},
+   {item:"jm22", beat:"friends round the table.", dur:3}
  ]},
  {title:"Act V · Back to Vietnam - & engaged (Dec 2024 → Jan 2025)", items:[
-   {item:"v31", beat:"Dec 2024 - she's sent home to Vietnam. He follows. (A stop in Doha.)", dur:4},
-   {item:"v68", beat:"Phú Quốc, at sunset.", dur:4},
-   {item:"i166", beat:"On the swing he knelt: “Will you be my one Bubu forever?” 💍", dur:4},
-   {item:"i164", beat:"Engaged.", dur:3}
+   {item:"jm27", beat:"Dec 2024 - she's sent home to Vietnam. He follows (a stop in Doha).", dur:4},
+   {item:"jm28", beat:"On the swing he knelt: “Will you be my one Bubu forever?”", dur:5},
+   {item:"jm29", beat:"Engaged.", dur:3},
+   {item:"jm30", beat:"Phú Quốc sunset.", dur:3}
  ]},
  {title:"Act VI · Family in Vietnam - Tết", items:[
-   {item:"i170", beat:"Meeting her brother for the first time.", dur:3},
-   {item:"i150", beat:"Introducing him to her family in Đà Nẵng.", dur:3},
-   {item:"i176", beat:"Tết together -", dur:3},
-   {item:"i177", beat:"- our first Vietnamese New Year.", dur:3}
+   {item:"jm31", beat:"Meeting her brother for the first time.", dur:3},
+   {item:"jm32", beat:"Her family in Đà Nẵng.", dur:3},
+   {item:"jm33", beat:"Tết together -", dur:3},
+   {item:"jm34", beat:"- fireworks for our first Vietnamese New Year.", dur:3}
  ]},
  {title:"Act VII · Exploring Vietnam together", items:[
-   {item:"v70", beat:"Crawling up out of the Củ Chi tunnels.", dur:4},
-   {item:"v38", beat:"Say yes to everything - even a python. 🐍", dur:4},
-   {item:"i007", beat:"boat rides through the karsts,", dur:3},
+   {item:"jm36", beat:"Crawling up out of the Củ Chi tunnels.", dur:4},
+   {item:"jm35", beat:"Say yes to everything - even a python.", dur:4},
+   {item:"jm38", beat:"boat rides through the karsts,", dur:3},
    {item:"v46", beat:"the Hà Giang loop - always up for a laugh,", dur:3},
    {item:"v45", beat:"then sending him off again.", dur:3}
  ]},
  {title:"Act VIII · Long distance → conquering peaks (2025)", items:[
-   {item:"i174", beat:"A year of long distance - three reunions in twelve months.", dur:4},
-   {item:"v55", beat:"When he visited, we climbed - in the dark,", dur:3},
+   {item:"jm39", beat:"A year of long distance - three reunions in twelve months.", dur:4},
+   {item:"v06", beat:"When he visited, we climbed - sky-biking over Sapa,", dur:3},
+   {item:"v55", beat:"then in the dark,", dur:3},
    {item:"v54", beat:"one step at a time,", dur:3},
-   {item:"v56", beat:"above the clouds -", dur:3},
-   {item:"v27", beat:"the highest peak in Vietnam,", dur:3},
-   {item:"v50", beat:"and the highest in Taiwan.", dur:3},
+   {item:"v56", beat:"above the clouds,", dur:3},
+   {item:"v27", beat:"the highest peak in Vietnam - Fansipan,", dur:4},
+   {item:"v50", beat:"and the highest in Taiwan.", dur:4},
    {item:"v01", beat:"On top of the world, together.", dur:4},
-   {item:"v53", beat:"Taiwan and Thailand, reunited.", dur:3}
+   {item:"v41", beat:"Taiwan nights,", dur:3},
+   {item:"v43", beat:"", dur:2},
+   {item:"v53", beat:"and Thailand - reunited.", dur:3}
  ]},
  {title:"Act IX · Back to Sweden - the next chapter", items:[
-   {item:"v39", beat:"Back to Sweden - preparing for the next chapter.", dur:3},
-   {item:"i033", beat:"Ready for what's next. 💛", dur:4}
+   {item:"jm26", beat:"Back to Sweden - Christmas by the tree,", dur:3},
+   {item:"v33", beat:"Midsummer,", dur:3},
+   {item:"jm25", beat:"friends and family,", dur:3},
+   {item:"v39", beat:"preparing for the next chapter -", dur:3},
+   {item:"jm24", beat:"- together. 💛", dur:4}
  ]}
 ]};
 DATA.story = DATA.stories.draft1.chapters; /* back-compat */
