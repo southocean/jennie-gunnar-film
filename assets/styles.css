@@ -180,7 +180,7 @@ button{font:inherit;cursor:pointer}
 .modal-backdrop{position:absolute;inset:0;background:rgba(20,12,4,.55)}
 .modal-card{position:relative;background:var(--panel);border-radius:16px;max-width:560px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)}
 .modal-x{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.5);color:#fff;border:none;width:30px;height:30px;border-radius:50%;font-size:14px;z-index:2}
-.mhero{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--panel2);display:block}
+.mhero{width:100%;max-height:56vh;object-fit:contain;background:#111;display:block}
 .mbody{padding:16px 20px 22px}
 .mbody h3{font-size:17px}
 .mrow{display:flex;gap:8px;margin:9px 0;font-size:13.5px}
