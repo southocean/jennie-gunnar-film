@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"1.4", appUpdated:"2026-08-06 01:09 WEST" };
+const DATA = { targetSec:135, appVersion:"1.5", appUpdated:"2026-08-06 01:29 WEST" };
 
 /* ---- event groups (code -> label + colour) ---- */
 DATA.events = {
@@ -61,7 +61,7 @@ const V = [
 ["v30","IMG_3202.MOV",1,"P","SE-SEASONS","Players","Stockholm","Watching a football match",2,""],
 ["v31","Doha 2.MOV",11,"P","QA-DOHA","-","Doha, Qatar","City lights on a layover",3,"Somewhere between here and there"],
 ["v32","IMG_3287.MOV",7,"P","VN-SAPA","Distant","Sapa, Vietnam","The glass skywalk over the cliffs",4,"Walking on air"],
-["v33","IMG_3532.MOV",17,"P","SE-SEASONS","Gunnar+crowd","Stockholm (Södermalm)","Midsummer - flower crowns, arms waving",4,"Midsummer, flower crowns and all"],
+["v33","Mid summer 2026- 1.MOV",17,"P","SE-SEASONS","Gunnar+crowd","Stockholm","Midsummer - flower crowns, arms waving",4,"Midsummer, flower crowns and all"],
 ["v34","IMG_3659.MOV",9,"P","VN-SAPA","Gunnar","Sapa, Vietnam","Cliffside swing out over the valley",4,"Swinging over the edge -"],
 ["v35","IMG_3662.MOV",11,"P","VN-SAPA","Jennie","Sapa, Vietnam","Her turn on the cliffside swing",4,"- her turn"],
 ["v36","Castle 9.MOV",7,"P","SE-SEASONS","Gunnar","South of Stockholm","Summer by the jetty",3,"Long light summer evenings"],
@@ -229,7 +229,7 @@ const JM=[
 ["jm23","First year anniversary 2.HEIC","image",0,"L","SE-SEASONS","Both","Stockholm","First-year anniversary",4,"2024-09-15"],
 ["jm24","Stockholm 2.jpg","image",0,"P","SE-SEASONS","Both","Stockholm","By the water",4,"2024-06-15"],
 ["jm25","Family 1.jpg","image",0,"L","SE-HOME","Family","Stockholm","Dinner with his family",3,"2024-12-01"],
-["jm26","IMG_2946.heic","image",0,"P","SE-HOME","Both","Stockholm","Christmas by the tree",4,"2024-12-24"],
+["jm26","SC 10.heic","image",0,"P","SE-HOME","Both","Stockholm","Christmas by the tree",4,"2024-12-24"],
 ["jm27","Doha 1.HEIC","image",0,"L","QA-DOHA","Both","Doha, Qatar","A stop in Doha",3,"2024-12-20"],
 ["jm28","Engage 1.HEIC","image",0,"P","VN-PHUQUOC","Both","Phu Quoc, Vietnam","On the swing: “Will you be my one Bubu forever?”",5,"2025-01-15"],
 ["jm29","Engage 2.heic","image",0,"P","VN-PHUQUOC","Jennie","Phu Quoc, Vietnam","The ring",5,"2025-01-15"],
@@ -384,6 +384,54 @@ DATA.stories.jennie = { name:"Version 2 (Jennie's story)", chapters:[
    {item:"jm24", beat:"- together. 💛", dur:4}
  ]}
 ]};
+/* -- Version 3: Storytelling (a real arc: chemistry -> a life -> the obstacle of distance -> choosing each other -> conquering it together -> the wedding) -- */
+DATA.stories.storytelling = { name:"Version 3 (Storytelling)", chapters:[
+ {title:"I. The spark (2023)", items:[
+   {item:"jm02", beat:"It started with a Bumble profile.", dur:4},
+   {item:"jm03", beat:"A first date, in the neighbourhood he grew up in.", dur:4},
+   {item:"jm05", beat:"One castle date became a hundred.", dur:3},
+   {item:"jm06", beat:"A month in - painted nails - and they were official.", dur:4},
+   {item:"v14",  beat:"Two people who just fit.", dur:3}
+ ]},
+ {title:"II. Building a life (2024)", items:[
+   {item:"jm12", beat:"Home became something they made together.", dur:4},
+   {item:"jm22", beat:"A table always full of friends.", dur:3},
+   {item:"v33",  beat:"A first Swedish summer, a first anniversary.", dur:4},
+   {item:"jm07", beat:"And when they went looking, the world opened up - Poland,", dur:4},
+   {item:"jm10", beat:"the Arctic north,", dur:3},
+   {item:"jm11", beat:"long days on Gotland.", dur:3}
+ ]},
+ {title:"III. Torn apart (Dec 2024)", items:[
+   {item:"v31",  beat:"Then, at the end of 2024, she had to go home to Vietnam.", dur:4},
+   {item:"jm39", beat:"Suddenly there was an ocean between them.", dur:4},
+   {item:"i031", beat:"The kind of distance that tests a love.", dur:4}
+ ]},
+ {title:"IV. Choosing each other (2025)", items:[
+   {item:"jm28", beat:"So he followed her. And on a swing at sunset, he got down on one knee.", dur:5},
+   {item:"jm29", beat:"“Will you be my one Bubu forever?”", dur:4},
+   {item:"jm31", beat:"He met her brother,", dur:3},
+   {item:"jm33", beat:"her family, her first Tet -", dur:3},
+   {item:"jm34", beat:"and chose all of it.", dur:3}
+ ]},
+ {title:"V. Reaching the summit (2025)", items:[
+   {item:"v38",  beat:"Distance couldn't stop them living. They said yes to everything -", dur:4},
+   {item:"v70",  beat:"even crawling out of the Cu Chi tunnels.", dur:3},
+   {item:"v20",  beat:"Ha Long Bay,", dur:3},
+   {item:"v46",  beat:"always laughing.", dur:3},
+   {item:"v55",  beat:"And when the climb got hard,", dur:3},
+   {item:"v54",  beat:"they took it one step at a time,", dur:3},
+   {item:"v56",  beat:"until they stood above the clouds -", dur:4},
+   {item:"v27",  beat:"the highest peak in Vietnam,", dur:3},
+   {item:"v50",  beat:"and the highest in Taiwan.", dur:4},
+   {item:"v01",  beat:"Whatever it takes, they reach the top together.", dur:4}
+ ]},
+ {title:"VI. The next chapter (2026)", items:[
+   {item:"jm26", beat:"Now the distance is behind them.", dur:4},
+   {item:"v39",  beat:"Back home in Sweden,", dur:3},
+   {item:"jm24", beat:"ready for the biggest climb of all. 💛", dur:5}
+ ]}
+]};
+
 DATA.story = DATA.stories.draft1.chapters; /* back-compat */
 
 window.DATA = DATA;

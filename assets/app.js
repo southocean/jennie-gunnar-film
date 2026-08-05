@@ -2,7 +2,7 @@
 (function(){
 "use strict";
 const DATA = window.DATA;
-const LS_KEY = "jennie_story_v7";
+const LS_KEY = "jennie_story_v8";
 const EVENTS = DATA.events;
 const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const byId = {};
@@ -19,7 +19,7 @@ function buildVersion(chapters){
 }
 function defaultState(){
   const saved={}; Object.keys(DATA.stories).forEach(k=>{ saved[k]=buildVersion(DATA.stories[k].chapters); });
-  const active = saved.jennie ? "jennie" : Object.keys(saved)[0];
+  const active = saved.storytelling ? "storytelling" : (saved.jennie ? "jennie" : Object.keys(saved)[0]);
   const st={saved:saved, active:active, ratings:{}, seq:99, theme:"light", version:4};
   st.chapters=saved[active].chapters; st.meta=saved[active].meta; return st;
 }
@@ -34,10 +34,10 @@ function sanitizeState(st){ // strip any em/en dashes left in already-saved capt
 function load(){
   let st=null;
   try{ const s=JSON.parse(localStorage.getItem(LS_KEY));
-    if(s&&s.version===7&&s.saved){ if(!s.saved[s.active]) s.active=Object.keys(s.saved)[0]; st=s; }
+    if(s&&s.version===8&&s.saved){ if(!s.saved[s.active]) s.active=Object.keys(s.saved)[0]; st=s; }
   }catch(e){}
   if(!st){ // migrate older saves: keep First-draft edits + ratings/theme, refresh Jennie's story to the new template
-    ["jennie_story_v6","jennie_story_v5","jennie_story_v4"].some(function(k){ try{ const so=JSON.parse(localStorage.getItem(k)); if(so&&so.saved){ st=defaultState(); if(so.saved.draft1) st.saved.draft1=so.saved.draft1; if(so.ratings)st.ratings=so.ratings; if(so.theme)st.theme=so.theme; st.active=(so.active&&st.saved[so.active])?so.active:"jennie"; return true; } }catch(e){} return false; });
+    ["jennie_story_v7","jennie_story_v6","jennie_story_v5","jennie_story_v4"].some(function(k){ try{ const so=JSON.parse(localStorage.getItem(k)); if(so&&so.saved){ st=defaultState(); if(so.saved.draft1) st.saved.draft1=so.saved.draft1; if(so.ratings)st.ratings=so.ratings; if(so.theme)st.theme=so.theme; st.active="storytelling"; return true; } }catch(e){} return false; });
   }
   if(!st){ try{ const old=JSON.parse(localStorage.getItem("jennie_story_v3"));
     if(old&&old.version===3&&old.chapters){ st=defaultState(); st.saved.draft1={chapters:old.chapters,meta:old.meta||{}}; st.active="draft1"; if(old.ratings)st.ratings=old.ratings; if(old.theme)st.theme=old.theme; }
@@ -45,10 +45,10 @@ function load(){
   if(!st) st=defaultState();
   sanitizeState(st);
   st.chapters=st.saved[st.active].chapters; st.meta=st.saved[st.active].meta;
-  try{ localStorage.setItem(LS_KEY, JSON.stringify({saved:st.saved,active:st.active,ratings:st.ratings,theme:st.theme,seq:st.seq,version:7})); }catch(e){}
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({saved:st.saved,active:st.active,ratings:st.ratings,theme:st.theme,seq:st.seq,version:8})); }catch(e){}
   return st;
 }
-function save(){ localStorage.setItem(LS_KEY, JSON.stringify({saved:state.saved,active:state.active,ratings:state.ratings,theme:state.theme,seq:state.seq,version:7})); }
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify({saved:state.saved,active:state.active,ratings:state.ratings,theme:state.theme,seq:state.seq,version:8})); }
 function loadVersion(v){ if(!state.saved[v])return; state.active=v; state.chapters=state.saved[v].chapters; state.meta=state.saved[v].meta; save(); updateVersionButtons(); renderAll(); const nm=DATA.stories[v]?DATA.stories[v].name:v; toast("Now editing: "+nm); }
 function shortVerName(v){ const n=(DATA.stories[v]?DATA.stories[v].name:v)||v; return n.split("(")[0].trim(); }
 function updateVersionButtons(){ const vs=$("#verSelect"); if(vs) vs.value=state.active; const rb=$("#btnReset"); if(rb){ rb.textContent="↺ Reset "+shortVerName(state.active); rb.title="Reset "+shortVerName(state.active)+" back to its original"; } }
