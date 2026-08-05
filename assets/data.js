@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"1.3", appUpdated:"2026-08-03 22:10 WEST" };
+const DATA = { targetSec:135, appVersion:"1.4", appUpdated:"2026-08-06 01:09 WEST" };
 
 /* ---- event groups (code -> label + colour) ---- */
 DATA.events = {
@@ -241,7 +241,11 @@ const JM=[
 ["jm35","VN 10.MOV","video",6,"P","VN-MEKONG","Gunnar","Mekong Delta","Draped in a python",5,"2025-05-30"],
 ["jm36","VN 13.mov","video",14,"P","VN-MEKONG","Both","Cu Chi, Vietnam","Crawling up out of the Củ Chi tunnels",5,"2025-01-22"],
 ["jm38","VN 1.jpg","image",0,"L","VN-NINHBINH","Both","Ninh Binh, Vietnam","Boat through the karsts",4,"2025-05-25"],
-["jm39","Long distance 1.PNG","image",0,"P","SE-HOME","Gunnar","-","A year of long distance, three reunions",3,"2025-06-01"]
+["jm39","Long distance 1.PNG","image",0,"P","SE-HOME","Gunnar","-","A year of long distance, three reunions",3,"2025-06-01"],
+["jm05","IMG_0889.HEIC","image",0,"L","SE-SEASONS","Both","Drottningholm Palace","First castle date - Drottningholm",5,"2023-10-01"],
+["jm06","IMG_1014.HEIC","image",0,"P","SE-HOME","Both","Stockholm","Painting each other's nails - the day he asked her to be his girlfriend",5,"2023-10-15"],
+["jm18","Zombie 4.MOV","video",16,"P","SE-SEASONS","Both","Uppsala","Zombie walk through the streets",4,"2023-10-28"],
+["jm37","VN 8.MOV","video",12,"P","VN-NINHBINH","Both","Ninh Binh, Vietnam","Boat ride under conical hats",4,"2025-05-25"]
 ];
 JM.forEach(function(a){ const o={id:a[0],file:a[1],orient:a[4],event:a[5],people:a[6],loc:a[7],ctx:a[8],rating:a[9],date:a[10],beat:""}; if(a[2]==="video"){o.dur=a[3];o.dateApprox=true;DATA.videos.push(o);} else {DATA.images.push(o);} });
 
@@ -315,7 +319,8 @@ DATA.stories.jennie = { name:"Version 2 (Jennie's story)", chapters:[
    {item:"jm02", beat:"and his (Gunnar, 30).", dur:3},
    {item:"jm03", beat:"First date in Bromma - the neighbourhood he grew up in.", dur:4},
    {item:"jm04", beat:"", dur:3},
-   {item:"jm21", beat:"Castle dates became our thing. A month in, after painting each other's nails, he asked her to be his girlfriend.  ⟨Drottningholm selfie IMG_0889 & nail photo IMG_1014 are in Jennie's Drive - add when downloaded⟩", dur:5}
+   {item:"jm05", beat:"Castle dates became our thing - first, Drottningholm.", dur:4},
+   {item:"jm06", beat:"A month in, after painting each other's nails, he asked her to be his girlfriend.", dur:4}
  ]},
  {title:"Act II · First trip - Poland & the far north (Christmas 2023)", items:[
    {item:"jm07", beat:"Our first trip together - Christmas in Kraków.", dur:4},
@@ -332,7 +337,8 @@ DATA.stories.jennie = { name:"Version 2 (Jennie's story)", chapters:[
    {item:"jm16", beat:"Even the errands, together.", dur:3}
  ]},
  {title:"Act IV · Occasions, friends & family", items:[
-   {item:"jm17", beat:"Zombie walk in Uppsala - we made the local paper.", dur:4},
+   {item:"jm17", beat:"Zombie walk in Uppsala - we made the local paper.", dur:3},
+   {item:"jm18", beat:"", dur:3},
    {item:"jm19", beat:"cheering him on at football,", dur:3},
    {item:"jm20", beat:"a jump at every castle,", dur:3},
    {item:"jm23", beat:"our first anniversary,", dur:3},
@@ -353,7 +359,7 @@ DATA.stories.jennie = { name:"Version 2 (Jennie's story)", chapters:[
  {title:"Act VII · Exploring Vietnam together", items:[
    {item:"jm36", beat:"Crawling up out of the Củ Chi tunnels.", dur:4},
    {item:"jm35", beat:"Say yes to everything - even a python.", dur:4},
-   {item:"jm38", beat:"boat rides through the karsts,", dur:3},
+   {item:"jm37", beat:"boat rides through the karsts,", dur:3},
    {item:"v46", beat:"the Hà Giang loop - always up for a laugh,", dur:3},
    {item:"v45", beat:"then sending him off again.", dur:3}
  ]},
