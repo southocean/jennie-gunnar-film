@@ -1,18 +1,38 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"1.8", appUpdated:"2026-08-06 03:40 WEST" };
+const DATA = { targetSec:135, appVersion:"1.9", appUpdated:"2026-08-06 - song v2 (personal lyrics)" };
 
 /* ---- the song (music-first approach) ----
    A love story about "a girl and a guy" who resemble the couple, from her POV,
    in the storytelling style of Taylor Swift's "Love Story". No real names, so
    guests connect the dots themselves. The emotional drop lives in the bridge
    (the distance); the key change lands on the summit. Plain hyphens only. */
-DATA.song = {
-  title: "The Long Way Home",
-  altTitles: ["Meet Me at the Summit", "All In", "Worth the Climb"],
-  suno: `Female-led modern country-pop love ballad, storytelling in the style of early Taylor Swift "Love Story". Warm, cinematic, wedding-ready, honest radio-quality lead vocal. Instrumentation: fingerpicked acoustic guitar, soft mandolin and banjo touches, piano, building to full drums and sweeping strings. Emotional arc: intimate tender verses, a bright hopeful chorus, a bittersweet second verse, then a stripped-back bridge (just vocals, soft piano and a heartbeat kick) for the long-distance low, then a dramatic key change into a soaring anthemic final chorus with layered harmonies for the mountaintop climax, then a gentle warm resolve. Tempo around 100 to 112 BPM.`,
-  lyrics: `[Intro]
+/* shared style prompt (Nam liked the Suno style; only the lyrics change per version)
+   and shared timing map (both versions follow the same act structure). */
+const SONG_SUNO = `Female-led modern country-pop love ballad, storytelling in the style of early Taylor Swift "Love Story". Warm, cinematic, wedding-ready, honest radio-quality lead vocal. Instrumentation: fingerpicked acoustic guitar, soft mandolin and banjo touches, piano, building to full drums and sweeping strings. Emotional arc: intimate tender verses, a bright hopeful chorus, a bittersweet second verse, then a stripped-back bridge (just vocals, soft piano and a heartbeat kick) for the long-distance low, then a dramatic key change into a soaring anthemic final chorus with layered harmonies for the mountaintop climax, then a gentle warm resolve. Tempo around 100 to 112 BPM.`;
+const SONG_MAP = [
+  {sec:"0:00 - 0:08", part:"Intro",        act:"Title",              show:"Title card over a soft frame; hold on the couple."},
+  {sec:"0:08 - 0:30", part:"Verse 1",      act:"I. The spark",       show:"The dating-app screen, first date, early Stockholm chemistry."},
+  {sec:"0:30 - 0:40", part:"Pre-Chorus",   act:"II. Building a life",show:"Cooking, puzzles, home mornings, first snow together."},
+  {sec:"0:40 - 0:58", part:"Chorus",       act:"II. Building a life",show:"Happy montage: castles, Poland, friends, laughing - cut on the beat."},
+  {sec:"0:58 - 1:18", part:"Verse 2",      act:"III. Torn apart",    show:"Packing, the airport, her flight home, his city emptying out."},
+  {sec:"1:18 - 1:40", part:"Bridge (drop)",act:"III. Torn apart",    show:"THE distance sequence: the world map, both apart, both crying."},
+  {sec:"1:40 - 1:52", part:"Lift / key change",act:"IV. Choosing each other",show:"He flies to Vietnam, the ring, engaged, family, Tet."},
+  {sec:"1:52 - 2:20", part:"Final Chorus", act:"V. Reaching the summit",show:"The climax: Fansipan and Yushan climbs, hands together at the peak."},
+  {sec:"2:20 - 2:35", part:"Outro",        act:"VI. Next chapter",   show:"Back to Sweden, the ring, the wedding, the next chapter."}
+];
+
+/* Browsable song versions (like the storyboard versions). v1 kept verbatim. */
+DATA.songs = [
+  {
+    id:"v1",
+    name:"Version 1 - first draft",
+    note:"The first pass we tested on Suno. The style nailed the early-Taylor-Swift 'Love Story' feel; the lyrics are intentionally a bit generic.",
+    title:"The Long Way Home",
+    altTitles:["Meet Me at the Summit","All In","Worth the Climb"],
+    suno:SONG_SUNO,
+    lyrics:`[Intro]
 (soft acoustic guitar, hold for the title card)
 
 [Verse 1]
@@ -58,18 +78,68 @@ Oh, this is our love story, and it's only just begun.
 [Outro - soft, warm]
 Four seasons and an ocean, and a ring to see us through,
 the long way round the whole wide world, just led me home to you.`,
-  map: [
-    {sec:"0:00 - 0:08", part:"Intro",        act:"Title",              show:"Title card over a soft frame; hold on the couple."},
-    {sec:"0:08 - 0:30", part:"Verse 1",      act:"I. The spark",       show:"The dating-app screen, first date, early Stockholm chemistry."},
-    {sec:"0:30 - 0:40", part:"Pre-Chorus",   act:"II. Building a life",show:"Cooking, puzzles, home mornings, first snow together."},
-    {sec:"0:40 - 0:58", part:"Chorus",       act:"II. Building a life",show:"Happy montage: castles, Poland, friends, laughing - cut on the beat."},
-    {sec:"0:58 - 1:18", part:"Verse 2",      act:"III. Torn apart",    show:"Packing, the airport, her flight home, his city emptying out."},
-    {sec:"1:18 - 1:40", part:"Bridge (drop)",act:"III. Torn apart",    show:"THE distance sequence: the world map, both apart, both crying."},
-    {sec:"1:40 - 1:52", part:"Lift / key change",act:"IV. Choosing each other",show:"He flies to Vietnam, the ring, engaged, family, Tet."},
-    {sec:"1:52 - 2:20", part:"Final Chorus", act:"V. Reaching the summit",show:"The climax: Fansipan and Yushan climbs, hands together at the peak."},
-    {sec:"2:20 - 2:35", part:"Outro",        act:"VI. Next chapter",   show:"Back to Sweden, the ring, the wedding, the next chapter."}
-  ]
-};
+    map:SONG_MAP
+  },
+  {
+    id:"v2",
+    name:"Version 2 - personal",
+    note:"Same style and structure, but the lyrics now carry real, unnamed details: cooking together (saffron buns, pad thai, the 1500-piece puzzle), a life of travelling, the long-distance year and its reunions, the swing proposal, Tet with her family, the summit climbs - and their pet name 'bubu'. No names, so guests still connect the dots themselves.",
+    title:"The Long Way Home",
+    altTitles:["My One Bubu Forever","We Cooked, We Climbed","Half a World to Reach"],
+    suno:SONG_SUNO,
+    lyrics:`[Intro]
+(soft acoustic guitar, hold for the title card)
+
+[Verse 1]
+I wasn't out there looking when your message lit the dark,
+a stranger with a crooked smile who somehow hit the mark.
+You walked me through the town that raised you, cobblestones and rain,
+I swore I'd keep my guard up, then I never did again.
+
+[Pre-Chorus]
+We burned the saffron buns and laughed, made pad thai in the steam,
+built a fifteen-hundred-piece of home, two spoons and one big dream.
+
+[Chorus]
+Oh, this is a love story, and we wrote it on the road,
+two hearts from a northern town who never could stay home.
+So take my hand, I'm all in, I don't need to know the end,
+just promise me wherever we go, you'll take me there again.
+
+[Verse 2]
+But the world that made me had a home on the other shore,
+and the sea began to call me like it never had before.
+I folded up our northern winters, boxed the life we'd grown,
+flew back into the heat and monsoon, and learned to be alone.
+
+[Bridge - pull the band back, voice and a soft heartbeat]
+So I counted all the timezones, every night I couldn't sleep,
+loving someone through a phone screen is a promise hard to keep.
+Three reunions in a year, and a thousand miles between,
+then a knock upon my door, and there you stood. You flew to me.
+
+[Lift - build into a key change]
+You crossed the whole wide world to stand where all my roots begin,
+you met my family, watched Tet burning, held me on a swing.
+"Will you be my one bubu forever?", and the sky came all undone,
+no ocean left to cross now, bubu, look how far we've come.
+
+[Final Chorus - big, anthemic]
+'Cause this is our love story, and we climbed it all the way,
+from a saffron-scented kitchen to the roof of everything.
+We went up through the clouds and cold, hand in hand up at the peak,
+found forever on a summit that took half a world to reach.
+Oh, this is our love story, and it's only just begun.
+
+[Outro - soft, warm]
+Four seasons and two countries, and a ring to see us through,
+we cooked, we climbed, we crossed the world, it only led to you.
+So here's to every kitchen and each mountain still to come,
+the long way round the whole wide world, my bubu, we are home.`,
+    map:SONG_MAP
+  }
+];
+DATA.song = DATA.songs[DATA.songs.length-1]; // default = latest; back-compat for old refs
 
 /* ---- event groups (code -> label + colour) ---- */
 DATA.events = {

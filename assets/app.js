@@ -338,14 +338,21 @@ function renderAbout(){
 
 /* ---------- the song (music-first) ---------- */
 function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+let songVer=-1; /* index into DATA.songs; defaults to the latest */
 function renderMusic(){
   const box=$("#musicBody"); if(!box) return;
-  const s=DATA.song||{};
+  const list=DATA.songs||(DATA.song?[DATA.song]:[]);
+  if(songVer<0||songVer>=list.length) songVer=list.length-1;
+  const s=list[songVer]||DATA.song||{};
   const rows=(s.map||[]).map(m=>`<tr><td class="sl-tc">${esc(m.sec)}</td><td><b>${esc(m.part)}</b><div class="sl-loc">${esc(m.act)}</div></td><td class="sl-cap">${esc(m.show)}</td></tr>`).join("");
+  const vers=list.length>1?`<div class="song-vers">${list.map((v,i)=>`<button class="btn songver${i===songVer?" on":""}" data-i="${i}">${esc(v.name||("Version "+(i+1)))}</button>`).join("")}</div>`:"";
   box.innerHTML=`
     <h2>The song 🎵</h2>
     <p>We're going <strong>music first</strong>. The song is written, then the film is cut to it: the lyrics decide what we show, and every transition lands on the beat. So the plan is to get a version we love in <strong>Suno</strong>, then time the edit to it.</p>
     <p>It's a love story about <em>a girl and a guy</em> - never named - told from her side, in the storytelling style of Taylor Swift's <em>Love Story</em>. The guests connect the dots. The emotional low (the distance) sits in the bridge; the key change explodes on the mountain summit.</p>
+
+    ${vers}
+    ${s.note?`<p class="hint song-note">${esc(s.note)}</p>`:""}
 
     <h3>1. Suno style prompt</h3>
     <p class="hint">Paste this into Suno's <strong>Style of Music</strong> box. Title suggestion: <strong>${esc(s.title||"")}</strong> ${s.altTitles&&s.altTitles.length?`(alts: ${s.altTitles.map(esc).join(", ")})`:""}.</p>
@@ -370,6 +377,7 @@ function renderMusic(){
   const copy=(txt,ok)=>{ if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>toast(ok),()=>toast("Copy failed - select and copy manually.")); else toast("Select and copy manually."); };
   $("#btnCopySuno").addEventListener("click",()=>copy(s.suno||"","Style prompt copied."));
   $("#btnCopyLyrics").addEventListener("click",()=>copy(s.lyrics||"","Lyrics copied."));
+  $$(".songver").forEach(b=>b.addEventListener("click",()=>{ songVer=+b.dataset.i; renderMusic(); }));
 }
 
 /* ---------- watch the cuts (guarded by the global site gate) ---------- */

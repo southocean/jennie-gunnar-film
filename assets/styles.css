@@ -177,6 +177,9 @@ button{font:inherit;cursor:pointer}
 .gate-card .btn{width:100%;justify-content:center;padding:10px}
 .gate-err{color:#c0392b;font-size:12.5px;margin:10px 0 0;font-weight:600}
 .songbox{white-space:pre-wrap;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.55;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;color:var(--ink);margin:8px 0 4px;max-height:none;overflow-x:auto}
+.song-vers{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+.song-vers .songver.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.song-note{font-style:italic}
 .sl-wrap{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:8px}
 .shotlist{width:100%;border-collapse:collapse;font-size:12.5px}
 .shotlist th{text-align:left;background:var(--panel2);color:var(--muted);font-size:11px;padding:7px 9px;border-bottom:1px solid var(--line);position:sticky;top:0}
