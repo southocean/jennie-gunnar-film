@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"1.9", appUpdated:"2026-08-06 - song v2 (personal lyrics)" };
+const DATA = { targetSec:135, appVersion:"2.0", appUpdated:"2026-08-06 - song v2 refined (balance pass)" };
 
 /* ---- the song (music-first approach) ----
    A love story about "a girl and a guy" who resemble the couple, from her POV,
@@ -83,9 +83,9 @@ the long way round the whole wide world, just led me home to you.`,
   {
     id:"v2",
     name:"Version 2 - personal",
-    note:"Same style and structure, but the lyrics now carry real, unnamed details: cooking together (saffron buns, pad thai, the 1500-piece puzzle), a life of travelling, the long-distance year and its reunions, the swing proposal, Tet with her family, the summit climbs - and their pet name 'bubu'. No names, so guests still connect the dots themselves.",
+    note:"Refined for the good-song vs personal-song balance. Specifics live in the verses; the chorus stays generic and repeatable for catchiness. Food is kept general (we have ~8 cooking clips to cut to) rather than a one-off dish, and 'we cooked, we climbed, we crossed the world' is the recurring hook (a clean visual triplet: kitchen, summit, travel). No 'Tet' (Suno mispronounces it) - 'holidays' instead. The pet name 'boo boo' is held back for a single reveal on the very last line, like the proposal. No names, so guests still connect the dots.",
     title:"The Long Way Home",
-    altTitles:["My One Bubu Forever","We Cooked, We Climbed","Half a World to Reach"],
+    altTitles:["We Cooked, We Climbed","Half a World to Reach","The Long Way Round"],
     suno:SONG_SUNO,
     lyrics:`[Intro]
 (soft acoustic guitar, hold for the title card)
@@ -97,8 +97,8 @@ You walked me through the town that raised you, cobblestones and rain,
 I swore I'd keep my guard up, then I never did again.
 
 [Pre-Chorus]
-We burned the saffron buns and laughed, made pad thai in the steam,
-built a fifteen-hundred-piece of home, two spoons and one big dream.
+We burned a few good dinners, laughed until we cried,
+made a home out of the ordinary, winter dark outside.
 
 [Chorus]
 Oh, this is a love story, and we wrote it on the road,
@@ -110,32 +110,33 @@ just promise me wherever we go, you'll take me there again.
 But the world that made me had a home on the other shore,
 and the sea began to call me like it never had before.
 I folded up our northern winters, boxed the life we'd grown,
-flew back into the heat and monsoon, and learned to be alone.
+flew back into the heat and the monsoon, and learned to be alone.
 
 [Bridge - pull the band back, voice and a soft heartbeat]
 So I counted all the timezones, every night I couldn't sleep,
-loving someone through a phone screen is a promise hard to keep.
-Three reunions in a year, and a thousand miles between,
+loving through a little screen is a promise hard to keep.
+Three long flights across a year, half a world in between,
 then a knock upon my door, and there you stood. You flew to me.
 
 [Lift - build into a key change]
 You crossed the whole wide world to stand where all my roots begin,
-you met my family, watched Tet burning, held me on a swing.
-"Will you be my one bubu forever?", and the sky came all undone,
-no ocean left to cross now, bubu, look how far we've come.
+you met the ones who raised me, shared our holidays with them.
+Out over the valley on a swing, you asked me for my life,
+and the whole sky came undone the day I said I'd be your wife.
 
 [Final Chorus - big, anthemic]
 'Cause this is our love story, and we climbed it all the way,
-from a saffron-scented kitchen to the roof of everything.
-We went up through the clouds and cold, hand in hand up at the peak,
+from a snowed-in northern kitchen to the roof of everything.
+We went up through the cloud and cold, hand in hand up at the peak,
 found forever on a summit that took half a world to reach.
-Oh, this is our love story, and it's only just begun.
+We cooked, we climbed, we crossed the whole wide world,
+oh, this is our love story, and it's only just begun.
 
 [Outro - soft, warm]
 Four seasons and two countries, and a ring to see us through,
 we cooked, we climbed, we crossed the world, it only led to you.
 So here's to every kitchen and each mountain still to come,
-the long way round the whole wide world, my bubu, we are home.`,
+the long way round the whole wide world, my boo boo, we are home.`,
     map:SONG_MAP
   }
 ];
