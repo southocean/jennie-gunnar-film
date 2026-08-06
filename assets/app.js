@@ -372,9 +372,7 @@ function renderMusic(){
   $("#btnCopyLyrics").addEventListener("click",()=>copy(s.lyrics||"","Lyrics copied."));
 }
 
-/* ---------- watch the cuts (spoiler-gated) ---------- */
-/* Not persisted: the gate re-locks on every fresh page load so Jennie can't be let in by a remembered choice. */
-let cutsUnlocked=false;
+/* ---------- watch the cuts (guarded by the global site gate) ---------- */
 const CUTS=[
   {title:"Storytelling cut (Version 3) - about 1:55",
    note:"The current best arc: the spark, building a life, torn apart by distance, choosing each other, reaching the summit, and the next chapter. This is the one to watch first and rethink beats/scripts against.",
@@ -385,18 +383,6 @@ const CUTS=[
 ];
 function renderCuts(){
   const box=$("#cutsBody"); if(!box) return;
-  if(!cutsUnlocked){
-    box.innerHTML=`
-      <h2>Draft cuts - spoilers ahead</h2>
-      <p>This tab holds work-in-progress cuts of the wedding film, here so you can watch them back and rethink the beats and scripts.</p>
-      <p><strong>If you are Jennie, please close this tab.</strong> Watching will spoil your wedding video.</p>
-      <label class="spoiler-ack"><input type="checkbox" id="cutsAck"> I confirm I am <strong>not Jennie</strong> and I want to watch the draft cuts.</label>
-      <div class="make-actions"><button class="btn" id="btnUnlockCuts" disabled>Show the cuts</button></div>`;
-    const cb=$("#cutsAck"), btn=$("#btnUnlockCuts");
-    cb.addEventListener("change",()=>{ btn.disabled=!cb.checked; });
-    btn.addEventListener("click",()=>{ if(cb.checked){ cutsUnlocked=true; renderCuts(); } });
-    return;
-  }
   const items=CUTS.map(c=>`
     <div class="cut">
       <h3>${c.title}</h3>
@@ -405,9 +391,9 @@ function renderCuts(){
     </div>`).join("");
   box.innerHTML=`
     <h2>Draft cuts 🎬</h2>
-    <p>Work in progress - not final. Watch, then tell me what to change: reorder beats, swap clips, rewrite captions, adjust the music.</p>
+    <p>Work in progress - not final. Watch, then tell me what to change: reorder beats, swap clips, rewrite captions, adjust the music. (The whole site is already behind the password, so no extra spoiler gate here.)</p>
     ${items}
-    <p class="hint">Tip: right-click a video to save it. To re-hide these, reload the page.</p>`;
+    <p class="hint">Tip: right-click a video to save it.</p>`;
 }
 /* ---------- boot ---------- */
 /* ---------- shot list (kept for reference / export) ---------- */
@@ -444,5 +430,30 @@ function bind(){
   document.addEventListener("keydown",e=>{ if(e.key==="Escape")closeModal(); });
 }
 function renderAppVer(){ const el=$("#appVer"); if(el) el.textContent="v"+(DATA.appVersion||"?")+" · updated "+(DATA.appUpdated||"-"); }
+
+/* ---------- global gate: confirm not-Jennie + password (soft, client-side) ---------- */
+/* Password is stored only as a hash so the plaintext is not in the source. Unlock lasts for the browser session. */
+function hashStr(s){ let h=5381; for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))>>>0; return h; }
+const GATE_HASH=160275652; // djb2 of the password, lowercased and trimmed
+function initGate(){
+  const g=$("#gate"); if(!g) return;
+  try{ if(sessionStorage.getItem("jg_gate")==="1"){ g.remove(); return; } }catch(e){}
+  document.body.style.overflow="hidden";
+  const ack=$("#gateAck"), pass=$("#gatePass"), btn=$("#gateBtn"), err=$("#gateErr");
+  const upd=()=>{ btn.disabled=!ack.checked; if(err) err.hidden=true; };
+  ack.addEventListener("change",upd);
+  const tryUnlock=()=>{
+    if(!ack.checked) return;
+    if(hashStr((pass.value||"").trim().toLowerCase())===GATE_HASH){
+      try{ sessionStorage.setItem("jg_gate","1"); }catch(e){}
+      document.body.style.overflow=""; g.remove();
+    } else { if(err) err.hidden=false; pass.value=""; pass.focus(); }
+  };
+  btn.addEventListener("click",tryUnlock);
+  pass.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); tryUnlock(); } });
+  ack.focus();
+}
+
+initGate();
 applyTheme(state.theme||"light"); fillEventSelects(); bind(); renderAbout(); renderAppVer(); initPoolSortable(); updateVersionButtons(); renderAll();
 })();

@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"1.7", appUpdated:"2026-08-06 03:05 WEST" };
+const DATA = { targetSec:135, appVersion:"1.8", appUpdated:"2026-08-06 03:40 WEST" };
 
 /* ---- the song (music-first approach) ----
    A love story about "a girl and a guy" who resemble the couple, from her POV,
