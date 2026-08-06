@@ -292,6 +292,7 @@ function switchTab(name){
   $$(".tabpane").forEach(p=>p.classList.remove("active"));
   $("#tab-"+name).classList.add("active");
   if(name==="analysis") renderAnalysis();
+  if(name==="music") renderMusic();
   if(name==="cuts") renderCuts();
 }
 
@@ -333,6 +334,42 @@ function renderAbout(){
     <p>This is a static site, so it can't sync live. Edit freely, hit <code>⬇ Export story</code> (a small JSON), send it back, and the other person hits <code>⬆ Import</code>. Pass the cut back and forth until it feels right.</p>
     <h3>About the dates</h3>
     <p>Photo dates are real (from EXIF). Video files had only export dates, so each video shows an <em>approximate</em> date (~) inherited from the trip it belongs to. The real timeline runs Dec 2023 (Poland) → 2024 home life → Vietnam Apr 2025 → the big Asia trip Nov-Dec 2025.</p>`;
+}
+
+/* ---------- the song (music-first) ---------- */
+function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function renderMusic(){
+  const box=$("#musicBody"); if(!box) return;
+  const s=DATA.song||{};
+  const rows=(s.map||[]).map(m=>`<tr><td class="sl-tc">${esc(m.sec)}</td><td><b>${esc(m.part)}</b><div class="sl-loc">${esc(m.act)}</div></td><td class="sl-cap">${esc(m.show)}</td></tr>`).join("");
+  box.innerHTML=`
+    <h2>The song 🎵</h2>
+    <p>We're going <strong>music first</strong>. The song is written, then the film is cut to it: the lyrics decide what we show, and every transition lands on the beat. So the plan is to get a version we love in <strong>Suno</strong>, then time the edit to it.</p>
+    <p>It's a love story about <em>a girl and a guy</em> - never named - told from her side, in the storytelling style of Taylor Swift's <em>Love Story</em>. The guests connect the dots. The emotional low (the distance) sits in the bridge; the key change explodes on the mountain summit.</p>
+
+    <h3>1. Suno style prompt</h3>
+    <p class="hint">Paste this into Suno's <strong>Style of Music</strong> box. Title suggestion: <strong>${esc(s.title||"")}</strong> ${s.altTitles&&s.altTitles.length?`(alts: ${s.altTitles.map(esc).join(", ")})`:""}.</p>
+    <div class="make-actions"><button class="btn" id="btnCopySuno">⧉ Copy style prompt</button></div>
+    <pre class="songbox" id="sunoBox">${esc(s.suno||"")}</pre>
+
+    <h3>2. Lyrics</h3>
+    <p class="hint">Paste into Suno's <strong>Lyrics</strong> box. The bracketed tags ([Bridge], [Lift - key change], [Final Chorus]) steer the dynamics - keep them. Generate a few takes and we'll fine-tune from there.</p>
+    <div class="make-actions"><button class="btn" id="btnCopyLyrics">⧉ Copy lyrics</button></div>
+    <pre class="songbox" id="lyricsBox">${esc(s.lyrics||"")}</pre>
+
+    <h3>3. How the song maps to the film</h3>
+    <p class="hint">A rough timing map for a ~2:35 song. Once you have a Suno take you like, tell me its real section timings and I'll cut each act to fit exactly.</p>
+    <div class="sl-wrap"><table class="shotlist"><thead><tr><th>Time</th><th>Section</th><th>What we show</th></tr></thead><tbody>${rows}</tbody></table></div>
+
+    <h3>Notes for iterating</h3>
+    <ul>
+      <li>Suno is random per generation - make 4 to 6 takes, keep the one whose <em>bridge</em> feels most naked and whose <em>final chorus</em> lifts hardest.</li>
+      <li>If a section runs long or short, we bend the edit to the music, not the other way around.</li>
+      <li>Want it more country or more pop? Change the first line of the style prompt (e.g. "acoustic country ballad" vs "cinematic pop ballad") and regenerate.</li>
+    </ul>`;
+  const copy=(txt,ok)=>{ if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>toast(ok),()=>toast("Copy failed - select and copy manually.")); else toast("Select and copy manually."); };
+  $("#btnCopySuno").addEventListener("click",()=>copy(s.suno||"","Style prompt copied."));
+  $("#btnCopyLyrics").addEventListener("click",()=>copy(s.lyrics||"","Lyrics copied."));
 }
 
 /* ---------- watch the cuts (spoiler-gated) ---------- */
@@ -390,7 +427,7 @@ function shotListText(){
 }
 function downloadShotList(){ const b=new Blob([shotListText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-shotlist-"+state.active+".txt"; a.click(); URL.revokeObjectURL(a.href); toast("Shot list downloaded."); }
 function copyShotList(){ if(navigator.clipboard) navigator.clipboard.writeText(shotListText()).then(()=>toast("Shot list copied."),()=>toast("Copy failed - use Download.")); else toast("Use Download."); }
-function renderAll(){ renderPool(); renderStory(); if($("#tab-analysis").classList.contains("active")) renderAnalysis(); if($("#tab-cuts").classList.contains("active")) renderCuts(); }
+function renderAll(){ renderPool(); renderStory(); if($("#tab-analysis").classList.contains("active")) renderAnalysis(); if($("#tab-music").classList.contains("active")) renderMusic(); if($("#tab-cuts").classList.contains("active")) renderCuts(); }
 function bind(){
   $$(".tab").forEach(t=>t.addEventListener("click",()=>switchTab(t.dataset.tab)));
   ["#poolSearch","#poolType","#poolEvent","#poolRating","#poolSort"].forEach(s=>$(s).addEventListener("input",renderPool));

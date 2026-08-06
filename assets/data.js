@@ -1,7 +1,75 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"1.6", appUpdated:"2026-08-06 02:15 WEST" };
+const DATA = { targetSec:135, appVersion:"1.7", appUpdated:"2026-08-06 03:05 WEST" };
+
+/* ---- the song (music-first approach) ----
+   A love story about "a girl and a guy" who resemble the couple, from her POV,
+   in the storytelling style of Taylor Swift's "Love Story". No real names, so
+   guests connect the dots themselves. The emotional drop lives in the bridge
+   (the distance); the key change lands on the summit. Plain hyphens only. */
+DATA.song = {
+  title: "The Long Way Home",
+  altTitles: ["Meet Me at the Summit", "All In", "Worth the Climb"],
+  suno: `Female-led modern country-pop love ballad, storytelling in the style of early Taylor Swift "Love Story". Warm, cinematic, wedding-ready, honest radio-quality lead vocal. Instrumentation: fingerpicked acoustic guitar, soft mandolin and banjo touches, piano, building to full drums and sweeping strings. Emotional arc: intimate tender verses, a bright hopeful chorus, a bittersweet second verse, then a stripped-back bridge (just vocals, soft piano and a heartbeat kick) for the long-distance low, then a dramatic key change into a soaring anthemic final chorus with layered harmonies for the mountaintop climax, then a gentle warm resolve. Tempo around 100 to 112 BPM.`,
+  lyrics: `[Intro]
+(soft acoustic guitar, hold for the title card)
+
+[Verse 1]
+I wasn't even looking when your message lit my screen,
+a stranger with a crooked smile in a city cold and clean.
+Our first date I was certain I'd be halfway out the door,
+but you laughed at all my nonsense, and I stayed for something more.
+
+[Pre-Chorus]
+And we built a little world between the candlelight and snow,
+puzzle pieces, quiet mornings, all the ways a love can grow.
+
+[Chorus]
+Oh, this is a love story, the kind you don't see twice,
+two hearts in a northern town, learning how to fly.
+So take my hand, I'm all in, I don't need to know the end,
+just promise me you'll find me, again and again.
+
+[Verse 2]
+But life don't ask you gently, it just hands you what it will,
+and home was calling softly from an ocean past a hill.
+I packed my heart in boxes, watched your city fade to blue,
+half a world between us now, and nothing I could do.
+
+[Bridge - pull the band back, voice and a soft heartbeat]
+So I counted all the timezones, every night I couldn't sleep,
+loving someone that far away is a promise hard to keep.
+I whispered to the distance, are you still coming through,
+then a knock upon my door, and there you stood. You flew.
+
+[Lift - build into a key change]
+You crossed the whole wide world just to stand where I could see,
+got down on one knee in the country that made me.
+No mountain's gonna stop us now, we'll climb it if we must,
+
+[Final Chorus - big, anthemic]
+'Cause this is our love story, and we wrote it in the stars,
+from a cold and quiet city to the top of who we are.
+We climbed until the clouds broke, hand in hand up at the peak,
+and I found my forever at the summit that we reached.
+Oh, this is our love story, and it's only just begun.
+
+[Outro - soft, warm]
+Four seasons and an ocean, and a ring to see us through,
+the long way round the whole wide world, just led me home to you.`,
+  map: [
+    {sec:"0:00 - 0:08", part:"Intro",        act:"Title",              show:"Title card over a soft frame; hold on the couple."},
+    {sec:"0:08 - 0:30", part:"Verse 1",      act:"I. The spark",       show:"The dating-app screen, first date, early Stockholm chemistry."},
+    {sec:"0:30 - 0:40", part:"Pre-Chorus",   act:"II. Building a life",show:"Cooking, puzzles, home mornings, first snow together."},
+    {sec:"0:40 - 0:58", part:"Chorus",       act:"II. Building a life",show:"Happy montage: castles, Poland, friends, laughing - cut on the beat."},
+    {sec:"0:58 - 1:18", part:"Verse 2",      act:"III. Torn apart",    show:"Packing, the airport, her flight home, his city emptying out."},
+    {sec:"1:18 - 1:40", part:"Bridge (drop)",act:"III. Torn apart",    show:"THE distance sequence: the world map, both apart, both crying."},
+    {sec:"1:40 - 1:52", part:"Lift / key change",act:"IV. Choosing each other",show:"He flies to Vietnam, the ring, engaged, family, Tet."},
+    {sec:"1:52 - 2:20", part:"Final Chorus", act:"V. Reaching the summit",show:"The climax: Fansipan and Yushan climbs, hands together at the peak."},
+    {sec:"2:20 - 2:35", part:"Outro",        act:"VI. Next chapter",   show:"Back to Sweden, the ring, the wedding, the next chapter."}
+  ]
+};
 
 /* ---- event groups (code -> label + colour) ---- */
 DATA.events = {
