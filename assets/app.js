@@ -383,25 +383,30 @@ function renderMusic(){
 /* ---------- watch the cuts (guarded by the global site gate) ---------- */
 const CUTS=[
   {title:"Storytelling cut (Version 3) - about 1:55",
-   note:"The current best arc: the spark, building a life, torn apart by distance, choosing each other, reaching the summit, and the next chapter. This is the one to watch first and rethink beats/scripts against.",
-   src:"media/renders/story-v3.mp4"},
-  {title:"“Distance” sequence - MVP concept - 12s",
-   note:"A stylised world-map animation for the long-distance act: together in Stockholm, then Jennie moves home to Vietnam (both cry), then Gunnar crosses the world with heart-eyes, reunited. A rough proof of concept, not a finished shot.",
-   src:"media/renders/distance-mvp.mp4"}
+   note:"The current best arc: the spark, building a life, torn apart by distance, choosing each other, reaching the summit, and the next chapter. Watch this one first and rethink beats/scripts against it.",
+   file:"Jennie-Gunnar-storytelling-cut.mp4"},
+  {title:"“Distance” sequence - MVP - 15s",
+   note:"A stylised world-map animation for the long-distance act: together in Stockholm, then Jennie moves home to Vietnam (both cry), a beat apart, then Gunnar crosses the world with heart-eyes, reunited. A proof of concept, not a finished shot.",
+   file:"Jennie-Gunnar-distance-MVP.mp4"}
 ];
 function renderCuts(){
   const box=$("#cutsBody"); if(!box) return;
+  const url=(DATA&&DATA.cutsFolderUrl)||"";
   const items=CUTS.map(c=>`
     <div class="cut">
       <h3>${c.title}</h3>
       <p class="hint">${c.note}</p>
-      <video controls playsinline preload="metadata" src="${c.src}"></video>
+      <p class="cut-file">📄 ${c.file}</p>
     </div>`).join("");
+  const linkBlock = url
+    ? `<div class="make-actions"><a class="btn" href="${url}" target="_blank" rel="noopener">🎬 Open the video folder (Koofr)</a></div>`
+    : `<p class="hint" style="color:var(--danger)">The Koofr folder link is not set yet. Paste the share link into <code>DATA.cutsFolderUrl</code> in <code>assets/data.js</code> (or send it to me) and it will appear here as a button.</p>`;
   box.innerHTML=`
     <h2>Draft cuts 🎬</h2>
-    <p>Work in progress - not final. Watch, then tell me what to change: reorder beats, swap clips, rewrite captions, adjust the music. (The whole site is already behind the password, so no extra spoiler gate here.)</p>
+    <p>To keep this site lightweight, the video files live in the shared <strong>Koofr</strong> folder, not on the page. The cuts below are in that folder; open it to watch or download. (The whole site is already behind the password, so no extra spoiler gate here.)</p>
+    ${linkBlock}
     ${items}
-    <p class="hint">Tip: right-click a video to save it.</p>`;
+    <p class="hint">Work in progress - not final. Watch, then tell me what to change: reorder beats, swap clips, rewrite captions, adjust the music.</p>`;
 }
 /* ---------- boot ---------- */
 /* ---------- shot list (kept for reference / export) ---------- */

@@ -1,7 +1,9 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.2", appUpdated:"2026-08-06 - added hybrid song (recommended)" };
+const DATA = { targetSec:135, appVersion:"2.3", appUpdated:"2026-08-07 - lightweight (videos to Koofr), Suno prompt polish" };
+/* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
+DATA.cutsFolderUrl = "";
 
 /* ---- the song (music-first approach) ----
    A love story about "a girl and a guy" who resemble the couple, from her POV,
@@ -38,7 +40,16 @@ const SONG_MAP_TRAVELER = [
 ];
 
 /* the hybrid: traveller-found-home + domestic joy, ONE emotional dip (distance) in the bridge, then proposal + summit */
-const SONG_SUNO_HYBRID = `Female-led modern country-pop love ballad in the storytelling style of Taylor Swift "Love Story", warm and cinematic, wedding-ready, radio-quality lead vocal. Instrumentation: bright fingerpicked acoustic guitar, mandolin and banjo, piano, light hand-claps, building to full drums and soaring strings. Arc: joyful confident verses and a big singalong chorus, an even happier domestic second verse, then a stripped-back emotional bridge (just vocals, soft piano and a heartbeat kick) for the long-distance ache, then a dramatic key change into a euphoric anthemic final chorus with layered harmonies for the mountaintop climax, then a gentle warm resolve. Tempo around 108 to 118 BPM.`;
+const SONG_SUNO_HYBRID = `Female lead vocal, modern country-pop love ballad, warm and cinematic, storytelling in the style of early Taylor Swift "Love Story". Radio-quality, emotive, clear diction, acoustic-driven. No EDM, no rap, no heavy autotune.
+Follow this dynamic map closely:
+- Intro and Verse 1: gentle and intimate, fingerpicked acoustic guitar and light brush percussion, hopeful.
+- Pre-Chorus and Chorus: lift into a bright warm singalong chorus, add mandolin, banjo and light drums.
+- Verse 2: stay happy and full, cozy and domestic.
+- BRIDGE: the emotional low point. Pull almost everything away to near silence: a soft, vulnerable, exposed lead vocal with only a single soft piano and a slow heartbeat kick. Let it breathe and ache. Keep the drums out here.
+- Then BUILD and hit a dramatic KEY CHANGE upward.
+- FINAL CHORUS: the biggest, most euphoric moment, full drums, soaring strings and layered backing harmonies, triumphant.
+- Outro: resolve gently, warm and intimate.
+Tempo around 110 BPM, 4/4. Keep it concise: about 2 minutes 30 seconds, no longer than 2:45. Do not pad with long instrumental solos or extra repeated choruses.`;
 const SONG_MAP_HYBRID = [
   {sec:"0:00 - 0:08", part:"Intro",        act:"Title",              show:"Title over a fast pin-drop travel montage."},
   {sec:"0:08 - 0:30", part:"Verse 1",      act:"The wanderer",       show:"Her traveller identity: world map filling with pins, wanderlust b-roll ('thirty before thirty')."},
