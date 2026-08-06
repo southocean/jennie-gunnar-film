@@ -292,7 +292,7 @@ function switchTab(name){
   $$(".tabpane").forEach(p=>p.classList.remove("active"));
   $("#tab-"+name).classList.add("active");
   if(name==="analysis") renderAnalysis();
-  if(name==="make") renderMake();
+  if(name==="cuts") renderCuts();
 }
 
 /* ---------- theme ---------- */
@@ -335,8 +335,45 @@ function renderAbout(){
     <p>Photo dates are real (from EXIF). Video files had only export dates, so each video shows an <em>approximate</em> date (~) inherited from the trip it belongs to. The real timeline runs Dec 2023 (Poland) → 2024 home life → Vietnam Apr 2025 → the big Asia trip Nov-Dec 2025.</p>`;
 }
 
+/* ---------- watch the cuts (spoiler-gated) ---------- */
+/* Not persisted: the gate re-locks on every fresh page load so Jennie can't be let in by a remembered choice. */
+let cutsUnlocked=false;
+const CUTS=[
+  {title:"Storytelling cut (Version 3) - about 1:55",
+   note:"The current best arc: the spark, building a life, torn apart by distance, choosing each other, reaching the summit, and the next chapter. This is the one to watch first and rethink beats/scripts against.",
+   src:"media/renders/story-v3.mp4"},
+  {title:"“Distance” sequence - MVP concept - 12s",
+   note:"A stylised world-map animation for the long-distance act: together in Stockholm, then Jennie moves home to Vietnam (both cry), then Gunnar crosses the world with heart-eyes, reunited. A rough proof of concept, not a finished shot.",
+   src:"media/renders/distance-mvp.mp4"}
+];
+function renderCuts(){
+  const box=$("#cutsBody"); if(!box) return;
+  if(!cutsUnlocked){
+    box.innerHTML=`
+      <h2>Draft cuts - spoilers ahead</h2>
+      <p>This tab holds work-in-progress cuts of the wedding film, here so you can watch them back and rethink the beats and scripts.</p>
+      <p><strong>If you are Jennie, please close this tab.</strong> Watching will spoil your wedding video.</p>
+      <label class="spoiler-ack"><input type="checkbox" id="cutsAck"> I confirm I am <strong>not Jennie</strong> and I want to watch the draft cuts.</label>
+      <div class="make-actions"><button class="btn" id="btnUnlockCuts" disabled>Show the cuts</button></div>`;
+    const cb=$("#cutsAck"), btn=$("#btnUnlockCuts");
+    cb.addEventListener("change",()=>{ btn.disabled=!cb.checked; });
+    btn.addEventListener("click",()=>{ if(cb.checked){ cutsUnlocked=true; renderCuts(); } });
+    return;
+  }
+  const items=CUTS.map(c=>`
+    <div class="cut">
+      <h3>${c.title}</h3>
+      <p class="hint">${c.note}</p>
+      <video controls playsinline preload="metadata" src="${c.src}"></video>
+    </div>`).join("");
+  box.innerHTML=`
+    <h2>Draft cuts 🎬</h2>
+    <p>Work in progress - not final. Watch, then tell me what to change: reorder beats, swap clips, rewrite captions, adjust the music.</p>
+    ${items}
+    <p class="hint">Tip: right-click a video to save it. To re-hide these, reload the page.</p>`;
+}
 /* ---------- boot ---------- */
-/* ---------- make the video (shot list) ---------- */
+/* ---------- shot list (kept for reference / export) ---------- */
 function buildShotList(){
   const rows=[]; let t=0,n=0;
   state.chapters.forEach(ch=>{ rows.push({type:"act",title:ch.title});
@@ -353,39 +390,7 @@ function shotListText(){
 }
 function downloadShotList(){ const b=new Blob([shotListText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-shotlist-"+state.active+".txt"; a.click(); URL.revokeObjectURL(a.href); toast("Shot list downloaded."); }
 function copyShotList(){ if(navigator.clipboard) navigator.clipboard.writeText(shotListText()).then(()=>toast("Shot list copied."),()=>toast("Copy failed - use Download.")); else toast("Use Download."); }
-function renderMake(){
-  const {rows,total,beats}=buildShotList(); const nm=DATA.stories[state.active]?DATA.stories[state.active].name:state.active;
-  let list="";
-  rows.forEach(r=>{ if(r.type==="act") list+=`<tr class="sl-act"><td colspan="4">${r.title}</td></tr>`;
-    else list+=`<tr><td class="sl-n">${r.n}</td><td class="sl-tc">${r.tc}<br><b>${r.dur}s</b></td><td class="sl-file">${r.kind==="video"?"🎬":"🖼"} ${r.file}${r.loc?`<div class="sl-loc">${r.loc}</div>`:""}</td><td class="sl-cap">${r.cap||'<span class="muted">(no caption)</span>'}</td></tr>`; });
-  $("#makeBody").innerHTML=`
-    <h2>Make the video 🎬</h2>
-    <p>You're viewing <strong>${nm}</strong> - <strong>${beats} shots, ${fmt(total)}</strong>. This turns the current timeline into a shot list you can follow in any editor; it updates whenever you edit the story or switch version.</p>
-    <div class="make-actions"><button class="btn" id="btnCopySL">⧉ Copy shot list</button><button class="btn" id="btnDlSL">⬇ Download (.txt)</button></div>
-    <h3>Fastest path: CapCut (free, phone or desktop)</h3>
-    <ol>
-      <li>Open the Drive folder of clips &amp; photos - the shot list below uses the names Jennie gave them.</li>
-      <li>New project, canvas <strong>9:16 (portrait)</strong>.</li>
-      <li>Add media <strong>in the order below</strong>, trimming each to about the seconds shown. For photos, set the duration and add a slow zoom (Ken Burns).</li>
-      <li>Add each caption as a short text layer, bottom-centre.</li>
-      <li>Lay one music track across the whole edit; let the summit act land on the biggest swell.</li>
-      <li>Add 0.3-0.5s cross-dissolves; export 1080x1920.</li>
-    </ol>
-    <p class="hint">Want more control on desktop? <strong>DaVinci Resolve</strong> (free) works the same way: portrait timeline, clips in order, captions, one music bed.</p>
-    <h3>Format &amp; feel</h3>
-    <ul>
-      <li><strong>Portrait 9:16, aim ~2.5 min.</strong> ~90% of the footage is vertical. The few landscape clips (Ha Long kayak, sky-bike, trekker line) can be letterboxed or punched-in.</li>
-      <li><strong>Music:</strong> one warm, building track - gentle at the start, lifting through the trips, peaking at the summits, settling for the ending.</li>
-      <li><strong>Captions:</strong> the beat texts are written to read as on-screen lines.</li>
-    </ul>
-    <h3>Or: I can build a rough cut for you</h3>
-    <p>I have the original files. Tell me to <strong>"make the rough cut"</strong> and I'll assemble a real portrait .mp4 - clips and photos in this exact order, with the durations, cross-dissolves and burned-in captions (plus a music bed if you drop a track in the folder) - for you to refine.</p>
-    <h3>Shot list - ${nm}</h3>
-    <div class="sl-wrap"><table class="shotlist"><thead><tr><th>#</th><th>Time</th><th>Clip / photo</th><th>Caption</th></tr></thead><tbody>${list}</tbody></table></div>`;
-  $("#btnCopySL").addEventListener("click",copyShotList);
-  $("#btnDlSL").addEventListener("click",downloadShotList);
-}
-function renderAll(){ renderPool(); renderStory(); if($("#tab-analysis").classList.contains("active")) renderAnalysis(); if($("#tab-make").classList.contains("active")) renderMake(); }
+function renderAll(){ renderPool(); renderStory(); if($("#tab-analysis").classList.contains("active")) renderAnalysis(); if($("#tab-cuts").classList.contains("active")) renderCuts(); }
 function bind(){
   $$(".tab").forEach(t=>t.addEventListener("click",()=>switchTab(t.dataset.tab)));
   ["#poolSearch","#poolType","#poolEvent","#poolRating","#poolSort"].forEach(s=>$(s).addEventListener("input",renderPool));
