@@ -349,7 +349,7 @@ function renderMusic(){
   box.innerHTML=`
     <h2>The song 🎵</h2>
     <p>We're going <strong>music first</strong>. The song is written, then the film is cut to it: the lyrics decide what we show, and every transition lands on the beat. So the plan is to get a version we love in <strong>Suno</strong>, then time the edit to it.</p>
-    <p>It's a love story about <em>a girl and a guy</em> - never named - told from her side, in the storytelling style of Taylor Swift's <em>Love Story</em>. The guests connect the dots. The emotional low (the distance) sits in the bridge; the key change explodes on the mountain summit.</p>
+    <p>It's a love story about <em>a girl and a guy</em> - never named - told from her side, in the storytelling style of Taylor Swift's <em>Love Story</em>. The guests connect the dots. Two narrative approaches to compare below: the <strong>reunion story</strong> (the emotional arc, with the long-distance low in the bridge) and the <strong>traveller's story</strong> (celebratory, travel-first, far more accessible). Same harnesses on both: no names, every reference backed by footage, catchy generic chorus, and the <em>boo boo</em> reveal held for the last line.</p>
 
     ${vers}
     ${s.note?`<p class="hint song-note">${esc(s.note)}</p>`:""}

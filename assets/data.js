@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.0", appUpdated:"2026-08-06 - song v2 refined (balance pass)" };
+const DATA = { targetSec:135, appVersion:"2.1", appUpdated:"2026-08-06 - added traveller's story (2 approaches)" };
 
 /* ---- the song (music-first approach) ----
    A love story about "a girl and a guy" who resemble the couple, from her POV,
@@ -23,11 +23,25 @@ const SONG_MAP = [
   {sec:"2:20 - 2:35", part:"Outro",        act:"VI. Next chapter",   show:"Back to Sweden, the ring, the wedding, the next chapter."}
 ];
 
+/* the celebratory "traveller's story" has its own brighter style + its own act map (no long-distance drop) */
+const SONG_SUNO_TRAVELER = `Female-led modern country-pop, upbeat and celebratory, storytelling in the bright joyful spirit of Taylor Swift "Love Story". Warm, cinematic, wedding-ready, radio-quality lead vocal. Instrumentation: bright fingerpicked acoustic guitar, mandolin and banjo, hand-claps and a light driving kick, building to full drums and soaring strings. Arc: playful confident verses, a big singalong chorus, a warm reflective bridge (a knowing smile, not sad), then a key change into a euphoric anthemic final chorus with layered harmonies. Tempo around 112 to 122 BPM. Feel-good, hopeful, triumphant.`;
+const SONG_MAP_TRAVELER = [
+  {sec:"0:00 - 0:08", part:"Intro",        act:"Title",            show:"Title over a fast pin-drop travel montage."},
+  {sec:"0:08 - 0:32", part:"Verse 1",      act:"The wanderer",     show:"Her traveller identity: a world map filling with pins, wanderlust b-roll ('thirty before thirty')."},
+  {sec:"0:32 - 0:42", part:"Pre-Chorus",   act:"The meet",         show:"Dating-app screen, Stockholm by the water, first date."},
+  {sec:"0:42 - 1:00", part:"Chorus",       act:"The world, together",show:"Big joyful travel montage together: Ha Long, Sapa, castles, Doha, Taipei - cut on the beat."},
+  {sec:"1:00 - 1:24", part:"Verse 2",      act:"Kitchen & peaks",  show:"World-cooking (his pasta, her Asian dishes) and the summit climbs (Fansipan, Yushan)."},
+  {sec:"1:24 - 1:44", part:"Bridge",       act:"The turn",         show:"Reflective travel b-roll settling into 'home is a person'."},
+  {sec:"1:44 - 1:58", part:"Lift / key change",act:"The proposal", show:"The beach swing in Phu Quoc, the ring, engaged."},
+  {sec:"1:58 - 2:24", part:"Final Chorus", act:"Everything",       show:"Euphoric montage: summits + travels + the two of them, biggest energy."},
+  {sec:"2:24 - 2:38", part:"Outro",        act:"The next trip",    show:"The ring, back to Sweden, the adventure continues."}
+];
+
 /* Browsable song versions (like the storyboard versions). v1 kept verbatim. */
 DATA.songs = [
   {
     id:"v1",
-    name:"Version 1 - first draft",
+    name:"First draft (generic)",
     note:"The first pass we tested on Suno. The style nailed the early-Taylor-Swift 'Love Story' feel; the lyrics are intentionally a bit generic.",
     title:"The Long Way Home",
     altTitles:["Meet Me at the Summit","All In","Worth the Climb"],
@@ -82,8 +96,8 @@ the long way round the whole wide world, just led me home to you.`,
   },
   {
     id:"v2",
-    name:"Version 2 - personal",
-    note:"Refined for the good-song vs personal-song balance. Specifics live in the verses; the chorus stays generic and repeatable for catchiness. Food is kept general (we have ~8 cooking clips to cut to) rather than a one-off dish, and 'we cooked, we climbed, we crossed the world' is the recurring hook (a clean visual triplet: kitchen, summit, travel). No 'Tet' (Suno mispronounces it) - 'holidays' instead. The pet name 'boo boo' is held back for a single reveal on the very last line, like the proposal. No names, so guests still connect the dots.",
+    name:"The reunion story (personal)",
+    note:"The emotional arc, built on the obstacle: they meet, build a life, she has to move home, they endure the distance (the bridge is the low), he crosses the world, the proposal, the summit, home. Refined for the good-song vs personal-song balance. Specifics live in the verses; the chorus stays generic and repeatable for catchiness. Food is kept general (we have ~8 cooking clips to cut to) rather than a one-off dish, and 'we cooked, we climbed, we crossed the world' is the recurring hook (a clean visual triplet: kitchen, summit, travel). No 'Tet' (Suno mispronounces it) - 'holidays' instead. The pet name 'boo boo' is held back for a single reveal on the very last line, like the proposal. No names, so guests still connect the dots.",
     title:"The Long Way Home",
     altTitles:["We Cooked, We Climbed","Half a World to Reach","The Long Way Round"],
     suno:SONG_SUNO,
@@ -138,6 +152,64 @@ we cooked, we climbed, we crossed the world, it only led to you.
 So here's to every kitchen and each mountain still to come,
 the long way round the whole wide world, my boo boo, we are home.`,
     map:SONG_MAP
+  },
+  {
+    id:"v3",
+    name:"The traveller's story (celebratory)",
+    note:"The celebratory alternative: she is a world traveller (thirty countries before thirty) whose greatest adventure turns out to be seeing it all with him. Simpler and far more accessible - no backstory needed - and it rides our deepest footage (travel, world-cooking, the summits). Keeps the personal touches: his surname literally means 'mountain' (so they climb the tallest peaks), the beach-swing proposal, the world-in-one-kitchen cooking, and the 'boo boo' reveal on the last line. Downplays the long-distance obstacle, so it trades emotional catharsis for joy and accessibility. Note: her solo pre-relationship travels (India, Liechtenstein) are not in our footage, so Verse 1 rides a pin-drop map and wanderlust b-roll rather than specific solo shots.",
+    title:"One More Place to Go",
+    altTitles:["The Whole Wide World Is Ours","Two Passports","The Traveller's Story"],
+    suno:SONG_SUNO_TRAVELER,
+    lyrics:`[Intro]
+(bright acoustic guitar and a light, hopeful heartbeat)
+
+[Verse 1]
+Before you, I was restless, chasing borders on a map,
+thirty countries before thirty, and I never once looked back.
+I could pack a life in one small bag and vanish with the dawn,
+I told myself I travelled best with no one holding on.
+
+[Pre-Chorus]
+Then a message from a stranger in a cold and northern town,
+by a lake I still can't name, I finally set it down.
+
+[Chorus]
+Oh, this is a traveller's story, and the whole wide world is ours,
+every border, every mountain, every city lit with stars.
+I had seen it all already, but it never shone so bright,
+'til I saw it all beside you, love, so take my hand tonight.
+
+[Verse 2]
+We cook the whole world in our kitchen, every country on a plate,
+your pasta and my noodles, and we never make the same.
+We climb the highest peaks we find, from the tropics to the cold,
+and it's no surprise your name means mountain, so the summit's where we go.
+
+[Bridge - lighter, a knowing smile]
+I have wandered every kind of road, and I'd wander them again,
+slept beneath a thousand skylines, called a stranger my best friend.
+But for all the maps I've folded, all the wonders that I've chased,
+the finest place I ever found was a life I didn't chase.
+
+[Lift - build into a key change]
+So on an island, on a swing, with the whole bright sea behind,
+you asked me for forever, and I laughed until I cried.
+No summit left to frighten me, no border we won't do,
+whatever's next, wherever's next, I'm seeing it with you.
+
+[Final Chorus - big, anthemic]
+'Cause this is our traveller's story, and the whole wide world is ours,
+we cooked, we climbed, we crossed it all, from the kitchen to the stars.
+I have been to all those countries, but there's one more place to go:
+the rest of my whole life with you, so darling, let's just go.
+Oh, this is our traveller's story, and it's only just begun.
+
+[Outro - soft, warm]
+Two passports, one adventure, and a ring to see us through,
+the whole wide world was beautiful, but it only led to you.
+So here's to every border and each mountain still to come,
+the greatest trip I'll ever take, my boo boo, we've begun.`,
+    map:SONG_MAP_TRAVELER
   }
 ];
 DATA.song = DATA.songs[DATA.songs.length-1]; // default = latest; back-compat for old refs
