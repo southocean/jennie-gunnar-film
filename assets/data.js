@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.1", appUpdated:"2026-08-06 - added traveller's story (2 approaches)" };
+const DATA = { targetSec:135, appVersion:"2.2", appUpdated:"2026-08-06 - added hybrid song (recommended)" };
 
 /* ---- the song (music-first approach) ----
    A love story about "a girl and a guy" who resemble the couple, from her POV,
@@ -37,14 +37,28 @@ const SONG_MAP_TRAVELER = [
   {sec:"2:24 - 2:38", part:"Outro",        act:"The next trip",    show:"The ring, back to Sweden, the adventure continues."}
 ];
 
+/* the hybrid: traveller-found-home + domestic joy, ONE emotional dip (distance) in the bridge, then proposal + summit */
+const SONG_SUNO_HYBRID = `Female-led modern country-pop love ballad in the storytelling style of Taylor Swift "Love Story", warm and cinematic, wedding-ready, radio-quality lead vocal. Instrumentation: bright fingerpicked acoustic guitar, mandolin and banjo, piano, light hand-claps, building to full drums and soaring strings. Arc: joyful confident verses and a big singalong chorus, an even happier domestic second verse, then a stripped-back emotional bridge (just vocals, soft piano and a heartbeat kick) for the long-distance ache, then a dramatic key change into a euphoric anthemic final chorus with layered harmonies for the mountaintop climax, then a gentle warm resolve. Tempo around 108 to 118 BPM.`;
+const SONG_MAP_HYBRID = [
+  {sec:"0:00 - 0:08", part:"Intro",        act:"Title",              show:"Title over a fast pin-drop travel montage."},
+  {sec:"0:08 - 0:30", part:"Verse 1",      act:"The wanderer",       show:"Her traveller identity: world map filling with pins, wanderlust b-roll ('thirty before thirty')."},
+  {sec:"0:30 - 0:40", part:"Pre-Chorus",   act:"The meet",           show:"Dating-app screen, a frozen-lake walk in Stockholm, first date."},
+  {sec:"0:40 - 0:58", part:"Chorus",       act:"Found home",         show:"Joyful travel montage together (home is a person): Ha Long, Sapa, castles, Doha, Taipei."},
+  {sec:"0:58 - 1:20", part:"Verse 2",      act:"Everyday bliss",     show:"Domestic happiness: world-cooking, chores, seasons turning at home."},
+  {sec:"1:20 - 1:42", part:"Bridge (drop)",act:"Torn apart",         show:"THE distance sequence: she moves home, the world map, both apart; he flies to her three times."},
+  {sec:"1:42 - 1:56", part:"Lift / key change",act:"The proposal",   show:"The beach swing in Phu Quoc, the ring, engaged."},
+  {sec:"1:56 - 2:24", part:"Final Chorus", act:"The summit",         show:"The climax: Fansipan and Yushan climbs, hands together at the peak."},
+  {sec:"2:24 - 2:40", part:"Outro",        act:"Home, together",     show:"The ring, back to Sweden, the next chapter."}
+];
+
 /* Browsable song versions (like the storyboard versions). v1 kept verbatim. */
 DATA.songs = [
   {
     id:"v1",
     name:"First draft (generic)",
     note:"The first pass we tested on Suno. The style nailed the early-Taylor-Swift 'Love Story' feel; the lyrics are intentionally a bit generic.",
-    title:"The Long Way Home",
-    altTitles:["Meet Me at the Summit","All In","Worth the Climb"],
+    title:"Meet Me at the Summit",
+    altTitles:["The Long Way Home","All In","Worth the Climb"],
     suno:SONG_SUNO,
     lyrics:`[Intro]
 (soft acoustic guitar, hold for the title card)
@@ -97,9 +111,9 @@ the long way round the whole wide world, just led me home to you.`,
   {
     id:"v2",
     name:"The reunion story (personal)",
+    title:"Half a World to Reach",
     note:"The emotional arc, built on the obstacle: they meet, build a life, she has to move home, they endure the distance (the bridge is the low), he crosses the world, the proposal, the summit, home. Refined for the good-song vs personal-song balance. Specifics live in the verses; the chorus stays generic and repeatable for catchiness. Food is kept general (we have ~8 cooking clips to cut to) rather than a one-off dish, and 'we cooked, we climbed, we crossed the world' is the recurring hook (a clean visual triplet: kitchen, summit, travel). No 'Tet' (Suno mispronounces it) - 'holidays' instead. The pet name 'boo boo' is held back for a single reveal on the very last line, like the proposal. No names, so guests still connect the dots.",
-    title:"The Long Way Home",
-    altTitles:["We Cooked, We Climbed","Half a World to Reach","The Long Way Round"],
+    altTitles:["The Long Way Home","We Cooked, We Climbed","The Long Way Round"],
     suno:SONG_SUNO,
     lyrics:`[Intro]
 (soft acoustic guitar, hold for the title card)
@@ -210,6 +224,65 @@ the whole wide world was beautiful, but it only led to you.
 So here's to every border and each mountain still to come,
 the greatest trip I'll ever take, my boo boo, we've begun.`,
     map:SONG_MAP_TRAVELER
+  },
+  {
+    id:"v4",
+    name:"The hybrid (recommended)",
+    title:"The Long Way Home",
+    altTitles:["Home Is a Person","The Farthest Place","We Cooked, We Climbed"],
+    note:"The best of both. It opens as the traveller's story (a world traveller who learns that home is not a place but a person), stays joyful through a domestic second verse (cooking, chores, seasons), then takes ONE earned emotional dip in the bridge (she has to move home, the distance, and he flies across the world three times to reach her) before it explodes into the proposal and the summit. Front-loads joy for accessibility, keeps a single heartfelt low so the story still lands, and rides our deepest footage all the way through. Accessible-poetic: one clean metaphor (home is you) that reads on first listen while the visuals carry the rest. This is my recommendation.",
+    suno:SONG_SUNO_HYBRID,
+    lyrics:`[Intro]
+(bright acoustic guitar and a light, hopeful heartbeat)
+
+[Verse 1]
+I never was a stay-still girl, I chased the far-off blue,
+thirty countries before thirty, always one more avenue.
+I could fit my life in one small bag and leave without a sound,
+I thought that home was everywhere, so I never wrote it down.
+
+[Pre-Chorus]
+Then a message from a stranger in a cold and northern town,
+and a walk beside a frozen lake, and I let my guard right down.
+
+[Chorus]
+And oh, I finally found a home, not a dot upon a map,
+but your hand inside of mine and a light left on for two.
+I have seen the whole wide world, but it never shone so true,
+'til the farthest place I travelled turned out to be you.
+
+[Verse 2]
+We burned the toast on lazy mornings, laughed until we cried,
+your pasta and my noodles, put the whole world on one plate.
+We split the chores, we split the winters, watched the seasons turn,
+and I who never stayed for anyone, I finally learned to stay.
+
+[Bridge - pull the band back, voice and a soft heartbeat]
+Then the world that made me called me back, an ocean in between,
+and we loved through little glowing screens, and miles we couldn't cross.
+But you never let the distance win, you chased me through the sky,
+three times around the world for me, you flew to my side.
+
+[Lift - build into a key change]
+So on an island, on a swing, with the warm sea at our backs,
+you asked me to be yours for good, and I never looked back.
+No border left to keep us now, no summit we won't do,
+whatever comes, wherever's next, I'm facing it with you.
+
+[Final Chorus - big, anthemic]
+'Cause I finally found a home, and we climbed it all the way,
+from a snowed-in northern kitchen to the roof of everything.
+We went up through the cloud and cold, hand in hand at the peak,
+and the farthest place I travelled turned out to be you.
+We cooked, we climbed, we crossed the whole wide world,
+oh, I finally found my home, and it's only just begun.
+
+[Outro - soft, warm]
+Two passports, four seasons, and a ring to see us through,
+the whole wide world was beautiful, but it only led to you.
+So here's to every kitchen and each mountain still to come,
+the long way round the whole wide world, my boo boo, we're home.`,
+    map:SONG_MAP_HYBRID
   }
 ];
 DATA.song = DATA.songs[DATA.songs.length-1]; // default = latest; back-compat for old refs
