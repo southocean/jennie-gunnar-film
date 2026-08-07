@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.3", appUpdated:"2026-08-07 - Suno style trimmed under 1000 chars" };
+const DATA = { targetSec:135, appVersion:"2.4", appUpdated:"2026-08-07 - hybrid reworked: folk-pop, inline dynamics, POV pet-names" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
@@ -40,16 +40,7 @@ const SONG_MAP_TRAVELER = [
 ];
 
 /* the hybrid: traveller-found-home + domestic joy, ONE emotional dip (distance) in the bridge, then proposal + summit */
-const SONG_SUNO_HYBRID = `Female lead vocal, warm cinematic country-pop love ballad in the storytelling style of early Taylor Swift "Love Story". Acoustic-driven, emotive, clear diction. No EDM, no rap, no heavy autotune.
-Dynamics to follow:
-- Verse 1: gentle, intimate, fingerpicked guitar, light percussion.
-- Chorus: lift to a bright warm singalong; add mandolin, banjo, light drums.
-- Verse 2: happy, full, cozy.
-- Bridge: the emotional low. Strip to near silence, an exposed vulnerable vocal with only soft piano and a slow heartbeat kick, no drums. Let it ache.
-- Then build and hit a big KEY CHANGE up.
-- Final chorus: biggest and euphoric, full drums, soaring strings, layered harmonies.
-- Outro: gentle, warm.
-Tempo ~110 BPM, 4/4. Keep it concise: about 2:30, no longer than 2:45. No long instrumental solos or extra repeated choruses.`;
+const SONG_SUNO_HYBRID = `Warm, uplifting indie folk-pop, female lead vocal. Acoustic guitar, stomp-and-clap percussion, mandolin, warm gang-vocal "oh-oh" hooks, building to a full-band anthemic finale with a key-change lift. Cinematic and emotional but upbeat and moving. Mid-tempo, around 120 BPM, 4/4. In the spirit of The Lumineers, Vance Joy and Of Monsters and Men. Clear female vocal, no rap, no heavy autotune. Keep it concise, radio length, about 2 minutes 30 seconds: no long intro, no instrumental solos, no repeated outro.`;
 const SONG_MAP_HYBRID = [
   {sec:"0:00 - 0:08", part:"Intro",        act:"Title",              show:"Title over a fast pin-drop travel montage."},
   {sec:"0:08 - 0:30", part:"Verse 1",      act:"The wanderer",       show:"Her traveller identity: world map filling with pins, wanderlust b-roll ('thirty before thirty')."},
@@ -175,7 +166,7 @@ oh, this is our love story, and it's only just begun.
 Four seasons and two countries, and a ring to see us through,
 we cooked, we climbed, we crossed the world, it only led to you.
 So here's to every kitchen and each mountain still to come,
-the long way round the whole wide world, my boo boo, we are home.`,
+the long way round the whole wide world, my Dudu Bear, we are home.`,
     map:SONG_MAP
   },
   {
@@ -233,7 +224,7 @@ Oh, this is our traveller's story, and it's only just begun.
 Two passports, one adventure, and a ring to see us through,
 the whole wide world was beautiful, but it only led to you.
 So here's to every border and each mountain still to come,
-the greatest trip I'll ever take, my boo boo, we've begun.`,
+the greatest trip I'll ever take, my Dudu Bear, we've begun.`,
     map:SONG_MAP_TRAVELER
   },
   {
@@ -241,58 +232,48 @@ the greatest trip I'll ever take, my boo boo, we've begun.`,
     name:"The hybrid (recommended)",
     title:"The Long Way Home",
     altTitles:["Home Is a Person","The Farthest Place","We Cooked, We Climbed"],
-    note:"The best of both. It opens as the traveller's story (a world traveller who learns that home is not a place but a person), stays joyful through a domestic second verse (cooking, chores, seasons), then takes ONE earned emotional dip in the bridge (she has to move home, the distance, and he flies across the world three times to reach her) before it explodes into the proposal and the summit. Front-loads joy for accessibility, keeps a single heartfelt low so the story still lands, and rides our deepest footage all the way through. Accessible-poetic: one clean metaphor (home is you) that reads on first listen while the visuals carry the rest. This is my recommendation.",
+    note:"Reworked after the first Suno run. Switched to warm indie folk-pop (Lumineers / Vance Joy energy): more upbeat, more concise, fits the travel-and-adventure spirit and still swells emotionally. Per-section dynamics (the near-silent bridge, the key-change final chorus) now live INLINE in the lyrics as bracket tags, where Suno actually reads them; the style box only sets the macro feel. Leaner lyrics (fewer sections) to fight Suno's 5-minute sprawl, and the over-used 'whole wide world' is gone. Pet-name reveal is now POV-correct: HE calls HER 'Boo-boo' in the proposal, and SHE calls HIM 'Dudu Bear' on the last line. Story: a world traveller learns home is a person, joy through the domestic verse, ONE earned dip (the distance) in the bridge, then the proposal and the summit. My recommendation.",
     suno:SONG_SUNO_HYBRID,
-    lyrics:`[Intro]
-(bright acoustic guitar and a light, hopeful heartbeat)
+    lyrics:`[Verse 1 - gentle, fingerpicked acoustic guitar, soft]
+I never was a stay-still girl, I chased the far horizon,
+one bag, one map, one more goodbye, and no one at my side.
+I counted countries like they'd fill some space I couldn't name,
+I told myself that home was just the next place on the train.
 
-[Verse 1]
-I never was a stay-still girl, I chased the far-off blue,
-thirty countries before thirty, always one more avenue.
-I could fit my life in one small bag and leave without a sound,
-I thought that home was everywhere, so I never wrote it down.
+[Chorus - warm, bright, add light drums and hand-claps]
+Then I found a home, and it wasn't on a map,
+just your hand around my hand and a light that led me back.
+I have seen the world, but it never felt like mine,
+'til the farthest place I ever went turned out to be your eyes.
 
-[Pre-Chorus]
-Then a message from a stranger in a cold and northern town,
-and a walk beside a frozen lake, and I let my guard right down.
+[Verse 2 - happy, full, cozy, gentle groove]
+We burned the toast on Sundays and we danced around the stove,
+your pasta and my noodles in a kitchen made of gold.
+We split the chores, the winters, watched the seasons come and go,
+and I who never stayed for anyone, I finally stayed for you.
 
-[Chorus]
-And oh, I finally found a home, not a dot upon a map,
-but your hand inside of mine and a light left on for two.
-I have seen the whole wide world, but it never shone so true,
-'til the farthest place I travelled turned out to be you.
+[Bridge - almost silent, whispered vocal, solo piano and a slow heartbeat, no drums]
+[Diminuendo]
+Then the world that made me called me home, an ocean set between,
+and we loved through little glowing screens, through nights I couldn't sleep.
+But you never let the distance win, you crossed it in the sky,
+three times around this Earth for me, you flew to my side.
 
-[Verse 2]
-We burned the toast on lazy mornings, laughed until we cried,
-your pasta and my noodles, put the whole world on one plate.
-We split the chores, we split the winters, watched the seasons turn,
-and I who never stayed for anyone, I finally learned to stay.
+[Pre-Chorus - building, drums swell]
+[Crescendo]
+Then down on one knee in the sand, with the sea behind your eyes:
+"will you be my Boo-boo forever?" and I laughed, and I cried yes.
 
-[Bridge - pull the band back, voice and a soft heartbeat]
-Then the world that made me called me back, an ocean in between,
-and we loved through little glowing screens, and miles we couldn't cross.
-But you never let the distance win, you chased me through the sky,
-three times around the world for me, you flew to my side.
+[Chorus - explosive, full band, key change up, soaring, gang vocals]
+So I found a home, and it wasn't on a map,
+it was your hand around my hand at the summit, looking back.
+We climbed up through the cloud and cold and we planted our own flag,
+and the farthest place I ever went turned out to be your eyes.
 
-[Lift - build into a key change]
-So on an island, on a swing, with the warm sea at our backs,
-you asked me to be yours for good, and I never looked back.
-No border left to keep us now, no summit we won't do,
-whatever comes, wherever's next, I'm facing it with you.
-
-[Final Chorus - big, anthemic]
-'Cause I finally found a home, and we climbed it all the way,
-from a snowed-in northern kitchen to the roof of everything.
-We went up through the cloud and cold, hand in hand at the peak,
-and the farthest place I travelled turned out to be you.
-We cooked, we climbed, we crossed the whole wide world,
-oh, I finally found my home, and it's only just begun.
-
-[Outro - soft, warm]
-Two passports, four seasons, and a ring to see us through,
-the whole wide world was beautiful, but it only led to you.
-So here's to every kitchen and each mountain still to come,
-the long way round the whole wide world, my boo boo, we're home.`,
+[Outro - soft, warm, fading out]
+Two passports, one adventure, and a ring to see us through,
+and every road I ever walked, my Dudu Bear, led to you.
+[End]`,
     map:SONG_MAP_HYBRID
   }
 ];

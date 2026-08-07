@@ -349,7 +349,7 @@ function renderMusic(){
   box.innerHTML=`
     <h2>The song 🎵</h2>
     <p>We're going <strong>music first</strong>. The song is written, then the film is cut to it: the lyrics decide what we show, and every transition lands on the beat. So the plan is to get a version we love in <strong>Suno</strong>, then time the edit to it.</p>
-    <p>It's a love story about <em>a girl and a guy</em> - never named - told from her side, in the storytelling style of Taylor Swift's <em>Love Story</em>. The guests connect the dots. Two narrative approaches to compare below: the <strong>reunion story</strong> (the emotional arc, with the long-distance low in the bridge) and the <strong>traveller's story</strong> (celebratory, travel-first, far more accessible). Same harnesses on both: no names, every reference backed by footage, catchy generic chorus, and the <em>boo boo</em> reveal held for the last line.</p>
+    <p>It's a love story about <em>a girl and a guy</em> - never named - told from her side, in the storytelling style of Taylor Swift's <em>Love Story</em>. The guests connect the dots. Two narrative approaches to compare below: the <strong>reunion story</strong> (the emotional arc, with the long-distance low in the bridge) and the <strong>traveller's story</strong> (celebratory, travel-first, far more accessible). Same harnesses on both: no names, every reference backed by footage, a catchy generic chorus, and the pet names kept POV-correct (he calls her <em>Boo-boo</em> in the proposal; she calls him <em>Dudu Bear</em> at the end).</p>
 
     ${vers}
     ${s.note?`<p class="hint song-note">${esc(s.note)}</p>`:""}
@@ -368,11 +368,12 @@ function renderMusic(){
     <p class="hint">A rough timing map for a ~2:35 song. Once you have a Suno take you like, tell me its real section timings and I'll cut each act to fit exactly.</p>
     <div class="sl-wrap"><table class="shotlist"><thead><tr><th>Time</th><th>Section</th><th>What we show</th></tr></thead><tbody>${rows}</tbody></table></div>
 
-    <h3>Notes for iterating</h3>
+    <h3>How to drive Suno (learned the hard way)</h3>
     <ul>
-      <li>Suno is random per generation - make 4 to 6 takes, keep the one whose <em>bridge</em> feels most naked and whose <em>final chorus</em> lifts hardest.</li>
-      <li>If a section runs long or short, we bend the edit to the music, not the other way around.</li>
-      <li>Want it more country or more pop? Change the first line of the style prompt (e.g. "acoustic country ballad" vs "cinematic pop ballad") and regenerate.</li>
+      <li><strong>Dynamics go INLINE in the lyrics, not the style box.</strong> The bracket tags in each section (<code>[Bridge - almost silent, solo piano, no drums]</code>, <code>[Diminuendo]</code>, <code>[Crescendo]</code>, <code>[Chorus - key change up]</code>) are what Suno actually acts on. The style box only sets the overall vibe.</li>
+      <li><strong>Length:</strong> Suno defaults to ~4 min and grows with the lyrics; each verse adds 30-60s. We trimmed sections and added <code>[End]</code>. If a take still runs long, crop the outro in Suno's own editor.</li>
+      <li><strong>Model:</strong> use <strong>v5.5</strong> for this - cleaner, fuller acoustic mixes and more natural vocals. v4.5 only wins for heavy/distorted genres, which this isn't.</li>
+      <li>Generate 4 to 6 takes and keep the one whose <em>bridge</em> strips back the most and whose <em>final chorus</em> lifts hardest on the key change.</li>
     </ul>`;
   const copy=(txt,ok)=>{ if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>toast(ok),()=>toast("Copy failed - select and copy manually.")); else toast("Select and copy manually."); };
   $("#btnCopySuno").addEventListener("click",()=>copy(s.suno||"","Style prompt copied."));
