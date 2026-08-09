@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.7", appUpdated:"2026-08-07 - remember last-selected tab" };
+const DATA = { targetSec:135, appVersion:"2.8", appUpdated:"2026-08-08 - Gravity rev3 (Suno materialization fixes: chorus hook + crescendo)" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
@@ -126,6 +126,64 @@ then you crossed the world to my side.
 [Crescendo]
 Then a swing, the sea, one knee,
 "be my Boo-boo?" You and me.
+
+[Final Chorus - huge, key change up, full band]
+Chased the sun through every zone,
+turns out you were always home.
+But you don't hold me to the ground,
+you're the wings I never found.
+So let's not land, let's chase the sky,
+arms wide open, watch us fly.
+
+[Outro - soft, then lifting]
+Wheels up, into the blue,
+my Dudu Bear, I fly with you.
+[End]`
+      },
+      {
+        rev:3, date:"2026-08-08",
+        note:"Materialization fixes after hearing rev2 on Suno. (1) CHORUS false-reveal: rev2's line 2 dragged 'was home', so Suno paused before the weak tail 'I found'. Reworked so the payoff word lands LAST - line 2 tightened to 'never knew which road led home' (rev1's crisp rhythm, kept the searching meaning), and the hook now ends on the strong word: 'then you caught me, steadied me, / and you became my gravity'. (2) CRESCENDO: rev2's two choppy lines gave Suno no structure and barely rhymed; expanded to 4 lines (clean AABB) with Tet/VN story so the proposal is earned, ending 'be my Boo-boo? I said yes' - 'I said yes' is a subtle nod to TS 'Love Story'. Kept the loved 'you're the wings I never found' in the final chorus (it materialized fine).",
+        lyrics:`[Verse 1 - soft, piano and heartbeat pulse]
+Window seat, a one-way flight,
+chasing color, chasing light.
+No address, no anchor down,
+just the sky in every town.
+
+[Pre-Chorus - building]
+Your message landed, made me smile,
+then you smiled, and the sky stood still.
+
+[Chorus - warm, drums in]
+Chased the sun through every zone,
+never knew which road led home.
+Then you caught me, steadied me,
+and you became my gravity.
+
+[Verse 2 - light groove, playful]
+Your pasta, my pho on the stove,
+we crank the music, dance real slow,
+two left feet and a burnt-black pan,
+happiest here, just where we stand.
+
+[Chorus]
+Chased the sun through every zone,
+turns out you were always home.
+Then you caught me, steadied me,
+and you became my gravity.
+
+[Bridge - almost silent, solo piano and a slow heartbeat, no drums]
+[Diminuendo]
+Then the whole world pulled apart,
+zero gravity, breaking heart.
+My sunrise was your goodnight,
+then you crossed the world to my side.
+
+[Pre-Chorus - building]
+[Crescendo]
+You stayed for Tet, you held me near,
+a hundred lanterns lit the year.
+Then on the sand, I couldn't guess,
+"be my Boo-boo?" I said yes.
 
 [Final Chorus - huge, key change up, full band]
 Chased the sun through every zone,
