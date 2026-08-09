@@ -287,7 +287,7 @@ function fillEventSelects(){
   const opts=Object.entries(EVENTS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("");
   $("#poolEvent").insertAdjacentHTML("beforeend",opts); $("#anaEvent").insertAdjacentHTML("beforeend",opts);
 }
-const TABS=["story","analysis","music","about","cuts"];
+const TABS=["story","analysis","music","edit","about","cuts"];
 function switchTab(name){
   if(TABS.indexOf(name)<0) return;
   $$(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===name));
@@ -295,6 +295,7 @@ function switchTab(name){
   $("#tab-"+name).classList.add("active");
   if(name==="analysis") renderAnalysis();
   if(name==="music") renderMusic();
+  if(name==="edit") renderEditPlan();
   if(name==="cuts") renderCuts();
   try{ localStorage.setItem("jg_tab",name); }catch(e){}
 }
@@ -399,6 +400,40 @@ function renderMusic(){
   const bl=$("#backToLatest"); if(bl) bl.addEventListener("click",e=>{ e.preventDefault(); songRev=-1; renderMusic(); });
 }
 
+/* ---------- edit plan (CapCut footprint) ---------- */
+function editPlanText(){
+  const sb=DATA.storyboard||[]; let s="JENNIE & GUNNAR - EDIT PLAN (footprint for CapCut)\n";
+  s+="Song: Gravity v3 (3:19, 99.4 BPM). Portrait 9:16. Lyrics burned on screen, synced per section. No story captions. Every clip/photo used ONCE.\n";
+  sb.forEach(sec=>{ s+="\n["+sec.tc+"]  "+sec.part+"\n  lyric: "+sec.lyric.replace(/ \/ /g," / ")+"\n  show: "+sec.intent+"\n";
+    sec.assets.forEach(a=>{ s+="   - "+(a.kind==="todo"?"[TODO] ":"")+a.label+"  ->  "+a.file+"\n"; });
+    if(sec.pending) s+="   PENDING: "+sec.pending+"\n";
+  });
+  return s;
+}
+function renderEditPlan(){
+  const box=$("#editBody"); if(!box) return;
+  const sb=DATA.storyboard||[];
+  const cards=sb.map(sec=>{
+    const rows=sec.assets.map(a=>`<tr class="${a.kind==='todo'?'ep-todo':''}"><td class="ep-lab">${a.kind==='todo'?'⚙ ':(a.kind==='photo'?'🖼 ':'🎬 ')}${esc(a.label)}</td><td class="ep-file">${esc(a.file)}</td></tr>`).join("");
+    return `<div class="ep-sec">
+      <div class="ep-head"><span class="ep-tc">${esc(sec.tc)}</span><strong>${esc(sec.part)}</strong></div>
+      <p class="ep-lyric">${esc(sec.lyric)}</p>
+      <p class="hint ep-intent">${esc(sec.intent)}</p>
+      <table class="ep-tab"><tbody>${rows}</tbody></table>
+      ${sec.pending?`<p class="hint ep-pending">Still needed: ${esc(sec.pending)}</p>`:""}
+    </div>`;
+  }).join("");
+  box.innerHTML=`
+    <h2>Edit plan 🎬 <span class="pill">footprint for CapCut</span></h2>
+    <p>Second-by-second map of which material goes where, cut to <strong>Gravity v3</strong> (3:19, 99.4 BPM), portrait 9:16. <strong>Lyrics are burned on screen</strong>, synced to each section; <strong>no story captions</strong>; and <strong>every clip/photo is used only once</strong>. Filenames match the source folder (<code>Jennies wedding</code>) and the Facebook set.</p>
+    <div class="make-actions"><button class="btn" id="btnCopyEDL">⧉ Copy plan</button><button class="btn" id="btnDlEDL">⬇ Download plan (.txt)</button></div>
+    ${cards}
+    <p class="hint">⚙ = to build / still to add. As new footage arrives (dancing, Tet, FaceTime, more Facebook), I slot it into the right section and update this plan.</p>`;
+  const copy=(t,ok)=>{ if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>toast(ok),()=>toast("Copy failed.")); };
+  $("#btnCopyEDL").addEventListener("click",()=>copy(editPlanText(),"Edit plan copied."));
+  $("#btnDlEDL").addEventListener("click",()=>{ const b=new Blob([editPlanText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-edit-plan.txt"; a.click(); URL.revokeObjectURL(a.href); toast("Edit plan downloaded."); });
+}
+
 /* ---------- watch the cuts (guarded by the global site gate) ---------- */
 const CUTS=[
   {title:"Storytelling cut (Version 3) - about 1:55",
@@ -445,7 +480,7 @@ function shotListText(){
 }
 function downloadShotList(){ const b=new Blob([shotListText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-shotlist-"+state.active+".txt"; a.click(); URL.revokeObjectURL(a.href); toast("Shot list downloaded."); }
 function copyShotList(){ if(navigator.clipboard) navigator.clipboard.writeText(shotListText()).then(()=>toast("Shot list copied."),()=>toast("Copy failed - use Download.")); else toast("Use Download."); }
-function renderAll(){ renderPool(); renderStory(); if($("#tab-analysis").classList.contains("active")) renderAnalysis(); if($("#tab-music").classList.contains("active")) renderMusic(); if($("#tab-cuts").classList.contains("active")) renderCuts(); }
+function renderAll(){ renderPool(); renderStory(); if($("#tab-analysis").classList.contains("active")) renderAnalysis(); if($("#tab-music").classList.contains("active")) renderMusic(); if($("#tab-edit").classList.contains("active")) renderEditPlan(); if($("#tab-cuts").classList.contains("active")) renderCuts(); }
 function bind(){
   $$(".tab").forEach(t=>t.addEventListener("click",()=>switchTab(t.dataset.tab)));
   ["#poolSearch","#poolType","#poolEvent","#poolRating","#poolSort"].forEach(s=>$(s).addEventListener("input",renderPool));

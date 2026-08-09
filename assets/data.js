@@ -1,9 +1,348 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.9", appUpdated:"2026-08-08 - Gravity rev4: chorus 1 builds, chorus 2 pays off" };
+const DATA = { targetSec:135, appVersion:"3.0", appUpdated:"2026-08-08 - Edit plan tab (CapCut footprint) + FB materials ingested" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
+
+DATA.storyboard = [
+  {
+    "part": "Verse 1 - her solo travels",
+    "tc": "0:04 - 0:28",
+    "lyric": "Window seat, a one-way flight, / chasing color, chasing light. / No address, no anchor down, / just the sky in every town.",
+    "intent": "Jennie travelling solo, before Gunnar. Pure wanderlust.",
+    "assets": [
+      {
+        "kind": "photo",
+        "label": "solo, bicycle in the city",
+        "file": "FB Solo bike.jpg"
+      },
+      {
+        "kind": "photo",
+        "label": "solo, jumping at a castle",
+        "file": "FB Solo castle.jpg"
+      },
+      {
+        "kind": "photo",
+        "label": "solo, jumping at a palace",
+        "file": "FB Solo palace.jpg"
+      },
+      {
+        "kind": "photo",
+        "label": "solo, jumping at the pink palace",
+        "file": "FB Solo pinkpalace.jpg"
+      },
+      {
+        "kind": "photo",
+        "label": "solo, autumn tree-lined path",
+        "file": "FB Solo autumn.jpg"
+      },
+      {
+        "kind": "photo",
+        "label": "solo, in the snow",
+        "file": "FB Solo snow.jpg"
+      }
+    ],
+    "pending": "More solo-travel photos from Facebook (Nam adding)."
+  },
+  {
+    "part": "Pre-Chorus - the meet",
+    "tc": "0:28 - 0:40",
+    "lyric": "Your message landed, made me smile, / then you smiled, and the sky stood still.",
+    "intent": "The dating app + first date. On \"then you smiled\", cut to a lovely smiling photo of Gunnar.",
+    "assets": [
+      {
+        "kind": "photo",
+        "label": "the Hinge/Bumble message (\"pasta addiction\")",
+        "file": "(dating screenshot i081)"
+      },
+      {
+        "kind": "video",
+        "label": "first date, Bromma",
+        "file": "Date- 1st date 2.mov",
+        "id": "v60",
+        "loc": "Bromma, Stockholm"
+      },
+      {
+        "kind": "todo",
+        "label": "a great solo smiling photo of Gunnar",
+        "file": "(to add / to build)"
+      }
+    ],
+    "pending": "Hinge screenshots; a nice solo Gunnar-smile still."
+  },
+  {
+    "part": "Chorus 1 - settling in (home, easygoing)",
+    "tc": "0:40 - 1:00",
+    "lyric": "Chased the sun through every zone, / never knew which road led home. / Then you reached for me, / you’re my gravity.",
+    "intent": "Easygoing home life and chores together. NOT travel yet.",
+    "assets": [
+      {
+        "kind": "video",
+        "label": "running errands",
+        "file": "Errand 1.MOV",
+        "id": "v61",
+        "loc": "Stockholm"
+      },
+      {
+        "kind": "video",
+        "label": "running errands",
+        "file": "Errand 2.MOV",
+        "id": "v62",
+        "loc": "Stockholm"
+      },
+      {
+        "kind": "video",
+        "label": "car selfie, everyday joy",
+        "file": "IMG_0619.MOV",
+        "id": "v14",
+        "loc": "Car, Stockholm"
+      },
+      {
+        "kind": "video",
+        "label": "hanging with friends",
+        "file": "Friends 4.MOV",
+        "id": "v63",
+        "loc": "Stockholm"
+      },
+      {
+        "kind": "video",
+        "label": "friends, easygoing",
+        "file": "Friends 7.mov",
+        "id": "v64",
+        "loc": "Stockholm"
+      }
+    ],
+    "pending": ""
+  },
+  {
+    "part": "Verse 2 - cooking",
+    "tc": "1:00 - 1:18",
+    "lyric": "Your pasta, my pho on the stove, / we crank the music, dance real slow, / two left feet and a burnt-black pan, / happiest here, just where we stand.",
+    "intent": "Cooking together at home (dancing clips to be added).",
+    "assets": [
+      {
+        "kind": "video",
+        "label": "baking saffron buns",
+        "file": "Cooking 6.MOV",
+        "id": "v18",
+        "loc": "Stockholm home"
+      },
+      {
+        "kind": "video",
+        "label": "cooking, steam and laughter",
+        "file": "IMG_0377.MOV",
+        "id": "v13",
+        "loc": "Stockholm home"
+      },
+      {
+        "kind": "video",
+        "label": "stirring bolognese",
+        "file": "Cooking 3.MP4",
+        "id": "v10",
+        "loc": "Stockholm home"
+      },
+      {
+        "kind": "video",
+        "label": "cooking pad thai",
+        "file": "Cooking 8.MOV",
+        "id": "v19",
+        "loc": "Stockholm home"
+      }
+    ],
+    "pending": "Dancing videos (Nam adding)."
+  },
+  {
+    "part": "Chorus 2 - the world, together",
+    "tc": "1:18 - 1:34",
+    "lyric": "Chased the sun through every zone, / turns out you were always home. / Then you pulled me to the ground, / and there I found, my gravity.",
+    "intent": "Travelling together OUTSIDE Vietnam (Taiwan, Thailand, Doha...).",
+    "assets": [
+      {
+        "kind": "video",
+        "label": "Taroko, Taiwan",
+        "file": "IMG_5805.MOV",
+        "id": "v43",
+        "loc": "Taroko, Taiwan"
+      },
+      {
+        "kind": "video",
+        "label": "Taiwan night market",
+        "file": "IMG_5613.MOV",
+        "id": "v41",
+        "loc": "Taiwan night market"
+      },
+      {
+        "kind": "video",
+        "label": "Bangkok",
+        "file": "IMG_7912.MOV",
+        "id": "v53",
+        "loc": "Bangkok"
+      },
+      {
+        "kind": "video",
+        "label": "Doha layover",
+        "file": "Doha 2.MOV",
+        "id": "v31",
+        "loc": "Doha, Qatar"
+      },
+      {
+        "kind": "video",
+        "label": "Beitou, Taipei",
+        "file": "IMG_5423.MOV",
+        "id": "v40",
+        "loc": "Beitou, Taipei"
+      }
+    ],
+    "pending": "Poland / other non-VN trip photos if available."
+  },
+  {
+    "part": "Bridge - the distance",
+    "tc": "1:34 - 2:04",
+    "lyric": "Then the whole world pulled apart, / zero gravity, breaking heart. / My sunrise was your goodnight, / then you crossed the world to my side.",
+    "intent": "ANIMATION: Jennie drifts away from Gunnar on the map; FaceTime screenshots; ANIMATION: Gunnar boards a plane to Vietnam.",
+    "assets": [
+      {
+        "kind": "todo",
+        "label": "Animation: Jennie moves Stockholm -> Vietnam (both apart)",
+        "file": "(to add / to build)"
+      },
+      {
+        "kind": "todo",
+        "label": "FaceTime screenshots",
+        "file": "(to add / to build)"
+      },
+      {
+        "kind": "todo",
+        "label": "Animation: Gunnar flies to Vietnam",
+        "file": "(to add / to build)"
+      }
+    ],
+    "pending": "Claude to build the clean, caption-free distance animation; Nam to add FaceTime screenshots."
+  },
+  {
+    "part": "Crescendo - Tet, then the proposal",
+    "tc": "2:04 - 2:22",
+    "lyric": "You stayed for Tet, you held me near, / a hundred lanterns lit the year. / Then on the sand, I couldn’t guess, / \"be my Boo-boo?\" I said yes.",
+    "intent": "Quick Tet images + light travel in Vietnam, then the swing and the ring.",
+    "assets": [
+      {
+        "kind": "video",
+        "label": "light travel, Ha Giang VN",
+        "file": "IMG_6448.MOV",
+        "id": "v46",
+        "loc": "Ha Giang, Vietnam"
+      },
+      {
+        "kind": "video",
+        "label": "the cliffside swing (her turn)",
+        "file": "IMG_3662.MOV",
+        "id": "v35",
+        "loc": "Sapa, Vietnam"
+      },
+      {
+        "kind": "video",
+        "label": "the cliffside swing",
+        "file": "IMG_3659.MOV",
+        "id": "v34",
+        "loc": "Sapa, Vietnam"
+      },
+      {
+        "kind": "photo",
+        "label": "the swing, Phu Quoc night",
+        "file": "Engage FB 5.jpg"
+      },
+      {
+        "kind": "photo",
+        "label": "the ring (close-up)",
+        "file": "Engage FB 1.jpg"
+      }
+    ],
+    "pending": "Tet photos (family, lanterns)."
+  },
+  {
+    "part": "Final Chorus - the summit",
+    "tc": "2:22 - 2:46",
+    "lyric": "...you’re the wings I never found. / So let’s not land, let’s chase the sky, / arms wide open, watch us fly.",
+    "intent": "The mountain summits: videos + photos, arms wide above the clouds.",
+    "assets": [
+      {
+        "kind": "video",
+        "label": "Yushan night summit push",
+        "file": "f55e2a90-930f-47cd-99b8-09c57ad9857a.MP4",
+        "id": "v55",
+        "loc": "Night summit push"
+      },
+      {
+        "kind": "video",
+        "label": "Yushan, Jade Mtn",
+        "file": "IMG_6866.MOV",
+        "id": "v50",
+        "loc": "Yushan (Jade Mtn), Taiwan"
+      },
+      {
+        "kind": "video",
+        "label": "above the clouds, summit",
+        "file": "fafda0a7-9dd0-48ce-822a-c1b2b6f83492.MP4",
+        "id": "v56",
+        "loc": "Summit above the clouds"
+      },
+      {
+        "kind": "video",
+        "label": "Fansipan flag, Top of Indochina",
+        "file": "04375d38-01f8-41a3-83f6-23cf1adc757f.MP4",
+        "id": "v01",
+        "loc": "Fansipan summit, Vietnam"
+      },
+      {
+        "kind": "video",
+        "label": "Fansipan certificate, beaming",
+        "file": "IMG_2632.MOV",
+        "id": "v27",
+        "loc": "Fansipan summit"
+      },
+      {
+        "kind": "photo",
+        "label": "both, summit, arms wide above clouds",
+        "file": "FB Summit couple.jpg"
+      },
+      {
+        "kind": "photo",
+        "label": "solo, summit, arms wide",
+        "file": "FB Summit solo.jpg"
+      }
+    ],
+    "pending": ""
+  },
+  {
+    "part": "Outro - wheels up, together",
+    "tc": "2:46 - 3:19",
+    "lyric": "Wheels up, into the blue, / my Dudu Bear, I fly with you.",
+    "intent": "A lovely shot of the two of them; camera drifts up to the blue sky. End.",
+    "assets": [
+      {
+        "kind": "video",
+        "label": "mountaintop hug, \"this view, with you\"",
+        "file": "IMG_2515.MOV",
+        "id": "v24",
+        "loc": "Sapa, Vietnam"
+      },
+      {
+        "kind": "photo",
+        "label": "the two of them, dressed up",
+        "file": "FB Couple formal.jpg"
+      },
+      {
+        "kind": "video",
+        "label": "Ha Long kayak, huge smiles",
+        "file": "IMG_1900.MOV",
+        "id": "v20",
+        "loc": "Ha Long Bay"
+      }
+    ],
+    "pending": "A shot that drifts up to the sky for the final frame."
+  }
+];
 
 /* ---- the song (music-first, craft-driven, VERSIONED) ----
    Fine-tuning phase. Two finalists kept: Gravity (pop) and The Long Way Home (country-folk).
