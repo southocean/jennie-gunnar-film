@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.9", appUpdated:"2026-08-08 - Gravity rev4 (chorus restored for symmetry + payoff); rev3 Suno link" };
+const DATA = { targetSec:135, appVersion:"2.9", appUpdated:"2026-08-08 - Gravity rev4: chorus 1 builds, chorus 2 pays off" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
@@ -201,7 +201,7 @@ my Dudu Bear, I fly with you.
       },
       {
         rev:4, date:"2026-08-08",
-        note:"Structural fix after hearing rev3. Rev3's chorus ('Then you reached for me / you're my gravity') felt like a build, not a payoff - too short (5-5 vs the 7-7 of lines 1-2), losing the symmetry and catchiness, and 'reached for me' was a weak image next to the graphic old line. Restored the strong, symmetrical line 3 'Then you pulled me to the ground' (7 syllables, and it now mirrors the final chorus's 'you don't hold me to the ground'), and ended line 4 on the theme via a comma-tag: 'and there I found, my gravity' - keeps the ground/found rhyme AND lands on 'gravity' (Suno should break at the comma). Everything else identical to rev3.",
+        note:"Structural fix after hearing rev3, using BOTH chorus versions on purpose (Nam's insight: a build-y chorus is perfect the first time, but later choruses must land as a payoff). CHORUS 1 keeps the short building version ('Then you reached for me / you're my gravity') - tentative, they've just met. CHORUS 2 (and the pattern after) uses the fuller symmetrical payoff: 'Then you pulled me to the ground, / and there I found, my gravity' - graphic line 3 that mirrors the final chorus's 'you don't hold me to the ground', and a comma-tag that lands line 4 on the theme word 'gravity' while keeping the ground/found rhyme. Everything else same as rev3.",
         lyrics:`[Verse 1 - soft, piano and heartbeat pulse]
 Window seat, a one-way flight,
 chasing color, chasing light.
@@ -215,8 +215,8 @@ then you smiled, and the sky stood still.
 [Chorus - warm, drums in]
 Chased the sun through every zone,
 never knew which road led home.
-Then you pulled me to the ground,
-and there I found, my gravity.
+Then you reached for me,
+you're my gravity.
 
 [Verse 2 - light groove, playful]
 Your pasta, my pho on the stove,
