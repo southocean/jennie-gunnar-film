@@ -338,18 +338,18 @@ function renderAbout(){
 
 /* ---------- the song (music-first) ---------- */
 function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-let songVer=-1; /* index into DATA.songs; defaults to the latest */
+let songVer=-1; /* index into DATA.songs; -1 = show the first (recommended) */
 function renderMusic(){
   const box=$("#musicBody"); if(!box) return;
   const list=DATA.songs||(DATA.song?[DATA.song]:[]);
-  if(songVer<0||songVer>=list.length) songVer=list.length-1;
+  if(songVer<0||songVer>=list.length) songVer=0;
   const s=list[songVer]||DATA.song||{};
   const rows=(s.map||[]).map(m=>`<tr><td class="sl-tc">${esc(m.sec)}</td><td><b>${esc(m.part)}</b><div class="sl-loc">${esc(m.act)}</div></td><td class="sl-cap">${esc(m.show)}</td></tr>`).join("");
   const vers=list.length>1?`<div class="song-vers">${list.map((v,i)=>`<button class="btn songver${i===songVer?" on":""}" data-i="${i}">${esc(v.name||("Version "+(i+1)))}</button>`).join("")}</div>`:"";
   box.innerHTML=`
     <h2>The song 🎵</h2>
     <p>We're going <strong>music first</strong>. The song is written, then the film is cut to it: the lyrics decide what we show, and every transition lands on the beat. So the plan is to get a version we love in <strong>Suno</strong>, then time the edit to it.</p>
-    <p>It's a love story about <em>a girl and a guy</em> - never named - told from her side, in the storytelling style of Taylor Swift's <em>Love Story</em>. The guests connect the dots. Two narrative approaches to compare below: the <strong>reunion story</strong> (the emotional arc, with the long-distance low in the bridge) and the <strong>traveller's story</strong> (celebratory, travel-first, far more accessible). Same harnesses on both: no names, every reference backed by footage, a catchy generic chorus, and the pet names kept POV-correct (he calls her <em>Boo-boo</em> in the proposal; she calls him <em>Dudu Bear</em> at the end).</p>
+    <p>It's a love story about <em>a girl and a guy</em> - never named - told from her side. Every version is run through <a href="LYRIC-CRAFT.md" target="_blank">the lyric-craft harness</a>: rhyming, economical, images over statements, the hook as the last line of the chorus, her wandering shown as a <em>flex</em> (never loneliness), and POV-correct pet names (he calls her <em>Boo-boo</em> in the proposal; she calls him <em>Dudu Bear</em> at the end). Four to compare: <strong>two catchy-pop</strong> (Gravity, The Summit) and <strong>two storytelling</strong> (The Long Way Home = country-folk, True North = indie-folk, with more of her real specifics). Each version's Suno style prompt matches its own vibe.</p>
 
     ${vers}
     ${s.note?`<p class="hint song-note">${esc(s.note)}</p>`:""}

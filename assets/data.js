@@ -1,283 +1,276 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.4", appUpdated:"2026-08-07 - hybrid reworked: folk-pop, inline dynamics, POV pet-names" };
+const DATA = { targetSec:135, appVersion:"2.5", appUpdated:"2026-08-07 - 4 craft-driven songs (2 pop, 2 storytelling)" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
-/* ---- the song (music-first approach) ----
-   A love story about "a girl and a guy" who resemble the couple, from her POV,
-   in the storytelling style of Taylor Swift's "Love Story". No real names, so
-   guests connect the dots themselves. The emotional drop lives in the bridge
-   (the distance); the key change lands on the summit. Plain hyphens only. */
-/* shared style prompt (Nam liked the Suno style; only the lyrics change per version)
-   and shared timing map (both versions follow the same act structure). */
-const SONG_SUNO = `Female-led modern country-pop love ballad, storytelling in the style of early Taylor Swift "Love Story". Warm, cinematic, wedding-ready, honest radio-quality lead vocal. Instrumentation: fingerpicked acoustic guitar, soft mandolin and banjo touches, piano, building to full drums and sweeping strings. Emotional arc: intimate tender verses, a bright hopeful chorus, a bittersweet second verse, then a stripped-back bridge (just vocals, soft piano and a heartbeat kick) for the long-distance low, then a dramatic key change into a soaring anthemic final chorus with layered harmonies for the mountaintop climax, then a gentle warm resolve. Tempo around 100 to 112 BPM.`;
-const SONG_MAP = [
-  {sec:"0:00 - 0:08", part:"Intro",        act:"Title",              show:"Title card over a soft frame; hold on the couple."},
-  {sec:"0:08 - 0:30", part:"Verse 1",      act:"I. The spark",       show:"The dating-app screen, first date, early Stockholm chemistry."},
-  {sec:"0:30 - 0:40", part:"Pre-Chorus",   act:"II. Building a life",show:"Cooking, puzzles, home mornings, first snow together."},
-  {sec:"0:40 - 0:58", part:"Chorus",       act:"II. Building a life",show:"Happy montage: castles, Poland, friends, laughing - cut on the beat."},
-  {sec:"0:58 - 1:18", part:"Verse 2",      act:"III. Torn apart",    show:"Packing, the airport, her flight home, his city emptying out."},
-  {sec:"1:18 - 1:40", part:"Bridge (drop)",act:"III. Torn apart",    show:"THE distance sequence: the world map, both apart, both crying."},
-  {sec:"1:40 - 1:52", part:"Lift / key change",act:"IV. Choosing each other",show:"He flies to Vietnam, the ring, engaged, family, Tet."},
-  {sec:"1:52 - 2:20", part:"Final Chorus", act:"V. Reaching the summit",show:"The climax: Fansipan and Yushan climbs, hands together at the peak."},
-  {sec:"2:20 - 2:35", part:"Outro",        act:"VI. Next chapter",   show:"Back to Sweden, the ring, the wedding, the next chapter."}
-];
-
-/* the celebratory "traveller's story" has its own brighter style + its own act map (no long-distance drop) */
-const SONG_SUNO_TRAVELER = `Female-led modern country-pop, upbeat and celebratory, storytelling in the bright joyful spirit of Taylor Swift "Love Story". Warm, cinematic, wedding-ready, radio-quality lead vocal. Instrumentation: bright fingerpicked acoustic guitar, mandolin and banjo, hand-claps and a light driving kick, building to full drums and soaring strings. Arc: playful confident verses, a big singalong chorus, a warm reflective bridge (a knowing smile, not sad), then a key change into a euphoric anthemic final chorus with layered harmonies. Tempo around 112 to 122 BPM. Feel-good, hopeful, triumphant.`;
-const SONG_MAP_TRAVELER = [
-  {sec:"0:00 - 0:08", part:"Intro",        act:"Title",            show:"Title over a fast pin-drop travel montage."},
-  {sec:"0:08 - 0:32", part:"Verse 1",      act:"The wanderer",     show:"Her traveller identity: a world map filling with pins, wanderlust b-roll ('thirty before thirty')."},
-  {sec:"0:32 - 0:42", part:"Pre-Chorus",   act:"The meet",         show:"Dating-app screen, Stockholm by the water, first date."},
-  {sec:"0:42 - 1:00", part:"Chorus",       act:"The world, together",show:"Big joyful travel montage together: Ha Long, Sapa, castles, Doha, Taipei - cut on the beat."},
-  {sec:"1:00 - 1:24", part:"Verse 2",      act:"Kitchen & peaks",  show:"World-cooking (his pasta, her Asian dishes) and the summit climbs (Fansipan, Yushan)."},
-  {sec:"1:24 - 1:44", part:"Bridge",       act:"The turn",         show:"Reflective travel b-roll settling into 'home is a person'."},
-  {sec:"1:44 - 1:58", part:"Lift / key change",act:"The proposal", show:"The beach swing in Phu Quoc, the ring, engaged."},
-  {sec:"1:58 - 2:24", part:"Final Chorus", act:"Everything",       show:"Euphoric montage: summits + travels + the two of them, biggest energy."},
-  {sec:"2:24 - 2:38", part:"Outro",        act:"The next trip",    show:"The ring, back to Sweden, the adventure continues."}
-];
-
-/* the hybrid: traveller-found-home + domestic joy, ONE emotional dip (distance) in the bridge, then proposal + summit */
-const SONG_SUNO_HYBRID = `Warm, uplifting indie folk-pop, female lead vocal. Acoustic guitar, stomp-and-clap percussion, mandolin, warm gang-vocal "oh-oh" hooks, building to a full-band anthemic finale with a key-change lift. Cinematic and emotional but upbeat and moving. Mid-tempo, around 120 BPM, 4/4. In the spirit of The Lumineers, Vance Joy and Of Monsters and Men. Clear female vocal, no rap, no heavy autotune. Keep it concise, radio length, about 2 minutes 30 seconds: no long intro, no instrumental solos, no repeated outro.`;
-const SONG_MAP_HYBRID = [
-  {sec:"0:00 - 0:08", part:"Intro",        act:"Title",              show:"Title over a fast pin-drop travel montage."},
-  {sec:"0:08 - 0:30", part:"Verse 1",      act:"The wanderer",       show:"Her traveller identity: world map filling with pins, wanderlust b-roll ('thirty before thirty')."},
-  {sec:"0:30 - 0:40", part:"Pre-Chorus",   act:"The meet",           show:"Dating-app screen, a frozen-lake walk in Stockholm, first date."},
-  {sec:"0:40 - 0:58", part:"Chorus",       act:"Found home",         show:"Joyful travel montage together (home is a person): Ha Long, Sapa, castles, Doha, Taipei."},
-  {sec:"0:58 - 1:20", part:"Verse 2",      act:"Everyday bliss",     show:"Domestic happiness: world-cooking, chores, seasons turning at home."},
-  {sec:"1:20 - 1:42", part:"Bridge (drop)",act:"Torn apart",         show:"THE distance sequence: she moves home, the world map, both apart; he flies to her three times."},
-  {sec:"1:42 - 1:56", part:"Lift / key change",act:"The proposal",   show:"The beach swing in Phu Quoc, the ring, engaged."},
-  {sec:"1:56 - 2:24", part:"Final Chorus", act:"The summit",         show:"The climax: Fansipan and Yushan climbs, hands together at the peak."},
-  {sec:"2:24 - 2:40", part:"Outro",        act:"Home, together",     show:"The ring, back to Sweden, the next chapter."}
-];
-
-/* Browsable song versions (like the storyboard versions). v1 kept verbatim. */
+/* ---- the song (music-first, craft-driven) ----
+   Four browsable versions, all run through LYRIC-CRAFT.md: rhyming, economical,
+   images over statements, hook as the LAST line of the chorus, her freedom shown as
+   a flex (never loneliness), POV-correct pet names (HE calls HER "Boo-boo" in the
+   proposal; SHE calls HIM "Dudu Bear" at the end). No real names. Plain hyphens only.
+   Two catchy-pop versions (Gravity, The Summit) and two storytelling versions
+   (The Long Way Home = country-folk, True North = indie-folk, more specifics). */
 DATA.songs = [
   {
-    id:"v1",
-    name:"First draft (generic)",
-    note:"The first pass we tested on Suno. The style nailed the early-Taylor-Swift 'Love Story' feel; the lyrics are intentionally a bit generic.",
-    title:"Meet Me at the Summit",
-    altTitles:["The Long Way Home","All In","Worth the Climb"],
-    suno:SONG_SUNO,
-    lyrics:`[Intro]
-(soft acoustic guitar, hold for the title card)
+    id:"gravity",
+    name:"Gravity (pop, recommended)",
+    title:"Gravity",
+    altTitles:["The Gravity I Found","Wheels Down"],
+    note:"Catchy pop. One metaphor, hammered: she never lands (always flying, always moving) until he becomes the gravity that pulls her down to earth. Short lines, clean rhymes, hook last. Her wandering is a flex. Mid-tempo and atmospheric so the stripped bridge (the distance) lands hard before the key change.",
+    suno:`Mid-tempo cinematic pop, female lead. Atmospheric and emotional: warm piano, soft synth pads, a steady heartbeat pulse under fingerpicked guitar, building to a big anthemic chorus with full drums and layered vocals. Dreamy but grounded, cinematic. Around 100 BPM, 4/4. Clear female vocal, no rap, no heavy autotune. Concise, radio length, about 2 minutes 30 seconds: no long intro, no solos, no repeated outro.`,
+    lyrics:`[Verse 1 - soft, piano and heartbeat pulse]
+Window seat, a one-way flight,
+chasing color, chasing light.
+No address, no anchor down,
+just the sky in every town.
 
-[Verse 1]
-I wasn't even looking when your message lit my screen,
-a stranger with a crooked smile in a city cold and clean.
-Our first date I was certain I'd be halfway out the door,
-but you laughed at all my nonsense, and I stayed for something more.
+[Pre-Chorus - building]
+Then you smiled, and the sky stood still,
+felt a pull no map could fill.
 
-[Pre-Chorus]
-And we built a little world between the candlelight and snow,
-puzzle pieces, quiet mornings, all the ways a love can grow.
+[Chorus - warm, drums in]
+Chased the sun through every zone,
+never needed a road home.
+Then you pulled me to the ground,
+you're the gravity I found.
 
-[Chorus]
-Oh, this is a love story, the kind you don't see twice,
-two hearts in a northern town, learning how to fly.
-So take my hand, I'm all in, I don't need to know the end,
-just promise me you'll find me, again and again.
-
-[Verse 2]
-But life don't ask you gently, it just hands you what it will,
-and home was calling softly from an ocean past a hill.
-I packed my heart in boxes, watched your city fade to blue,
-half a world between us now, and nothing I could do.
-
-[Bridge - pull the band back, voice and a soft heartbeat]
-So I counted all the timezones, every night I couldn't sleep,
-loving someone that far away is a promise hard to keep.
-I whispered to the distance, are you still coming through,
-then a knock upon my door, and there you stood. You flew.
-
-[Lift - build into a key change]
-You crossed the whole wide world just to stand where I could see,
-got down on one knee in the country that made me.
-No mountain's gonna stop us now, we'll climb it if we must,
-
-[Final Chorus - big, anthemic]
-'Cause this is our love story, and we wrote it in the stars,
-from a cold and quiet city to the top of who we are.
-We climbed until the clouds broke, hand in hand up at the peak,
-and I found my forever at the summit that we reached.
-Oh, this is our love story, and it's only just begun.
-
-[Outro - soft, warm]
-Four seasons and an ocean, and a ring to see us through,
-the long way round the whole wide world, just led me home to you.`,
-    map:SONG_MAP
-  },
-  {
-    id:"v2",
-    name:"The reunion story (personal)",
-    title:"Half a World to Reach",
-    note:"The emotional arc, built on the obstacle: they meet, build a life, she has to move home, they endure the distance (the bridge is the low), he crosses the world, the proposal, the summit, home. Refined for the good-song vs personal-song balance. Specifics live in the verses; the chorus stays generic and repeatable for catchiness. Food is kept general (we have ~8 cooking clips to cut to) rather than a one-off dish, and 'we cooked, we climbed, we crossed the world' is the recurring hook (a clean visual triplet: kitchen, summit, travel). No 'Tet' (Suno mispronounces it) - 'holidays' instead. The pet name 'boo boo' is held back for a single reveal on the very last line, like the proposal. No names, so guests still connect the dots.",
-    altTitles:["The Long Way Home","We Cooked, We Climbed","The Long Way Round"],
-    suno:SONG_SUNO,
-    lyrics:`[Intro]
-(soft acoustic guitar, hold for the title card)
-
-[Verse 1]
-I wasn't out there looking when your message lit the dark,
-a stranger with a crooked smile who somehow hit the mark.
-You walked me through the town that raised you, cobblestones and rain,
-I swore I'd keep my guard up, then I never did again.
-
-[Pre-Chorus]
-We burned a few good dinners, laughed until we cried,
-made a home out of the ordinary, winter dark outside.
+[Verse 2 - light groove]
+Sunday kitchen, coffee steam,
+you and me and nowhere to be.
+Salt and butter, warm and slow,
+never had a reason to go.
 
 [Chorus]
-Oh, this is a love story, and we wrote it on the road,
-two hearts from a northern town who never could stay home.
-So take my hand, I'm all in, I don't need to know the end,
-just promise me wherever we go, you'll take me there again.
+Chased the sun through every zone,
+never needed a road home.
+Then you pulled me to the ground,
+you're the gravity I found.
 
-[Verse 2]
-But the world that made me had a home on the other shore,
-and the sea began to call me like it never had before.
-I folded up our northern winters, boxed the life we'd grown,
-flew back into the heat and the monsoon, and learned to be alone.
-
-[Bridge - pull the band back, voice and a soft heartbeat]
-So I counted all the timezones, every night I couldn't sleep,
-loving through a little screen is a promise hard to keep.
-Three long flights across a year, half a world in between,
-then a knock upon my door, and there you stood. You flew to me.
-
-[Lift - build into a key change]
-You crossed the whole wide world to stand where all my roots begin,
-you met the ones who raised me, shared our holidays with them.
-Out over the valley on a swing, you asked me for my life,
-and the whole sky came undone the day I said I'd be your wife.
-
-[Final Chorus - big, anthemic]
-'Cause this is our love story, and we climbed it all the way,
-from a snowed-in northern kitchen to the roof of everything.
-We went up through the cloud and cold, hand in hand up at the peak,
-found forever on a summit that took half a world to reach.
-We cooked, we climbed, we crossed the whole wide world,
-oh, this is our love story, and it's only just begun.
-
-[Outro - soft, warm]
-Four seasons and two countries, and a ring to see us through,
-we cooked, we climbed, we crossed the world, it only led to you.
-So here's to every kitchen and each mountain still to come,
-the long way round the whole wide world, my Dudu Bear, we are home.`,
-    map:SONG_MAP
-  },
-  {
-    id:"v3",
-    name:"The traveller's story (celebratory)",
-    note:"The celebratory alternative: she is a world traveller (thirty countries before thirty) whose greatest adventure turns out to be seeing it all with him. Simpler and far more accessible - no backstory needed - and it rides our deepest footage (travel, world-cooking, the summits). Keeps the personal touches: his surname literally means 'mountain' (so they climb the tallest peaks), the beach-swing proposal, the world-in-one-kitchen cooking, and the 'boo boo' reveal on the last line. Downplays the long-distance obstacle, so it trades emotional catharsis for joy and accessibility. Note: her solo pre-relationship travels (India, Liechtenstein) are not in our footage, so Verse 1 rides a pin-drop map and wanderlust b-roll rather than specific solo shots.",
-    title:"One More Place to Go",
-    altTitles:["The Whole Wide World Is Ours","Two Passports","The Traveller's Story"],
-    suno:SONG_SUNO_TRAVELER,
-    lyrics:`[Intro]
-(bright acoustic guitar and a light, hopeful heartbeat)
-
-[Verse 1]
-Before you, I was restless, chasing borders on a map,
-thirty countries before thirty, and I never once looked back.
-I could pack a life in one small bag and vanish with the dawn,
-I told myself I travelled best with no one holding on.
-
-[Pre-Chorus]
-Then a message from a stranger in a cold and northern town,
-by a lake I still can't name, I finally set it down.
-
-[Chorus]
-Oh, this is a traveller's story, and the whole wide world is ours,
-every border, every mountain, every city lit with stars.
-I had seen it all already, but it never shone so bright,
-'til I saw it all beside you, love, so take my hand tonight.
-
-[Verse 2]
-We cook the whole world in our kitchen, every country on a plate,
-your pasta and my noodles, and we never make the same.
-We climb the highest peaks we find, from the tropics to the cold,
-and it's no surprise your name means mountain, so the summit's where we go.
-
-[Bridge - lighter, a knowing smile]
-I have wandered every kind of road, and I'd wander them again,
-slept beneath a thousand skylines, called a stranger my best friend.
-But for all the maps I've folded, all the wonders that I've chased,
-the finest place I ever found was a life I didn't chase.
-
-[Lift - build into a key change]
-So on an island, on a swing, with the whole bright sea behind,
-you asked me for forever, and I laughed until I cried.
-No summit left to frighten me, no border we won't do,
-whatever's next, wherever's next, I'm seeing it with you.
-
-[Final Chorus - big, anthemic]
-'Cause this is our traveller's story, and the whole wide world is ours,
-we cooked, we climbed, we crossed it all, from the kitchen to the stars.
-I have been to all those countries, but there's one more place to go:
-the rest of my whole life with you, so darling, let's just go.
-Oh, this is our traveller's story, and it's only just begun.
-
-[Outro - soft, warm]
-Two passports, one adventure, and a ring to see us through,
-the whole wide world was beautiful, but it only led to you.
-So here's to every border and each mountain still to come,
-the greatest trip I'll ever take, my Dudu Bear, we've begun.`,
-    map:SONG_MAP_TRAVELER
-  },
-  {
-    id:"v4",
-    name:"The hybrid (recommended)",
-    title:"The Long Way Home",
-    altTitles:["Home Is a Person","The Farthest Place","We Cooked, We Climbed"],
-    note:"Reworked after the first Suno run. Switched to warm indie folk-pop (Lumineers / Vance Joy energy): more upbeat, more concise, fits the travel-and-adventure spirit and still swells emotionally. Per-section dynamics (the near-silent bridge, the key-change final chorus) now live INLINE in the lyrics as bracket tags, where Suno actually reads them; the style box only sets the macro feel. Leaner lyrics (fewer sections) to fight Suno's 5-minute sprawl, and the over-used 'whole wide world' is gone. Pet-name reveal is now POV-correct: HE calls HER 'Boo-boo' in the proposal, and SHE calls HIM 'Dudu Bear' on the last line. Story: a world traveller learns home is a person, joy through the domestic verse, ONE earned dip (the distance) in the bridge, then the proposal and the summit. My recommendation.",
-    suno:SONG_SUNO_HYBRID,
-    lyrics:`[Verse 1 - gentle, fingerpicked acoustic guitar, soft]
-I never was a stay-still girl, I chased the far horizon,
-one bag, one map, one more goodbye, and no one at my side.
-I counted countries like they'd fill some space I couldn't name,
-I told myself that home was just the next place on the train.
-
-[Chorus - warm, bright, add light drums and hand-claps]
-Then I found a home, and it wasn't on a map,
-just your hand around my hand and a light that led me back.
-I have seen the world, but it never felt like mine,
-'til the farthest place I ever went turned out to be your eyes.
-
-[Verse 2 - happy, full, cozy, gentle groove]
-We burned the toast on Sundays and we danced around the stove,
-your pasta and my noodles in a kitchen made of gold.
-We split the chores, the winters, watched the seasons come and go,
-and I who never stayed for anyone, I finally stayed for you.
-
-[Bridge - almost silent, whispered vocal, solo piano and a slow heartbeat, no drums]
+[Bridge - almost silent, solo piano and a slow heartbeat, no drums]
 [Diminuendo]
-Then the world that made me called me home, an ocean set between,
-and we loved through little glowing screens, through nights I couldn't sleep.
-But you never let the distance win, you crossed it in the sky,
-three times around this Earth for me, you flew to my side.
+Then they pulled us worlds apart,
+zero gravity, breaking heart.
+Half a year of empty air,
+then your knock, and you were there.
 
-[Pre-Chorus - building, drums swell]
+[Pre-Chorus - building]
 [Crescendo]
-Then down on one knee in the sand, with the sea behind your eyes:
-"will you be my Boo-boo forever?" and I laughed, and I cried yes.
+Then a swing, the sea, one knee,
+"be my Boo-boo?" You and me.
 
-[Chorus - explosive, full band, key change up, soaring, gang vocals]
-So I found a home, and it wasn't on a map,
-it was your hand around my hand at the summit, looking back.
-We climbed up through the cloud and cold and we planted our own flag,
-and the farthest place I ever went turned out to be your eyes.
+[Chorus - huge, key change up, full band]
+Chased the sun through every zone,
+turns out you were always home.
+Now I've found my feet, my ground,
+you're the gravity I found.
 
-[Outro - soft, warm, fading out]
-Two passports, one adventure, and a ring to see us through,
-and every road I ever walked, my Dudu Bear, led to you.
+[Outro - soft, fading]
+Wheels down, engine low,
+my Dudu Bear, I'm home.
 [End]`,
-    map:SONG_MAP_HYBRID
+    map:[
+      {sec:"Verse 1", part:"The wanderer", act:"Flex", show:"Travel montage / pin-drop map: flights, windows, cities. She is free and fearless."},
+      {sec:"Pre-Chorus", part:"The meet", act:"Turn", show:"Dating message, frozen-lake walk in Stockholm."},
+      {sec:"Chorus", part:"Found home", act:"Hook", show:"The two of them travelling together, joyful."},
+      {sec:"Verse 2", part:"Everyday", act:"Bliss", show:"Home life: cooking, coffee, cozy Stockholm mornings."},
+      {sec:"Bridge", part:"Torn apart", act:"Dip", show:"THE distance sequence (world map, apart), then his arrival."},
+      {sec:"Pre-Chorus", part:"Proposal", act:"Lift", show:"The Phu Quoc beach swing, the ring."},
+      {sec:"Final Chorus", part:"The summit", act:"Payoff", show:"Fansipan / Yushan summit, hands at the peak."},
+      {sec:"Outro", part:"Home", act:"Land", show:"Back to Sweden, the ring, the next chapter."}
+    ]
+  },
+  {
+    id:"summit",
+    name:"The Summit (pop)",
+    title:"Top of the World",
+    altTitles:["The Summit","Every Peak I Climbed"],
+    note:"Catchy pop, anthemic. Metaphor: she always climbs higher, chasing the next peak, until the real summit turns out to be the two of them at the top. Leans on the true detail that his surname means 'mountain' and on your real Fansipan/Yushan climbs. Big cinematic build.",
+    suno:`Anthemic cinematic pop, female lead. Builds from spare and airy to huge and triumphant: acoustic guitar and piano into big drums, soaring strings and layered gang vocals for a mountaintop chorus. Epic, uplifting, wide open. Around 105 BPM, 4/4. Clear female vocal, no rap, no heavy autotune. Almost-silent stripped bridge, then a key change into the final chorus. Concise, radio length, about 2 minutes 30 seconds: no long intro, no solos.`,
+    lyrics:`[Verse 1 - spare, airy, acoustic]
+Boots on gravel, thin cold air,
+flags on every mountain there.
+Higher, harder, no way down,
+never wanted solid ground.
+
+[Pre-Chorus - building]
+Then you climbed beside my pace,
+same thin air, a steady face.
+
+[Chorus - big, strings and gang vocals]
+Chased the sky from stone to stone,
+every peak I climbed, I owned.
+Then I saw the greatest view,
+top of the world was you.
+
+[Verse 2 - full]
+They said your name means mountainside,
+no wonder you became my guide.
+Storm or sunrise, rope or snow,
+anywhere you climb, I go.
+
+[Chorus]
+Chased the sky from stone to stone,
+every peak I climbed, I owned.
+Then I saw the greatest view,
+top of the world was you.
+
+[Bridge - almost silent, solo piano, no drums]
+[Diminuendo]
+Then the mountain split in two,
+half a world with no way through.
+I climbed my nights, you climbed your day,
+'til you crossed the map to stay.
+
+[Pre-Chorus - building]
+[Crescendo]
+On a swing above the sea,
+"be my Boo-boo?" Down on one knee.
+
+[Chorus - huge, key change up]
+Chased the sky from stone to stone,
+now I never climb alone.
+Planted flags, but this is true:
+top of the world is you.
+
+[Outro - soft]
+Rope in hand, breathing slow,
+my Dudu Bear, let's go.
+[End]`,
+    map:[
+      {sec:"Verse 1", part:"The climber", act:"Flex", show:"Summit b-roll, flags, thin air, her conquering peaks."},
+      {sec:"Pre-Chorus", part:"The meet", act:"Turn", show:"Early together shots; a climb side by side."},
+      {sec:"Chorus", part:"Top of the world", act:"Hook", show:"Summit hands-up, the view, joy."},
+      {sec:"Verse 2", part:"His name", act:"Fate", show:"Their climbs (Fansipan, Yushan); the name-means-mountain nod."},
+      {sec:"Bridge", part:"Torn apart", act:"Dip", show:"THE distance sequence, then his arrival."},
+      {sec:"Pre-Chorus", part:"Proposal", act:"Lift", show:"The Phu Quoc beach swing, the ring."},
+      {sec:"Final Chorus", part:"The summit", act:"Payoff", show:"The biggest summit moment, certificates, flag."},
+      {sec:"Outro", part:"Next climb", act:"Land", show:"Back home, rings, the next adventure."}
+    ]
+  },
+  {
+    id:"longwayhome",
+    name:"The Long Way Home (storytelling, country-folk)",
+    title:"The Long Way Home",
+    altTitles:["The Long Way Round","Every Road I Chose"],
+    note:"Storytelling, warm country-folk. The full narrative with real specifics (Poland, Da Nang, Stockholm, his pasta and her pho, his three flights, the peaks). Chronological like 'Love Story', clean rhyme, repeated title hook. Home is the metaphor: every road she ever took was quietly leading to him.",
+    suno:`Warm country-folk storytelling ballad, female lead. Intimate and organic: fingerpicked acoustic guitar, gentle fiddle, upright bass, brushed drums, a touch of pedal steel. Honest, nostalgic, Americana. Around 95 BPM, 4/4. Clear storytelling female vocal, no rap, no heavy autotune. Almost-silent bridge, then a warm full-band final chorus. Concise, about 2 minutes 40 seconds: no long intro, no solos.`,
+    lyrics:`[Verse 1 - fingerpicked, intimate]
+Grew up restless, quick to roam,
+thirty countries, no fixed home.
+Poland snow to Da Nang heat,
+passport stamps beneath my feet.
+
+[Verse 2 - the meet]
+Then a message, cold Stockholm,
+a frozen lake, a walk back home.
+He cooked pasta, I made pho,
+snow outside and nowhere to go.
+
+[Chorus - warm, band in]
+All the roads I ever chose,
+all the planes, the highs and lows,
+led me here, and now I know,
+the long way round is the long way home.
+
+[Verse 3 - the distance]
+Then I flew back home for good,
+oceans where a lover stood.
+He came chasing, sky to sky,
+three whole times he said goodbye.
+
+[Bridge - almost silent, just voice and guitar]
+[Diminuendo]
+Phone light glowing, 3 a.m.,
+counting hours back to him.
+Then a knock, the sea, one knee,
+"be my Boo-boo?" Yes, that's me.
+
+[Final Chorus - full, warm, lift]
+All the roads I ever chose,
+led through peaks and Arctic snow,
+to your hand, and now I know,
+the long way round was the long way home.
+
+[Outro - soft]
+Wedding bells and mountain air,
+my Dudu Bear, we're almost there.
+[End]`,
+    map:[
+      {sec:"Verse 1", part:"The wanderer", act:"Flex", show:"Pin-drop map + travel b-roll: Poland, Vietnam, the stamps."},
+      {sec:"Verse 2", part:"The meet", act:"Spark", show:"Dating message, frozen lake, cooking (pasta + pho), snowy Stockholm."},
+      {sec:"Chorus", part:"The long way home", act:"Hook", show:"Travel-together montage, home warmth."},
+      {sec:"Verse 3", part:"Torn apart", act:"Distance", show:"Packing, the airport, his flights VN and back."},
+      {sec:"Bridge", part:"The ache + proposal", act:"Dip/turn", show:"Late-night phone, then the Phu Quoc swing and ring."},
+      {sec:"Final Chorus", part:"The summit", act:"Payoff", show:"The peaks, hands together, triumphant."},
+      {sec:"Outro", part:"The wedding", act:"Home", show:"Rings, back to Sweden, the wedding to come."}
+    ]
+  },
+  {
+    id:"truenorth",
+    name:"True North (storytelling, indie-folk)",
+    title:"True North",
+    altTitles:["The Needle Always Knew","No More Roam"],
+    note:"Storytelling, indie-folk with gentle momentum. The most detailed on her specifics (Bumble, the frozen-lake first date, her cooking, the visa move, his flights). Metaphor: a compass. She can chase the whole world, but the needle always points back to him. Rootsy, singalong.",
+    suno:`Indie-folk storytelling with gentle momentum, female lead. Rootsy and warm: acoustic guitar, mandolin, banjo, upright bass, light stomp rhythm, hand-claps in the chorus. Road-trip heart, singalong. Around 108 BPM, 4/4. Clear storytelling female vocal, no rap, no heavy autotune. Quiet stripped bridge, then a warm full-band final chorus. Concise, about 2 minutes 40 seconds: no long intro, no solos.`,
+    lyrics:`[Verse 1 - acoustic, warm]
+Bumble message, winter grey,
+frozen lake, a first-date day.
+He talked pasta, I talked home,
+walked until we lost the road.
+
+[Pre-Chorus - building]
+I had maps of everywhere,
+never thought I'd want to stay somewhere.
+
+[Chorus - band in, hand-claps]
+I have chased the northern light,
+every border, every flight,
+but the needle always knew,
+my true north was always you.
+
+[Verse 2 - the everyday]
+Sunday kitchens, steam and spice,
+bun and banh mi, basmati rice.
+He burned garlic, I burned tea,
+built a little world for two to be.
+
+[Bridge - almost silent, voice and guitar]
+[Diminuendo]
+Then my visa ran to ground,
+had to fly to my hometown.
+Ten thousand miles, a glowing screen,
+furthest north I'd ever been.
+
+[Pre-Chorus - building]
+[Crescendo]
+Then he crossed the world, and then,
+swing and sea, "my Boo-boo?" Yes.
+
+[Chorus - full, key change]
+I have chased the northern light,
+climbed each mountain, caught each flight,
+but the needle always knew,
+my true north was always you.
+
+[Outro - soft]
+Rings on, heading home,
+my Dudu Bear, no more roam.
+[End]`,
+    map:[
+      {sec:"Verse 1", part:"The meet", act:"Spark", show:"Bumble screen, frozen-lake first date, the walk."},
+      {sec:"Pre-Chorus", part:"The wanderer", act:"Flex", show:"Her maps / pin-drop, the traveller identity."},
+      {sec:"Chorus", part:"True north", act:"Hook", show:"Travel-together montage, compass motif."},
+      {sec:"Verse 2", part:"Everyday", act:"Bliss", show:"World-cooking (her Vietnamese dishes, his cooking), home life."},
+      {sec:"Bridge", part:"Torn apart", act:"Dip", show:"The visa move, the distance sequence, phone-light nights."},
+      {sec:"Pre-Chorus", part:"Proposal", act:"Turn", show:"He crosses the world; the Phu Quoc swing and ring."},
+      {sec:"Final Chorus", part:"The summit", act:"Payoff", show:"Peaks + travels, biggest energy."},
+      {sec:"Outro", part:"Home", act:"Land", show:"Rings, back to Sweden, home."}
+    ]
   }
 ];
-DATA.song = DATA.songs[DATA.songs.length-1]; // default = latest; back-compat for old refs
+DATA.song = DATA.songs[0]; // default shown = Gravity (recommended)
 
 /* ---- event groups (code -> label + colour) ---- */
 DATA.events = {
