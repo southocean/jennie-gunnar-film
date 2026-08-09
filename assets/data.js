@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.7", appUpdated:"2026-08-07 - Gravity map: paragliding=start, summit=fly-together ending" };
+const DATA = { targetSec:135, appVersion:"2.7", appUpdated:"2026-08-07 - remember last-selected tab" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 

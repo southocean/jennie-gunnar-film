@@ -287,13 +287,20 @@ function fillEventSelects(){
   const opts=Object.entries(EVENTS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("");
   $("#poolEvent").insertAdjacentHTML("beforeend",opts); $("#anaEvent").insertAdjacentHTML("beforeend",opts);
 }
+const TABS=["story","analysis","music","about","cuts"];
 function switchTab(name){
+  if(TABS.indexOf(name)<0) return;
   $$(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===name));
   $$(".tabpane").forEach(p=>p.classList.remove("active"));
   $("#tab-"+name).classList.add("active");
   if(name==="analysis") renderAnalysis();
   if(name==="music") renderMusic();
   if(name==="cuts") renderCuts();
+  try{ localStorage.setItem("jg_tab",name); }catch(e){}
+}
+function restoreTab(){
+  let t; try{ t=localStorage.getItem("jg_tab"); }catch(e){}
+  if(t && t!=="story" && TABS.indexOf(t)>=0) switchTab(t);
 }
 
 /* ---------- theme ---------- */
@@ -480,5 +487,5 @@ function initGate(){
 }
 
 initGate();
-applyTheme(state.theme||"light"); fillEventSelects(); bind(); renderAbout(); renderAppVer(); initPoolSortable(); updateVersionButtons(); renderAll();
+applyTheme(state.theme||"light"); fillEventSelects(); bind(); renderAbout(); renderAppVer(); initPoolSortable(); updateVersionButtons(); renderAll(); restoreTab();
 })();
