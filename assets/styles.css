@@ -180,6 +180,9 @@ button{font:inherit;cursor:pointer}
 .songbox{white-space:pre-wrap;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.55;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;color:var(--ink);margin:8px 0 4px;max-height:none;overflow-x:auto}
 .song-vers{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
 .song-vers .songver.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.song-revs{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0 2px}
+.song-revs .songrev.on{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.song-revnote{margin:2px 0 6px}
 .song-note{font-style:italic}
 .sl-wrap{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:8px}
 .shotlist{width:100%;border-collapse:collapse;font-size:12.5px}

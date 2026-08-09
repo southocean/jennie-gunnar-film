@@ -339,46 +339,57 @@ function renderAbout(){
 /* ---------- the song (music-first) ---------- */
 function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 let songVer=-1; /* index into DATA.songs; -1 = show the first (recommended) */
+let songRev=-1; /* index into the current song's revs; -1 = latest */
 function renderMusic(){
   const box=$("#musicBody"); if(!box) return;
   const list=DATA.songs||(DATA.song?[DATA.song]:[]);
   if(songVer<0||songVer>=list.length) songVer=0;
   const s=list[songVer]||DATA.song||{};
+  const revs=(s.revs&&s.revs.length)?s.revs:[{rev:1,date:"",note:"",lyrics:s.lyrics||""}];
+  const latest=revs.length-1;
+  const ri=(songRev<0||songRev>=revs.length)?latest:songRev;
+  const cur=revs[ri];
   const rows=(s.map||[]).map(m=>`<tr><td class="sl-tc">${esc(m.sec)}</td><td><b>${esc(m.part)}</b><div class="sl-loc">${esc(m.act)}</div></td><td class="sl-cap">${esc(m.show)}</td></tr>`).join("");
-  const vers=list.length>1?`<div class="song-vers">${list.map((v,i)=>`<button class="btn songver${i===songVer?" on":""}" data-i="${i}">${esc(v.name||("Version "+(i+1)))}</button>`).join("")}</div>`:"";
+  const vers=list.length>1?`<div class="song-vers">${list.map((v,i)=>`<button class="btn songver${i===songVer?" on":""}" data-i="${i}">${esc(v.name||("Song "+(i+1)))}</button>`).join("")}</div>`:"";
+  const revBar=revs.length>1?`<div class="song-revs"><span class="vlabel">Revisions</span>${revs.map((r,i)=>`<button class="btn small songrev${i===ri?" on":""}" data-r="${i}">rev ${r.rev}${i===latest?" (current)":""}</button>`).join("")}</div>`:"";
+  const revNote=(cur.note||cur.date)?`<p class="hint song-revnote">${ri===latest?"Current":"<strong>Older revision</strong>"} - rev ${cur.rev}${cur.date?" ("+esc(cur.date)+")":""}: ${esc(cur.note||"")}${ri!==latest?` <a href="#" id="backToLatest">(back to current rev ${revs[latest].rev})</a>`:""}</p>`:"";
   box.innerHTML=`
     <h2>The song 🎵</h2>
-    <p>We're going <strong>music first</strong>. The song is written, then the film is cut to it: the lyrics decide what we show, and every transition lands on the beat. So the plan is to get a version we love in <strong>Suno</strong>, then time the edit to it.</p>
-    <p>It's a love story about <em>a girl and a guy</em> - never named - told from her side. Every version is run through <a href="LYRIC-CRAFT.md" target="_blank">the lyric-craft harness</a>: rhyming, economical, images over statements, the hook as the last line of the chorus, her wandering shown as a <em>flex</em> (never loneliness), and POV-correct pet names (he calls her <em>Boo-boo</em> in the proposal; she calls him <em>Dudu Bear</em> at the end). Four to compare: <strong>two catchy-pop</strong> (Gravity, The Summit) and <strong>two storytelling</strong> (The Long Way Home = country-folk, True North = indie-folk, with more of her real specifics). Each version's Suno style prompt matches its own vibe.</p>
+    <p>We're going <strong>music first</strong>: the song is written, then the film is cut to it, and every transition lands on the beat. Get a take we love in <strong>Suno</strong> (v5.5), then I time the edit to it.</p>
+    <p>A love story about <em>a girl and a guy</em> - never named - from her side. Run through <a href="LYRIC-CRAFT.md" target="_blank">the lyric-craft harness</a>: rhyming, economical, images over statements, hook last, her wandering shown as a <em>flex</em> (never loneliness), POV-correct pet names (he calls her <em>Boo-boo</em> in the proposal; she calls him <em>Dudu Bear</em> at the end). Two finalists now: <strong>Gravity</strong> (catchy pop) and <strong>The Long Way Home</strong> (country-folk storytelling). We are fine-tuning, so each keeps a <strong>revision history</strong> you can view and revert.</p>
 
     ${vers}
     ${s.note?`<p class="hint song-note">${esc(s.note)}</p>`:""}
 
     <h3>1. Suno style prompt</h3>
-    <p class="hint">Paste this into Suno's <strong>Style of Music</strong> box. Title suggestion: <strong>${esc(s.title||"")}</strong> ${s.altTitles&&s.altTitles.length?`(alts: ${s.altTitles.map(esc).join(", ")})`:""}.</p>
+    <p class="hint">Paste into Suno's <strong>Style of Music</strong> box. Title: <strong>${esc(s.title||"")}</strong> ${s.altTitles&&s.altTitles.length?`(alts: ${s.altTitles.map(esc).join(", ")})`:""}.</p>
     <div class="make-actions"><button class="btn" id="btnCopySuno">⧉ Copy style prompt</button></div>
     <pre class="songbox" id="sunoBox">${esc(s.suno||"")}</pre>
 
     <h3>2. Lyrics</h3>
-    <p class="hint">Paste into Suno's <strong>Lyrics</strong> box. The bracketed tags ([Bridge], [Lift - key change], [Final Chorus]) steer the dynamics - keep them. Generate a few takes and we'll fine-tune from there.</p>
-    <div class="make-actions"><button class="btn" id="btnCopyLyrics">⧉ Copy lyrics</button></div>
-    <pre class="songbox" id="lyricsBox">${esc(s.lyrics||"")}</pre>
+    <p class="hint">Paste into Suno's <strong>Lyrics</strong> box. Keep the bracket tags - they steer the dynamics.</p>
+    ${revBar}
+    ${revNote}
+    <div class="make-actions"><button class="btn" id="btnCopyLyrics">⧉ Copy lyrics (rev ${cur.rev})</button></div>
+    <pre class="songbox" id="lyricsBox">${esc(cur.lyrics||"")}</pre>
 
     <h3>3. How the song maps to the film</h3>
-    <p class="hint">A rough timing map for a ~2:35 song. Once you have a Suno take you like, tell me its real section timings and I'll cut each act to fit exactly.</p>
-    <div class="sl-wrap"><table class="shotlist"><thead><tr><th>Time</th><th>Section</th><th>What we show</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="hint">Rough map. Once you have a Suno take you like, send me its real section timings and I'll cut each act to fit.</p>
+    <div class="sl-wrap"><table class="shotlist"><thead><tr><th>Section</th><th>Beat</th><th>What we show</th></tr></thead><tbody>${rows}</tbody></table></div>
 
     <h3>How to drive Suno (learned the hard way)</h3>
     <ul>
-      <li><strong>Dynamics go INLINE in the lyrics, not the style box.</strong> The bracket tags in each section (<code>[Bridge - almost silent, solo piano, no drums]</code>, <code>[Diminuendo]</code>, <code>[Crescendo]</code>, <code>[Chorus - key change up]</code>) are what Suno actually acts on. The style box only sets the overall vibe.</li>
-      <li><strong>Length:</strong> Suno defaults to ~4 min and grows with the lyrics; each verse adds 30-60s. We trimmed sections and added <code>[End]</code>. If a take still runs long, crop the outro in Suno's own editor.</li>
-      <li><strong>Model:</strong> use <strong>v5.5</strong> for this - cleaner, fuller acoustic mixes and more natural vocals. v4.5 only wins for heavy/distorted genres, which this isn't.</li>
-      <li>Generate 4 to 6 takes and keep the one whose <em>bridge</em> strips back the most and whose <em>final chorus</em> lifts hardest on the key change.</li>
+      <li><strong>Dynamics go INLINE in the lyrics, not the style box.</strong> The bracket tags per section (<code>[Bridge - almost silent, solo piano, no drums]</code>, <code>[Diminuendo]</code>, <code>[Crescendo]</code>, <code>[Chorus - key change up]</code>) are what Suno acts on. The style box only sets the overall vibe.</li>
+      <li><strong>Length:</strong> Suno grows with the lyrics; each verse adds 30-60s. We keep it lean and add <code>[End]</code>. If a take runs long, crop the outro in Suno's editor.</li>
+      <li><strong>Model:</strong> v5.5 for this - cleaner acoustic mixes and vocals.</li>
+      <li>Generate 4-6 takes; keep the one whose bridge strips back most and whose final chorus lifts hardest on the key change.</li>
     </ul>`;
   const copy=(txt,ok)=>{ if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>toast(ok),()=>toast("Copy failed - select and copy manually.")); else toast("Select and copy manually."); };
   $("#btnCopySuno").addEventListener("click",()=>copy(s.suno||"","Style prompt copied."));
-  $("#btnCopyLyrics").addEventListener("click",()=>copy(s.lyrics||"","Lyrics copied."));
-  $$(".songver").forEach(b=>b.addEventListener("click",()=>{ songVer=+b.dataset.i; renderMusic(); }));
+  $("#btnCopyLyrics").addEventListener("click",()=>copy(cur.lyrics||"","Lyrics copied (rev "+cur.rev+")."));
+  $$(".songver").forEach(b=>b.addEventListener("click",()=>{ songVer=+b.dataset.i; songRev=-1; renderMusic(); }));
+  $$(".songrev").forEach(b=>b.addEventListener("click",()=>{ songRev=+b.dataset.r; renderMusic(); }));
+  const bl=$("#backToLatest"); if(bl) bl.addEventListener("click",e=>{ e.preventDefault(); songRev=-1; renderMusic(); });
 }
 
 /* ---------- watch the cuts (guarded by the global site gate) ---------- */
