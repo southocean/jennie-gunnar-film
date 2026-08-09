@@ -370,7 +370,7 @@ function renderMusic(){
     <p class="hint">Paste into Suno's <strong>Lyrics</strong> box. Keep the bracket tags - they steer the dynamics.</p>
     ${revBar}
     ${revNote}
-    <div class="make-actions"><button class="btn" id="btnCopyLyrics">⧉ Copy lyrics (rev ${cur.rev})</button></div>
+    <div class="make-actions"><button class="btn" id="btnCopyLyrics">⧉ Copy lyrics (rev ${cur.rev})</button>${cur.url?`<a class="btn" href="${esc(cur.url)}" target="_blank" rel="noopener">🎧 Listen to this rev (Suno)</a>`:""}</div>
     <pre class="songbox" id="lyricsBox">${esc(cur.lyrics||"")}</pre>
 
     <h3>3. How the song maps to the film</h3>

@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.6", appUpdated:"2026-08-07 - 2 finalists + revision tracking; Gravity rev2" };
+const DATA = { targetSec:135, appVersion:"2.7", appUpdated:"2026-08-07 - Gravity rev2 fine-tune; Suno links on rev1" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
@@ -25,13 +25,14 @@ DATA.songs = [
       {sec:"Chorus 2", part:"Grounded", act:"Home", show:"The bigger travels together: Ha Long, Sapa, Taiwan, Doha - the world, but he is home."},
       {sec:"Bridge", part:"Torn apart", act:"Dip (~20s)", show:"THE animation: she moves to Vietnam, both cry (tears), facetime photos, back to map, he rockets across to her (VN, Tet)."},
       {sec:"Pre-Chorus", part:"Proposal", act:"Lift", show:"The Phu Quoc beach swing, the ring."},
-      {sec:"Final Chorus", part:"They fly", act:"Payoff", show:"Subversion: not grounded, soaring - the summit climbs (Fansipan, Yushan), reaching the sky together."},
+      {sec:"Final Chorus", part:"They fly", act:"Payoff", show:"Subversion, arms wide: paragliding + the summit climbs (Fansipan, Yushan), soaring and reaching the sky together."},
       {sec:"Outro", part:"Wheels up", act:"Fly", show:"Taking off together, the ring, the next adventure."}
     ],
     revs:[
       {
         rev:1, date:"2026-08-07",
-        note:"Initial craft draft.",
+        url:"https://suno.com/s/L6ZUbeMYb6k1Ks9J",
+        note:"Initial craft draft. Generated on Suno (link above) - kept as backlog.",
         lyrics:`[Verse 1 - soft, piano and heartbeat pulse]
 Window seat, a one-way flight,
 chasing color, chasing light.
@@ -85,7 +86,7 @@ my Dudu Bear, I'm home.
       },
       {
         rev:2, date:"2026-08-07",
-        note:"Nam's fine-tune. Pre-chorus now leads with the dating message, then the smile (stronger storytelling order). Verse 2 made specific and fun (his pasta / her pho, dancing, burnt pan) instead of generic salt-and-butter. Bridge rebuilt into 6 beats (she moves, both cry, facetime, he crosses the world) so the proposal is foreshadowed and earned; removed the vague 'they'. FINAL CHORUS subverted: gravity becomes wings - she does not need the ground, they fly together ('let's fly'), reframing the whole song and setting up the summit. Outro no longer 'I'm home' (which read as held back) but 'I fly with you'.",
+        note:"Fine-tune (not yet generated on Suno). Chorus line 2 now tracks the arc: C1 'never sure which way was home' (searching), C2 'turns out you were always home' (found). Final chorus opens with the two familiar lines, THEN subverts (less on-the-nose): it twists GRAVITY, not home - 'you don't hold me to the ground, you're the wings I never found', ending 'arms wide open, watch us fly' (sets up paragliding / summit). Verse 2 line 1 tightened to 'Your pasta, my pho on the stove' (killed the you/your-I/my-cook repetition); kept the golden 'two left feet / just where we stand'. Bridge line 3 now the timezone image 'Woke at six to say goodnight' (her dawn = his night, distance made visible). Cut the 'my love, my love' repetition; the Dudu Bear reveal stays as the single last-line payoff in the outro.",
         lyrics:`[Verse 1 - soft, piano and heartbeat pulse]
 Window seat, a one-way flight,
 chasing color, chasing light.
@@ -98,12 +99,12 @@ then you smiled, and the sky stood still.
 
 [Chorus - warm, drums in]
 Chased the sun through every zone,
-never needed a road home.
+never sure which way was home.
 Then you pulled me to the ground,
 you're the gravity I found.
 
 [Verse 2 - light groove, playful]
-You cook your pasta, I cook my pho,
+Your pasta, my pho on the stove,
 we crank the music, dance real slow,
 two left feet and a burnt-black pan,
 happiest here, just where we stand.
@@ -118,7 +119,7 @@ you're the gravity I found.
 [Diminuendo]
 Then the whole world pulled apart,
 zero gravity, breaking heart.
-Screens and time zones, one more night,
+Woke at six to say goodnight,
 then you crossed the world to my side.
 
 [Pre-Chorus - building]
@@ -128,11 +129,11 @@ Then a swing, the sea, one knee,
 
 [Final Chorus - huge, key change up, full band]
 Chased the sun through every zone,
-thought that gravity was home.
+turns out you were always home.
 But you don't hold me to the ground,
 you're the wings I never found.
 So let's not land, let's chase the sky,
-my love, my love, let's fly.
+arms wide open, watch us fly.
 
 [Outro - soft, then lifting]
 Wheels up, into the blue,
@@ -160,7 +161,8 @@ my Dudu Bear, I fly with you.
     revs:[
       {
         rev:1, date:"2026-08-07",
-        note:"Craft draft (country-folk storytelling). Not yet fine-tuned - we work this after Gravity.",
+        url:"https://suno.com/s/TImj8NfMOYcp4H8l",
+        note:"Craft draft (country-folk storytelling). Generated on Suno (link above). Not yet fine-tuned - we work this after Gravity.",
         lyrics:`[Verse 1 - fingerpicked, intimate]
 Grew up restless, quick to roam,
 thirty countries, no fixed home.
