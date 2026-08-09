@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.7", appUpdated:"2026-08-07 - Gravity rev2 fine-tune; Suno links on rev1" };
+const DATA = { targetSec:135, appVersion:"2.7", appUpdated:"2026-08-07 - Gravity rev2 bridge line (sunrise-goodnight)" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
@@ -86,7 +86,7 @@ my Dudu Bear, I'm home.
       },
       {
         rev:2, date:"2026-08-07",
-        note:"Fine-tune (not yet generated on Suno). Chorus line 2 now tracks the arc: C1 'never sure which way was home' (searching), C2 'turns out you were always home' (found). Final chorus opens with the two familiar lines, THEN subverts (less on-the-nose): it twists GRAVITY, not home - 'you don't hold me to the ground, you're the wings I never found', ending 'arms wide open, watch us fly' (sets up paragliding / summit). Verse 2 line 1 tightened to 'Your pasta, my pho on the stove' (killed the you/your-I/my-cook repetition); kept the golden 'two left feet / just where we stand'. Bridge line 3 now the timezone image 'Woke at six to say goodnight' (her dawn = his night, distance made visible). Cut the 'my love, my love' repetition; the Dudu Bear reveal stays as the single last-line payoff in the outro.",
+        note:"Fine-tune (not yet generated on Suno). Chorus line 2 now tracks the arc: C1 'never sure which way was home' (searching), C2 'turns out you were always home' (found). Final chorus opens with the two familiar lines, THEN subverts (less on-the-nose): it twists GRAVITY, not home - 'you don't hold me to the ground, you're the wings I never found', ending 'arms wide open, watch us fly' (sets up paragliding / summit). Verse 2 line 1 tightened to 'Your pasta, my pho on the stove' (killed the you/your-I/my-cook repetition); kept the golden 'two left feet / just where we stand'. Bridge line 3 now the timezone image 'My sunrise was your goodnight' (her dawn = his night, distance made visible; replaced the awkward 'Woke at six'). Cut the 'my love, my love' repetition; the Dudu Bear reveal stays as the single last-line payoff in the outro.",
         lyrics:`[Verse 1 - soft, piano and heartbeat pulse]
 Window seat, a one-way flight,
 chasing color, chasing light.
@@ -119,7 +119,7 @@ you're the gravity I found.
 [Diminuendo]
 Then the whole world pulled apart,
 zero gravity, breaking heart.
-Woke at six to say goodnight,
+My sunrise was your goodnight,
 then you crossed the world to my side.
 
 [Pre-Chorus - building]
