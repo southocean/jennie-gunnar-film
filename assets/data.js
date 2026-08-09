@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"2.7", appUpdated:"2026-08-07 - Gravity rev2 bridge line (sunrise-goodnight)" };
+const DATA = { targetSec:135, appVersion:"2.7", appUpdated:"2026-08-07 - Gravity map: paragliding=start, summit=fly-together ending" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
@@ -18,14 +18,14 @@ DATA.songs = [
     note:"Catchy pop, one metaphor. Arc: she is always flying (free, a flex), finds her 'gravity' in him (choruses 1 and 2 = grounded, this is home), then the final chorus SUBVERTS it - she doesn't need the ground after all; love is not an anchor, it is wings, so they fly together (ties to the summit, reaching the sky). Mid-tempo cinematic pop so the stripped bridge lands.",
     suno:`Mid-tempo cinematic pop, female lead. Atmospheric and emotional: warm piano, soft synth pads, a steady heartbeat pulse under fingerpicked guitar, building to a big anthemic chorus with full drums and layered vocals. Dreamy but grounded, cinematic, uplifting lift at the end. Around 100 BPM, 4/4. Clear female vocal, no rap, no heavy autotune. Concise, radio length, about 2 minutes 30 seconds: no long intro, no solos, no repeated outro.`,
     map:[
-      {sec:"Verse 1", part:"The wanderer", act:"Flex", show:"Travel b-roll / pin-drop map: windows, flights, cities. Free and fearless."},
+      {sec:"Verse 1", part:"The wanderer", act:"Flex", show:"Her solo flying = the wandering metaphor: paragliding, window seats, flights, a world map filling in. Free and fearless."},
       {sec:"Pre-Chorus", part:"The meet", act:"Turn", show:"The dating-app screenshot first, THEN Gunnar's smile / them together."},
       {sec:"Chorus 1", part:"Found gravity", act:"Hook", show:"Lighter travel: first date, early little trips (Poland), first snow."},
       {sec:"Verse 2", part:"Everyday", act:"Home", show:"Home life, escalating and fun: his pasta + her pho, dancing in the kitchen, burnt pan, laughing."},
       {sec:"Chorus 2", part:"Grounded", act:"Home", show:"The bigger travels together: Ha Long, Sapa, Taiwan, Doha - the world, but he is home."},
       {sec:"Bridge", part:"Torn apart", act:"Dip (~20s)", show:"THE animation: she moves to Vietnam, both cry (tears), facetime photos, back to map, he rockets across to her (VN, Tet)."},
       {sec:"Pre-Chorus", part:"Proposal", act:"Lift", show:"The Phu Quoc beach swing, the ring."},
-      {sec:"Final Chorus", part:"They fly", act:"Payoff", show:"Subversion, arms wide: paragliding + the summit climbs (Fansipan, Yushan), soaring and reaching the sky together."},
+      {sec:"Final Chorus", part:"They fly", act:"Payoff", show:"Flying again, but TOGETHER: the summit shot (arms wide, above the clouds at sunrise - Fansipan/Yushan) carries 'watch us fly'. No literal together-flying footage needed; the peak is the flight."},
       {sec:"Outro", part:"Wheels up", act:"Fly", show:"Taking off together, the ring, the next adventure."}
     ],
     revs:[
