@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:198, appVersion:"3.2", appUpdated:"2026-08-10 - Story Builder rebuilt on song sections (3:18) + stacks; captions removed" };
+const DATA = { targetSec:198, appVersion:"3.3", appUpdated:"2026-08-10 - real photo thumbnails in stacks (chunked ~2s) + maximize videos" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
@@ -1162,17 +1162,33 @@ DATA.story = DATA.stories.draft1.chapters; /* back-compat */
 /* Music-first: chapters ARE the song sections, derived from the Edit-plan storyboard.
    Clips (with ids) resolve to real thumbnails; the FB photo bulk rides along as stacks
    (rendered per-chapter in app.js). No per-clip captions. */
-DATA.stories.song = {
-  name: "🎵 Song sections (music-first)",
-  chapters: (DATA.storyboard||[]).map(function(sec){
-    return {
-      title: sec.part + "  ·  " + sec.tc,
-      items: (sec.assets||[]).filter(function(a){ return a.id; }).map(function(a){
-        return { item:a.id, beat:"", dur:(String(a.id).charAt(0)==="v"?4:3) };
-      })
-    };
-  })
-};
+(function(){
+  /* maximize videos: pull all pool videos whose trip/event maps to a section (deduped, each used once) */
+  var SEC_EVENTS = {
+    "Chorus 1 - her crazy, flying past": ["SE-SEASONS"],
+    "Verse 2 - the love story (home)": ["SE-HOME"],
+    "Chorus 2 - the world, together (+ instrumental)": ["TW-TAIPEI","TW-TAROKO","TH-BANGKOK","QA-DOHA","VN-HALONG","VN-NINHBINH","EU","SE-GOTLAND","SE-LAPLAND"],
+    "Crescendo - Tet, VN, then the proposal": ["VN-DANANG","VN-PHUQUOC","VN-SAPA","VN-HAGIANG","VN-MEKONG"],
+    "Final Chorus (Verse 3) - the summit": ["TW-YUSHAN"],
+    "Outro - the jump callback, into the sky (+ instrumental)": ["SPECIAL"]
+  };
+  var used = {};
+  DATA.stories.song = {
+    name: "🎵 Song sections (music-first)",
+    chapters: (DATA.storyboard||[]).map(function(sec){
+      var items = [];
+      (sec.assets||[]).filter(function(a){ return a.id; }).forEach(function(a){
+        if(used[a.id]) return; used[a.id]=1;
+        items.push({ item:a.id, beat:"", dur:(String(a.id).charAt(0)==="v"?4:3) });
+      });
+      var evs = SEC_EVENTS[sec.part] || [];
+      if(evs.length) (DATA.videos||[]).forEach(function(v){
+        if(!used[v.id] && evs.indexOf(v.event)>=0){ used[v.id]=1; items.push({ item:v.id, beat:"", dur:4 }); }
+      });
+      return { title: sec.part + "  ·  " + sec.tc, items: items };
+    })
+  };
+})();
 
 window.DATA = DATA;
 })();

@@ -175,11 +175,7 @@ function renderStory(){
     } else {
       const _sec=storySectionFor(ch), _stks=_sec?(_sec.assets||[]).filter(a=>a.kind==='stack'):[];
       if(_stks.length){ const sr=document.createElement("div"); sr.className="ep-stacks ch-stacks";
-        _stks.forEach(function(a){ const btn=document.createElement("button"); btn.className="ep-stack"; btn.title=a.note||"";
-          btn.innerHTML='<span class="ep-stack-pile"><i></i><i></i><i></i></span><span class="ep-stack-meta"><b>'+esc(a.label)+'</b><span class="ep-stack-cnt">'+a.count+' photos ▸</span><span class="ep-stack-folder">'+esc(a.folder)+'</span></span>';
-          btn.addEventListener("click",function(){ openStack(_sec,a); }); sr.appendChild(btn); });
-        list.appendChild(sr);
-      }
+        sr.innerHTML=stackTilesHTML(_stks); bindStackClicks(sr); list.appendChild(sr); }
       const body=document.createElement("div"); body.className="ch-body"+(ch.items.length?"":" empty"); body.dataset.ch=ch.id;
       ch.items.forEach(id=>{ const m=byId[id]; if(!m)return; globalNum++; body.appendChild(beatCard(m,globalNum)); });
       list.appendChild(body);
@@ -270,6 +266,48 @@ function openStack(sec, st){
     <div class="mrow"><span class="k">How to use</span><span>Flash this bulk on the beat during this section, then keep the best on the timeline.</span></div>
     <p class="hint" style="margin-top:12px">The ${st.count} photos live in <code>Downloads/Jennies facebook/${esc(st.folder)}</code>. Once that media is synced into the pool, this popup lists them as thumbnails and you can drag more photos into the stack (iOS-group style).</p>
   </div>`;
+  $("#modal").hidden=false;
+}
+/* --- photo stacks: real thumbnails (from local media/fb via window.FB_STACKS), chunked into ~2s micro-stacks --- */
+function fbFiles(folder){ return (window.FB_STACKS && window.FB_STACKS[folder] && window.FB_STACKS[folder].files.length) ? window.FB_STACKS[folder] : null; }
+function chunkArr(a,n){ const o=[]; for(let i=0;i<a.length;i+=n) o.push(a.slice(i,i+n)); return o; }
+function stackTilesHTML(assets){
+  return (assets||[]).map(function(a){
+    const fb=fbFiles(a.folder);
+    if(fb){
+      const groups=chunkArr(fb.files,5);
+      return groups.map(function(g,gi){
+        const pile=g.slice(0,3).map(f=>'<img src="media/fb/'+fb.slug+'/'+f+'" loading="lazy" alt="">').join("");
+        return '<button class="ep-stack has-thumbs" data-slug="'+fb.slug+'" data-files="'+g.join(',')+'" data-label="'+esc(a.label)+'" title="'+esc(a.note||'')+'">'
+          +'<span class="ep-stack-pile">'+pile+'</span>'
+          +'<span class="ep-stack-meta"><b>'+esc(a.label)+'</b><span class="ep-stack-cnt">'+g.length+' · ~2s ▸</span><span class="ep-stack-folder">'+esc(a.folder)+' ('+(gi+1)+'/'+groups.length+')</span></span></button>';
+      }).join("");
+    }
+    return '<button class="ep-stack" data-fallback="1" data-folder="'+esc(a.folder)+'" data-count="'+a.count+'" data-label="'+esc(a.label)+'" data-note="'+esc(a.note||'')+'" title="'+esc(a.note||'')+'">'
+      +'<span class="ep-stack-pile"><i></i><i></i><i></i></span>'
+      +'<span class="ep-stack-meta"><b>'+esc(a.label)+'</b><span class="ep-stack-cnt">'+a.count+' photos ▸</span><span class="ep-stack-folder">'+esc(a.folder)+'</span></span></button>';
+  }).join("");
+}
+function bindStackClicks(root){
+  $$(".ep-stack",root).forEach(function(b){
+    b.addEventListener("click",function(){
+      if(b.dataset.slug) openStackGrid(b.dataset.label, b.dataset.slug, b.dataset.files.split(","));
+      else openStackText(b.dataset.label, b.dataset.folder, b.dataset.count, b.dataset.note);
+    });
+  });
+}
+function openStackGrid(label, slug, files){
+  const grid=files.map(f=>'<img src="media/fb/'+slug+'/'+f+'" loading="lazy" alt="">').join("");
+  $("#modalBody").innerHTML='<div class="mbody stackpop"><h3>🗂 '+esc(label)+'</h3>'
+    +'<p class="hint">'+files.length+' photos in this ~2s stack - flash them on the beat, keep the best.</p>'
+    +'<div class="stackgrid">'+grid+'</div></div>';
+  $("#modal").hidden=false;
+}
+function openStackText(label, folder, count, note){
+  $("#modalBody").innerHTML='<div class="mbody stackpop"><h3>🗂 '+esc(label)+'</h3>'
+    +'<div class="mrow"><span class="k">Stack</span><span><b>'+count+' photos</b> from <code>Jennies facebook/'+esc(folder)+'</code></span></div>'
+    +(note?'<div class="mrow"><span class="k">Note</span><span>'+esc(note)+'</span></div>':'')
+    +'<p class="hint" style="margin-top:10px">Thumbnails show once the media is synced locally (media/fb/).</p></div>';
   $("#modal").hidden=false;
 }
 
@@ -439,11 +477,7 @@ function renderEditPlan(){
   const cards=sb.map((sec,si)=>{
     const stacks=sec.assets.filter(a=>a.kind==='stack');
     const rest=sec.assets.filter(a=>a.kind!=='stack');
-    const stackHTML = stacks.length ? `<div class="ep-stacks">`+stacks.map((a,ai)=>
-      `<button class="ep-stack" data-si="${si}" data-ai="${ai}" title="${esc(a.note||'')}">
-         <span class="ep-stack-pile"><i></i><i></i><i></i></span>
-         <span class="ep-stack-meta"><b>${esc(a.label)}</b><span class="ep-stack-cnt">${a.count} photos ▸</span><span class="ep-stack-folder">${esc(a.folder)}</span></span>
-       </button>`).join("")+`</div>` : "";
+    const stackHTML = stacks.length ? `<div class="ep-stacks">`+stackTilesHTML(stacks)+`</div>` : "";
     const rows=rest.map(a=>`<tr class="${a.kind==='todo'?'ep-todo':''}"><td class="ep-lab">${a.kind==='todo'?'⚙ ':(a.kind==='photo'?'🖼 ':'🎬 ')}${esc(a.label)}</td><td class="ep-file">${esc(a.file||'')}</td></tr>`).join("");
     return `<div class="ep-sec">
       <div class="ep-head"><span class="ep-tc">${esc(sec.tc)}</span><strong>${esc(sec.part)}</strong></div>
@@ -460,10 +494,7 @@ function renderEditPlan(){
     <div class="make-actions"><button class="btn" id="btnCopyEDL">⧉ Copy plan</button><button class="btn" id="btnDlEDL">⬇ Download plan (.txt)</button></div>
     ${cards}
     <p class="hint">⚙ = to build / still to add. 🗂 stacks point at <code>Downloads/Jennies facebook/…</code>; once that media syncs into the pool, stacks show thumbnails and become drag-to-add.</p>`;
-  $$(".ep-stack").forEach(b=>b.addEventListener("click",()=>{
-    const si=+b.dataset.si, ai=+b.dataset.ai;
-    const sec=DATA.storyboard[si]; openStack(sec, sec.assets.filter(a=>a.kind==='stack')[ai]);
-  }));
+  bindStackClicks($("#editBody"));
   const copy=(t,ok)=>{ if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>toast(ok),()=>toast("Copy failed.")); };
   $("#btnCopyEDL").addEventListener("click",()=>copy(editPlanText(),"Edit plan copied."));
   $("#btnDlEDL").addEventListener("click",()=>{ const b=new Blob([editPlanText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-edit-plan.txt"; a.click(); URL.revokeObjectURL(a.href); toast("Edit plan downloaded."); });
