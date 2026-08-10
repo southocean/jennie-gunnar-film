@@ -1,8 +1,9 @@
-import os, re, json
+import os, re, json, sys
 from PIL import Image, ImageOps
 
-SRC = r"C:\Users\nam\Downloads\Jennies facebook"
-REPO = r"C:\project\friends\jennie"
+# Source = the synced "Jennies facebook" folder. Pass it as the first arg, else defaults to Downloads.
+SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.expanduser("~"), "Downloads", "Jennies facebook")
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(REPO, "media", "fb")
 IMG_EXT = (".jpg",".jpeg",".png")
 
