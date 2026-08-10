@@ -275,10 +275,10 @@ button{font:inherit;cursor:pointer}
 .ep-stacks{display:flex;flex-wrap:wrap;gap:16px}
 #modal.stashmode{pointer-events:none}
 #modal.stashmode .modal-backdrop{background:transparent;pointer-events:none}
-#modal.stashmode .modal-card{pointer-events:auto;position:fixed;right:14px;top:64px;bottom:14px;left:auto;width:380px;max-width:42vw;margin:0;max-height:none;overflow:auto}
-.stashpop-head{padding:0 2px 10px}
-.stashpop-head h3{font-size:15px;margin-bottom:2px}
-.stashgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px}
+#modal.stashmode .modal-card{pointer-events:auto;position:fixed;right:16px;top:64px;bottom:16px;left:auto;width:400px;max-width:44vw;margin:0;max-height:none;overflow:auto;padding:20px 22px 22px}
+.stashpop-head{padding:0 34px 14px 0;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.stashpop-head h3{font-size:15.5px;margin-bottom:4px}
+.stashgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:9px}
 .stashgrid .pcard{aspect-ratio:1;cursor:grab;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
 .stashgrid .pthumb{width:100%;height:100%}
 .stashgrid .pthumb img{width:100%;height:100%;object-fit:cover;display:block}
