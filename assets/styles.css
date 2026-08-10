@@ -263,3 +263,22 @@ button{font:inherit;cursor:pointer}
 }
 
 .ch-stacks{margin:0 0 8px;padding-top:2px}
+
+/* ===== stash cards (timeline row, ~beat sized) + non-modal draggable stash panel ===== */
+.stash{flex:0 0 150px;width:150px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;position:relative;align-self:flex-start;box-shadow:4px 4px 0 -1px var(--panel2),4px 4px 0 0 var(--line),8px 8px 0 -1px var(--panel2),8px 8px 0 0 var(--line)}
+.stash:hover{border-color:var(--accent)}
+.stash-thumb{position:relative;width:100%;height:112px;background:var(--panel);display:flex;align-items:center;justify-content:center}
+.stash-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.stash-badge{position:absolute;top:5px;right:5px;background:var(--ov);color:#fff;font-size:10.5px;font-weight:800;border-radius:5px;padding:1px 6px}
+.stash-lab{font-size:11px;font-weight:700;padding:5px 7px 7px;line-height:1.22}
+.ch-body .stash{margin-right:8px}
+.ep-stacks{display:flex;flex-wrap:wrap;gap:16px}
+#modal.stashmode{pointer-events:none}
+#modal.stashmode .modal-backdrop{background:transparent;pointer-events:none}
+#modal.stashmode .modal-card{pointer-events:auto;position:fixed;right:14px;top:64px;bottom:14px;left:auto;width:380px;max-width:42vw;margin:0;max-height:none;overflow:auto}
+.stashpop-head{padding:0 2px 10px}
+.stashpop-head h3{font-size:15px;margin-bottom:2px}
+.stashgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px}
+.stashgrid .pcard{aspect-ratio:1;cursor:grab;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.stashgrid .pthumb{width:100%;height:100%}
+.stashgrid .pthumb img{width:100%;height:100%;object-fit:cover;display:block}

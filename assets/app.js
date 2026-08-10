@@ -8,6 +8,12 @@ const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","De
 const byId = {};
 DATA.videos.forEach(v=>{v.type="video";byId[v.id]=v;});
 DATA.images.forEach(m=>{m.type="image";byId[m.id]=m;});
+/* register local FB stash photos as thumbnail-backed media items so they are real, draggable, and persist in chapters */
+DATA.fbItems=[];
+if(window.FB_STASHES){ Object.keys(window.FB_STASHES).forEach(function(folder){ var st=window.FB_STASHES[folder];
+  (st.groups||[]).forEach(function(g){ (g.files||[]).forEach(function(f){ var id="fb:"+st.slug+"/"+f; if(byId[id])return;
+    var m={id:id,type:"image",fb:true,poster:"media/fb/"+st.slug+"/"+f,file:f,loc:folder,ctx:g.label,event:"MISC",people:"",orient:"",rating:0,date:"",beat:""};
+    byId[id]=m; DATA.fbItems.push(m); }); }); }); }
 let anaType = "video";
 
 /* ---------- state (two switchable story versions) ---------- */
@@ -60,7 +66,7 @@ function ratingOf(id){ return state.ratings[id]!=null ? state.ratings[id] : (byI
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 function fmt(t){t=Math.max(0,Math.round(t));return Math.floor(t/60)+":"+String(t%60).padStart(2,"0");}
-function posterOf(m){ return m.type==="video" ? `media/vid/${m.id}/poster.jpg` : `media/img/${m.id}.jpg`; }
+function posterOf(m){ return m.fb ? m.poster : (m.type==="video" ? `media/vid/${m.id}/poster.jpg` : `media/img/${m.id}.jpg`); }
 function framesOf(m){ return m.type==="video" ? [1,2,3,4,5].map(n=>`media/vid/${m.id}/f${n}.jpg`) : [posterOf(m)]; }
 function evOf(m){ return EVENTS[m.event] || {label:m.event||"-",color:"#999"}; }
 function monYear(d){ if(!d||d.length<7) return ""; return MON[+d.slice(5,7)-1]+" "+d.slice(0,4); }
@@ -174,10 +180,10 @@ function renderStory(){
       list.appendChild(strip);
     } else {
       const _sec=storySectionFor(ch), _stks=_sec?(_sec.assets||[]).filter(a=>a.kind==='stack'):[];
-      if(_stks.length){ const sr=document.createElement("div"); sr.className="ep-stacks ch-stacks";
-        sr.innerHTML=stackTilesHTML(_stks); bindStackClicks(sr); list.appendChild(sr); }
-      const body=document.createElement("div"); body.className="ch-body"+(ch.items.length?"":" empty"); body.dataset.ch=ch.id;
+      const body=document.createElement("div"); body.className="ch-body"+((ch.items.length||_stks.length)?"":" empty"); body.dataset.ch=ch.id;
+      if(_stks.length){ const tmp=document.createElement("div"); tmp.innerHTML=stashCardsHTML(_stks); Array.prototype.slice.call(tmp.children).forEach(c=>body.appendChild(c)); }
       ch.items.forEach(id=>{ const m=byId[id]; if(!m)return; globalNum++; body.appendChild(beatCard(m,globalNum)); });
+      bindStashClicks(body);
       list.appendChild(body);
     }
   });
@@ -255,7 +261,7 @@ function openModal(id){
   const st=starsEl(id,false); $(".starhost",b).appendChild(st);
   $("#modal").hidden=false;
 }
-function closeModal(){ $("#modal").hidden=true; }
+function closeModal(){ const m=$("#modal"); m.hidden=true; m.classList.remove("stashmode"); if(typeof stashSortable!=="undefined"&&stashSortable){ try{stashSortable.destroy();}catch(e){} stashSortable=null; } }
 function openStack(sec, st){
   if(!st) return; const b=$("#modalBody");
   b.innerHTML=`<div class="mbody stackpop">
@@ -269,46 +275,37 @@ function openStack(sec, st){
   $("#modal").hidden=false;
 }
 /* --- photo stacks: real thumbnails (from local media/fb via window.FB_STACKS), chunked into ~2s micro-stacks --- */
-function fbFiles(folder){ return (window.FB_STACKS && window.FB_STACKS[folder] && window.FB_STACKS[folder].files.length) ? window.FB_STACKS[folder] : null; }
-function chunkArr(a,n){ const o=[]; for(let i=0;i<a.length;i+=n) o.push(a.slice(i,i+n)); return o; }
-function stackTilesHTML(assets){
-  return (assets||[]).map(function(a){
-    const fb=fbFiles(a.folder);
-    if(fb){
-      const groups=chunkArr(fb.files,5);
-      return groups.map(function(g,gi){
-        const pile=g.slice(0,3).map(f=>'<img src="media/fb/'+fb.slug+'/'+f+'" loading="lazy" alt="">').join("");
-        return '<button class="ep-stack has-thumbs" data-slug="'+fb.slug+'" data-files="'+g.join(',')+'" data-label="'+esc(a.label)+'" title="'+esc(a.note||'')+'">'
-          +'<span class="ep-stack-pile">'+pile+'</span>'
-          +'<span class="ep-stack-meta"><b>'+esc(a.label)+'</b><span class="ep-stack-cnt">'+g.length+' · ~2s ▸</span><span class="ep-stack-folder">'+esc(a.folder)+' ('+(gi+1)+'/'+groups.length+')</span></span></button>';
-      }).join("");
-    }
-    return '<button class="ep-stack" data-fallback="1" data-folder="'+esc(a.folder)+'" data-count="'+a.count+'" data-label="'+esc(a.label)+'" data-note="'+esc(a.note||'')+'" title="'+esc(a.note||'')+'">'
-      +'<span class="ep-stack-pile"><i></i><i></i><i></i></span>'
-      +'<span class="ep-stack-meta"><b>'+esc(a.label)+'</b><span class="ep-stack-cnt">'+a.count+' photos ▸</span><span class="ep-stack-folder">'+esc(a.folder)+'</span></span></button>';
-  }).join("");
+/* themed photo stashes (window.FB_STASHES): card-sized tiles + a non-modal, draggable panel of real media cards */
+function stashGroups(folder){ var s=window.FB_STASHES&&window.FB_STASHES[folder]; return s?s.groups.map(function(g){return {label:folder+": "+g.label, short:g.label, slug:s.slug, files:g.files||[]};}):null; }
+function stashCardsHTML(assets){
+  var html="";
+  (assets||[]).forEach(function(a){
+    var gs=stashGroups(a.folder);
+    if(gs){ gs.forEach(function(g,gi){
+      var thumb=g.files.length?('media/fb/'+g.slug+'/'+g.files[0]):'';
+      html+='<div class="stash" data-folder="'+esc(a.folder)+'" data-gi="'+gi+'" title="'+esc(g.label)+'">'
+        +'<div class="stash-thumb">'+(thumb?'<img src="'+thumb+'" loading="lazy" alt="">':'')+'<span class="stash-badge">🗂 '+g.files.length+'</span></div>'
+        +'<div class="stash-lab">'+esc(g.short)+'</div></div>';
+    }); }
+    else { html+='<div class="stash nofb" data-folder="'+esc(a.folder)+'" title="'+esc(a.note||'')+'"><div class="stash-thumb"><span class="stash-badge">🗂 '+(a.count||'')+'</span></div><div class="stash-lab">'+esc(a.label)+'</div></div>'; }
+  });
+  return html;
 }
-function bindStackClicks(root){
-  $$(".ep-stack",root).forEach(function(b){
-    b.addEventListener("click",function(){
-      if(b.dataset.slug) openStackGrid(b.dataset.label, b.dataset.slug, b.dataset.files.split(","));
-      else openStackText(b.dataset.label, b.dataset.folder, b.dataset.count, b.dataset.note);
-    });
+function bindStashClicks(root){
+  $$(".stash",root).forEach(function(el){
+    el.addEventListener("click",function(){ if(clickBlocked())return; var gs=stashGroups(el.dataset.folder); var gi=+el.dataset.gi; if(gs&&gs[gi]) openStashPopup(gs[gi]); });
   });
 }
-function openStackGrid(label, slug, files){
-  const grid=files.map(f=>'<img src="media/fb/'+slug+'/'+f+'" loading="lazy" alt="">').join("");
-  $("#modalBody").innerHTML='<div class="mbody stackpop"><h3>🗂 '+esc(label)+'</h3>'
-    +'<p class="hint">'+files.length+' photos in this ~2s stack - flash them on the beat, keep the best.</p>'
-    +'<div class="stackgrid">'+grid+'</div></div>';
-  $("#modal").hidden=false;
-}
-function openStackText(label, folder, count, note){
-  $("#modalBody").innerHTML='<div class="mbody stackpop"><h3>🗂 '+esc(label)+'</h3>'
-    +'<div class="mrow"><span class="k">Stack</span><span><b>'+count+' photos</b> from <code>Jennies facebook/'+esc(folder)+'</code></span></div>'
-    +(note?'<div class="mrow"><span class="k">Note</span><span>'+esc(note)+'</span></div>':'')
-    +'<p class="hint" style="margin-top:10px">Thumbnails show once the media is synced locally (media/fb/).</p></div>';
-  $("#modal").hidden=false;
+let stashSortable=null;
+function openStashPopup(g){
+  var cards=g.files.map(function(f){ return '<div class="pcard" data-id="fb:'+g.slug+'/'+f+'"><div class="pthumb"><img src="media/fb/'+g.slug+'/'+f+'" loading="lazy" alt=""></div></div>'; }).join("");
+  $("#modalBody").innerHTML='<div class="stashpop"><div class="stashpop-head"><h3>🗂 '+esc(g.label)+'</h3>'
+    +'<span class="hint">'+g.files.length+' photos - drag any into a section on the timeline; drag more in to add.</span></div>'
+    +'<div class="stashgrid" id="stashGrid">'+cards+'</div></div>';
+  var modal=$("#modal"); modal.classList.add("stashmode"); modal.hidden=false;
+  if(stashSortable){try{stashSortable.destroy();}catch(e){}}
+  stashSortable=new Sortable($("#stashGrid"),{group:{name:"media",pull:"clone",put:true},sort:false,draggable:".pcard",animation:150,
+    onStart:function(){sortDragging=true;}, onEnd:function(){sortDragging=false;lastDragEnd=Date.now();scheduleRefresh();}});
 }
 
 /* ---------- analysis ---------- */
@@ -477,7 +474,7 @@ function renderEditPlan(){
   const cards=sb.map((sec,si)=>{
     const stacks=sec.assets.filter(a=>a.kind==='stack');
     const rest=sec.assets.filter(a=>a.kind!=='stack');
-    const stackHTML = stacks.length ? `<div class="ep-stacks">`+stackTilesHTML(stacks)+`</div>` : "";
+    const stackHTML = stacks.length ? `<div class="ep-stacks">`+stashCardsHTML(stacks)+`</div>` : "";
     const rows=rest.map(a=>`<tr class="${a.kind==='todo'?'ep-todo':''}"><td class="ep-lab">${a.kind==='todo'?'⚙ ':(a.kind==='photo'?'🖼 ':'🎬 ')}${esc(a.label)}</td><td class="ep-file">${esc(a.file||'')}</td></tr>`).join("");
     return `<div class="ep-sec">
       <div class="ep-head"><span class="ep-tc">${esc(sec.tc)}</span><strong>${esc(sec.part)}</strong></div>
@@ -494,7 +491,7 @@ function renderEditPlan(){
     <div class="make-actions"><button class="btn" id="btnCopyEDL">⧉ Copy plan</button><button class="btn" id="btnDlEDL">⬇ Download plan (.txt)</button></div>
     ${cards}
     <p class="hint">⚙ = to build / still to add. 🗂 stacks point at <code>Downloads/Jennies facebook/…</code>; once that media syncs into the pool, stacks show thumbnails and become drag-to-add.</p>`;
-  bindStackClicks($("#editBody"));
+  bindStashClicks($("#editBody"));
   const copy=(t,ok)=>{ if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>toast(ok),()=>toast("Copy failed.")); };
   $("#btnCopyEDL").addEventListener("click",()=>copy(editPlanText(),"Edit plan copied."));
   $("#btnDlEDL").addEventListener("click",()=>{ const b=new Blob([editPlanText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-edit-plan.txt"; a.click(); URL.revokeObjectURL(a.href); toast("Edit plan downloaded."); });

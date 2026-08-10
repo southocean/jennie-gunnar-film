@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:198, appVersion:"3.3", appUpdated:"2026-08-10 - real photo thumbnails in stacks (chunked ~2s) + maximize videos" };
+const DATA = { targetSec:198, appVersion:"3.4", appUpdated:"2026-08-10 - themed photo stashes (card-sized, in-row) + non-modal draggable stash panel" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
