@@ -252,6 +252,18 @@ function openModal(id){
   $("#modal").hidden=false;
 }
 function closeModal(){ $("#modal").hidden=true; }
+function openStack(sec, st){
+  if(!st) return; const b=$("#modalBody");
+  b.innerHTML=`<div class="mbody stackpop">
+    <h3>🗂 ${esc(st.label)}</h3>
+    <div class="mrow"><span class="k">Section</span><span>${esc(sec.part)} · <b>${esc(sec.tc)}</b></span></div>
+    <div class="mrow"><span class="k">Stack</span><span><b>${st.count} photos</b> from <code>Jennies facebook/${esc(st.folder)}</code></span></div>
+    ${st.note?`<div class="mrow"><span class="k">Note</span><span>${esc(st.note)}</span></div>`:""}
+    <div class="mrow"><span class="k">How to use</span><span>Flash this bulk on the beat during this section, then keep the best on the timeline.</span></div>
+    <p class="hint" style="margin-top:12px">The ${st.count} photos live in <code>Downloads/Jennies facebook/${esc(st.folder)}</code>. Once that media is synced into the pool, this popup lists them as thumbnails and you can drag more photos into the stack (iOS-group style).</p>
+  </div>`;
+  $("#modal").hidden=false;
+}
 
 /* ---------- analysis ---------- */
 function renderAnalysis(){
@@ -405,7 +417,10 @@ function editPlanText(){
   const sb=DATA.storyboard||[]; let s="JENNIE & GUNNAR - EDIT PLAN (footprint for CapCut)\n";
   s+="Song: Gravity v3 (3:19, 99.4 BPM). Portrait 9:16. Lyrics burned on screen, synced per section. No story captions. Every clip/photo used ONCE.\n";
   sb.forEach(sec=>{ s+="\n["+sec.tc+"]  "+sec.part+"\n  lyric: "+sec.lyric.replace(/ \/ /g," / ")+"\n  show: "+sec.intent+"\n";
-    sec.assets.forEach(a=>{ s+="   - "+(a.kind==="todo"?"[TODO] ":"")+a.label+"  ->  "+a.file+"\n"; });
+    sec.assets.forEach(a=>{
+      if(a.kind==="stack") s+="   - [STACK] "+a.label+"  ->  "+(a.count||"?")+" photos from folder \""+a.folder+"\""+(a.note?"  ("+a.note+")":"")+"\n";
+      else s+="   - "+(a.kind==="todo"?"[TODO] ":(a.kind==="photo"?"[photo] ":"[video] "))+a.label+"  ->  "+(a.file||"")+"\n";
+    });
     if(sec.pending) s+="   PENDING: "+sec.pending+"\n";
   });
   return s;
@@ -413,22 +428,34 @@ function editPlanText(){
 function renderEditPlan(){
   const box=$("#editBody"); if(!box) return;
   const sb=DATA.storyboard||[];
-  const cards=sb.map(sec=>{
-    const rows=sec.assets.map(a=>`<tr class="${a.kind==='todo'?'ep-todo':''}"><td class="ep-lab">${a.kind==='todo'?'⚙ ':(a.kind==='photo'?'🖼 ':'🎬 ')}${esc(a.label)}</td><td class="ep-file">${esc(a.file)}</td></tr>`).join("");
+  const cards=sb.map((sec,si)=>{
+    const stacks=sec.assets.filter(a=>a.kind==='stack');
+    const rest=sec.assets.filter(a=>a.kind!=='stack');
+    const stackHTML = stacks.length ? `<div class="ep-stacks">`+stacks.map((a,ai)=>
+      `<button class="ep-stack" data-si="${si}" data-ai="${ai}" title="${esc(a.note||'')}">
+         <span class="ep-stack-pile"><i></i><i></i><i></i></span>
+         <span class="ep-stack-meta"><b>${esc(a.label)}</b><span class="ep-stack-cnt">${a.count} photos ▸</span><span class="ep-stack-folder">${esc(a.folder)}</span></span>
+       </button>`).join("")+`</div>` : "";
+    const rows=rest.map(a=>`<tr class="${a.kind==='todo'?'ep-todo':''}"><td class="ep-lab">${a.kind==='todo'?'⚙ ':(a.kind==='photo'?'🖼 ':'🎬 ')}${esc(a.label)}</td><td class="ep-file">${esc(a.file||'')}</td></tr>`).join("");
     return `<div class="ep-sec">
       <div class="ep-head"><span class="ep-tc">${esc(sec.tc)}</span><strong>${esc(sec.part)}</strong></div>
       <p class="ep-lyric">${esc(sec.lyric)}</p>
       <p class="hint ep-intent">${esc(sec.intent)}</p>
-      <table class="ep-tab"><tbody>${rows}</tbody></table>
+      ${stackHTML}
+      ${rows?`<table class="ep-tab"><tbody>${rows}</tbody></table>`:""}
       ${sec.pending?`<p class="hint ep-pending">Still needed: ${esc(sec.pending)}</p>`:""}
     </div>`;
   }).join("");
   box.innerHTML=`
     <h2>Edit plan 🎬 <span class="pill">footprint for CapCut</span></h2>
-    <p>Second-by-second map of which material goes where, cut to <strong>Gravity v3</strong> (3:19, 99.4 BPM), portrait 9:16. <strong>Lyrics are burned on screen</strong>, synced to each section; <strong>no story captions</strong>; and <strong>every clip/photo is used only once</strong>. Filenames match the source folder (<code>Jennies wedding</code>) and the Facebook set.</p>
+    <p>Second-by-second map cut to the <strong>song section breakdown</strong> (portrait 9:16). <strong>Lyrics burned on screen</strong>, synced per section; <strong>no story captions</strong>. Photo-heavy sections carry a <strong>stack</strong> (a bulk of candidates from a Facebook folder) - click a stack to see it; on the timeline you flash through the pile on the beat and keep the best.</p>
     <div class="make-actions"><button class="btn" id="btnCopyEDL">⧉ Copy plan</button><button class="btn" id="btnDlEDL">⬇ Download plan (.txt)</button></div>
     ${cards}
-    <p class="hint">⚙ = to build / still to add. As new footage arrives (dancing, Tet, FaceTime, more Facebook), I slot it into the right section and update this plan.</p>`;
+    <p class="hint">⚙ = to build / still to add. 🗂 stacks point at <code>Downloads/Jennies facebook/…</code>; once that media syncs into the pool, stacks show thumbnails and become drag-to-add.</p>`;
+  $$(".ep-stack").forEach(b=>b.addEventListener("click",()=>{
+    const si=+b.dataset.si, ai=+b.dataset.ai;
+    const sec=DATA.storyboard[si]; openStack(sec, sec.assets.filter(a=>a.kind==='stack')[ai]);
+  }));
   const copy=(t,ok)=>{ if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>toast(ok),()=>toast("Copy failed.")); };
   $("#btnCopyEDL").addEventListener("click",()=>copy(editPlanText(),"Edit plan copied."));
   $("#btnDlEDL").addEventListener("click",()=>{ const b=new Blob([editPlanText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-edit-plan.txt"; a.click(); URL.revokeObjectURL(a.href); toast("Edit plan downloaded."); });

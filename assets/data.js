@@ -1,55 +1,62 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"3.0", appUpdated:"2026-08-08 - Edit plan tab (CapCut footprint) + FB materials ingested" };
+const DATA = { targetSec:135, appVersion:"3.1", appUpdated:"2026-08-10 - Edit plan re-timed to song breakdown + photo stacks" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
 DATA.storyboard = [
   {
-    "part": "Verse 1 - her solo travels",
-    "tc": "0:04 - 0:28",
-    "lyric": "Window seat, a one-way flight, / chasing color, chasing light. / No address, no anchor down, / just the sky in every town.",
-    "intent": "Jennie travelling solo, before Gunnar. Pure wanderlust.",
+    "part": "Intro (instrumental)",
+    "tc": "0:00 - 0:12",
+    "lyric": "(instrumental - title held over a hero shot)",
+    "intent": "Cold open before the vocal: one breathtaking solo shot of Jennie (arms-wide lake jump) held under the title card.",
     "assets": [
       {
-        "kind": "photo",
-        "label": "solo, bicycle in the city",
-        "file": "FB Solo bike.jpg"
-      },
-      {
-        "kind": "photo",
-        "label": "solo, jumping at a castle",
-        "file": "FB Solo castle.jpg"
-      },
-      {
-        "kind": "photo",
-        "label": "solo, jumping at a palace",
-        "file": "FB Solo palace.jpg"
-      },
-      {
-        "kind": "photo",
-        "label": "solo, jumping at the pink palace",
-        "file": "FB Solo pinkpalace.jpg"
-      },
-      {
-        "kind": "photo",
-        "label": "solo, autumn tree-lined path",
-        "file": "FB Solo autumn.jpg"
-      },
-      {
-        "kind": "photo",
-        "label": "solo, in the snow",
-        "file": "FB Solo snow.jpg"
+        "kind": "stack",
+        "label": "Hero jump shot (title frame)",
+        "folder": "Travel highlights (first verse)",
+        "count": 51,
+        "note": "Pick ONE title frame - the arms-wide lake jump is her signature."
       }
     ],
-    "pending": "More solo-travel photos from Facebook (Nam adding)."
+    "pending": "Choose the single title frame."
   },
   {
-    "part": "Pre-Chorus - the meet",
-    "tc": "0:28 - 0:40",
+    "part": "Verse 1 - her travels, long ago",
+    "tc": "0:12 - 0:30",
+    "lyric": "Window seat, a one-way flight, / chasing color, chasing light. / No address, no anchor down, / just the sky in every town.",
+    "intent": "Jennie from way back - old travel photos and a few of her signature jumps. Establish the wanderer. (Save the BIG jumping payoff for the Outro.) Flash fast on the beat.",
+    "assets": [
+      {
+        "kind": "stack",
+        "label": "Old travels (face shots)",
+        "folder": "Old photos",
+        "count": 149,
+        "note": "Her older solo travels - keep the ones with her in them."
+      },
+      {
+        "kind": "stack",
+        "label": "A few jump/travel shots",
+        "folder": "Travel highlights (first verse)",
+        "count": 51,
+        "note": "Just a taste here - the rest is saved for the outro callback."
+      },
+      {
+        "kind": "stack",
+        "label": "A couple old jumps",
+        "folder": "Old jumping",
+        "count": 4,
+        "note": "Tease the jump motif."
+      }
+    ],
+    "pending": "Media syncing from Downloads/Jennies facebook at home; then drag favorites into each stack."
+  },
+  {
+    "part": "Pre-Chorus - the dating story",
+    "tc": "0:30 - 0:41",
     "lyric": "Your message landed, made me smile, / then you smiled, and the sky stood still.",
-    "intent": "The dating app + first date. On \"then you smiled\", cut to a lovely smiling photo of Gunnar.",
+    "intent": "The dating story: the Hinge/Bumble message, the first dates, early selfies together. On 'then you smiled', cut to a lovely solo smile of Gunnar.",
     "assets": [
       {
         "kind": "photo",
@@ -65,62 +72,58 @@ DATA.storyboard = [
       },
       {
         "kind": "todo",
+        "label": "early selfies of them (Nam's phone, uploading later)",
+        "file": "(to add / to build)"
+      },
+      {
+        "kind": "todo",
         "label": "a great solo smiling photo of Gunnar",
         "file": "(to add / to build)"
       }
     ],
-    "pending": "Hinge screenshots; a nice solo Gunnar-smile still."
+    "pending": "Hinge screenshots; early selfies; a nice solo Gunnar-smile still."
   },
   {
-    "part": "Chorus 1 - settling in (home, easygoing)",
-    "tc": "0:40 - 1:00",
-    "lyric": "Chased the sun through every zone, / never knew which road led home. / Then you reached for me, / you’re my gravity.",
-    "intent": "Easygoing home life and chores together. NOT travel yet.",
+    "part": "Chorus 1 - her crazy, flying past",
+    "tc": "0:41 - 1:00",
+    "lyric": "Chased the sun through every zone, / never knew which road led home. / Then you reached for me, / you're my gravity.",
+    "intent": "Her wild, quirky past - color runs, crazy poses - building to the PARAGLIDING as the 'flying' metaphor and visual anchor. On 'then you reached for me', transition to Gunnar - bridging into Verse 2.",
     "assets": [
       {
-        "kind": "video",
-        "label": "running errands",
-        "file": "Errand 1.MOV",
-        "id": "v61",
-        "loc": "Stockholm"
+        "kind": "stack",
+        "label": "Quirky / color runs / crazy poses",
+        "folder": "Old photos",
+        "count": 149,
+        "note": "The fun, wild past - color run, silly poses."
       },
       {
-        "kind": "video",
-        "label": "running errands",
-        "file": "Errand 2.MOV",
-        "id": "v62",
-        "loc": "Stockholm"
+        "kind": "stack",
+        "label": "Paragliding = flying",
+        "folder": "Paraglide",
+        "count": 11,
+        "note": "The centerpiece of the flying metaphor (8 photos + 3 clips)."
       },
       {
-        "kind": "video",
-        "label": "car selfie, everyday joy",
-        "file": "IMG_0619.MOV",
-        "id": "v14",
-        "loc": "Car, Stockholm"
-      },
-      {
-        "kind": "video",
-        "label": "hanging with friends",
-        "file": "Friends 4.MOV",
-        "id": "v63",
-        "loc": "Stockholm"
-      },
-      {
-        "kind": "video",
-        "label": "friends, easygoing",
-        "file": "Friends 7.mov",
-        "id": "v64",
-        "loc": "Stockholm"
+        "kind": "todo",
+        "label": "transition beat to Gunnar on 'then you reached for me'",
+        "file": "(to add / to build)"
       }
     ],
-    "pending": ""
+    "pending": "Confirm how much room this section gives (tempo)."
   },
   {
-    "part": "Verse 2 - cooking",
-    "tc": "1:00 - 1:18",
+    "part": "Verse 2 - the love story (home)",
+    "tc": "1:00 - 1:20",
     "lyric": "Your pasta, my pho on the stove, / we crank the music, dance real slow, / two left feet and a burnt-black pan, / happiest here, just where we stand.",
-    "intent": "Cooking together at home (dancing clips to be added).",
+    "intent": "The love story at home: cooking together, dancing in the kitchen, everyday fun with Gunnar. (More materials on Nam's phone, uploading later.)",
     "assets": [
+      {
+        "kind": "stack",
+        "label": "Cooking together",
+        "folder": "Cooking",
+        "count": 20,
+        "note": "Saffron buns, pad thai, the kitchen - flash on beat between clips."
+      },
       {
         "kind": "video",
         "label": "baking saffron buns",
@@ -148,16 +151,42 @@ DATA.storyboard = [
         "file": "Cooking 8.MOV",
         "id": "v19",
         "loc": "Stockholm home"
+      },
+      {
+        "kind": "todo",
+        "label": "dancing-at-home clips (Nam's phone)",
+        "file": "(to add / to build)"
       }
     ],
-    "pending": "Dancing videos (Nam adding)."
+    "pending": "Dancing videos + more home fun (Nam adding)."
   },
   {
-    "part": "Chorus 2 - the world, together",
-    "tc": "1:18 - 1:34",
-    "lyric": "Chased the sun through every zone, / turns out you were always home. / Then you pulled me to the ground, / and there I found, my gravity.",
-    "intent": "Travelling together OUTSIDE Vietnam (Taiwan, Thailand, Doha...).",
+    "part": "Chorus 2 - the world, together (+ instrumental)",
+    "tc": "1:20 - 1:48",
+    "lyric": "Chased the sun through every zone, / turns out you were always home. / Then you pulled me to the ground, / and there I found, my gravity.  [vocal to ~1:35, instrumental 1:35-1:48]",
+    "intent": "The world, together - their trips as a couple (Taiwan, Doha, Vietnam and more). Vocal montage to ~1:35, then an instrumental beat to flash a big couple-travel stack.",
     "assets": [
+      {
+        "kind": "stack",
+        "label": "Traveling with Gunnar",
+        "folder": "Traveling with Gunnar",
+        "count": 5,
+        "note": "Couple abroad."
+      },
+      {
+        "kind": "stack",
+        "label": "Vietnam with Gunnar",
+        "folder": "Vietnam with Gunnar",
+        "count": 12,
+        "note": "Couple in Vietnam."
+      },
+      {
+        "kind": "stack",
+        "label": "More travels",
+        "folder": "Traveling",
+        "count": 34,
+        "note": "Fill the instrumental tail with fast flashes."
+      },
       {
         "kind": "video",
         "label": "Taroko, Taiwan",
@@ -194,13 +223,13 @@ DATA.storyboard = [
         "loc": "Beitou, Taipei"
       }
     ],
-    "pending": "Poland / other non-VN trip photos if available."
+    "pending": ""
   },
   {
     "part": "Bridge - the distance",
-    "tc": "1:34 - 2:04",
+    "tc": "1:48 - 2:06",
     "lyric": "Then the whole world pulled apart, / zero gravity, breaking heart. / My sunrise was your goodnight, / then you crossed the world to my side.",
-    "intent": "ANIMATION: Jennie drifts away from Gunnar on the map; FaceTime screenshots; ANIMATION: Gunnar boards a plane to Vietnam.",
+    "intent": "Lines 1-2: ANIMATION - she leaves for Vietnam (map), with luggage photos (incl. the sad-cat one). Then FaceTime screenshots (the distance). Last line: ANIMATION - Gunnar crosses the world to her.",
     "assets": [
       {
         "kind": "todo",
@@ -209,23 +238,35 @@ DATA.storyboard = [
       },
       {
         "kind": "todo",
-        "label": "FaceTime screenshots",
+        "label": "Luggage photos incl. the sad-cat one (Nam adding)",
         "file": "(to add / to build)"
       },
       {
         "kind": "todo",
-        "label": "Animation: Gunnar flies to Vietnam",
+        "label": "FaceTime screenshots (the distance)",
+        "file": "(to add / to build)"
+      },
+      {
+        "kind": "todo",
+        "label": "Animation: Gunnar flies to Vietnam (last line)",
         "file": "(to add / to build)"
       }
     ],
-    "pending": "Claude to build the clean, caption-free distance animation; Nam to add FaceTime screenshots."
+    "pending": "Claude to build the caption-free distance animation; Nam to add luggage + FaceTime photos."
   },
   {
-    "part": "Crescendo - Tet, then the proposal",
-    "tc": "2:04 - 2:22",
-    "lyric": "You stayed for Tet, you held me near, / a hundred lanterns lit the year. / Then on the sand, I couldn’t guess, / \"be my Boo-boo?\" I said yes.",
-    "intent": "Quick Tet images + light travel in Vietnam, then the swing and the ring.",
+    "part": "Crescendo - Tet, VN, then the proposal",
+    "tc": "2:06 - 2:22",
+    "lyric": "You stayed for Tet, you held me near, / a hundred lanterns lit the year. / Then on the sand, I couldn't guess, / \"be my Boo-boo?\" I said yes.",
+    "intent": "Lines 1-2: Tet + all the Vietnam activities/travel (lots of material, little time - flash fast). Line 3: beach photos (Phu Quoc). 'Will you be my bubu?' = a STILL with the question as ON-SCREEN TEXT, then a BLACK-SCREEN beat. On 'I said yes': flash ALL the engagement-ring photos on the drum hit.",
     "assets": [
+      {
+        "kind": "stack",
+        "label": "Tet + all VN activities",
+        "folder": "Vietnam with Gunnar",
+        "count": 12,
+        "note": "Lines 1-2: fast flashes, lots of material, little time."
+      },
       {
         "kind": "video",
         "label": "light travel, Ha Giang VN",
@@ -234,23 +275,26 @@ DATA.storyboard = [
         "loc": "Ha Giang, Vietnam"
       },
       {
-        "kind": "video",
-        "label": "the cliffside swing (her turn)",
-        "file": "IMG_3662.MOV",
-        "id": "v35",
-        "loc": "Sapa, Vietnam"
-      },
-      {
-        "kind": "video",
-        "label": "the cliffside swing",
-        "file": "IMG_3659.MOV",
-        "id": "v34",
-        "loc": "Sapa, Vietnam"
-      },
-      {
         "kind": "photo",
-        "label": "the swing, Phu Quoc night",
+        "label": "beach, Phu Quoc (line 3)",
         "file": "Engage FB 5.jpg"
+      },
+      {
+        "kind": "todo",
+        "label": "TEXT CARD still: 'Will you be my bubu?' (question on screen)",
+        "file": "(to add / to build)"
+      },
+      {
+        "kind": "todo",
+        "label": "BLACK SCREEN beat",
+        "file": "(to add / to build)"
+      },
+      {
+        "kind": "stack",
+        "label": "Engagement / ring photos (flash on the drum)",
+        "folder": "Vietnam with Gunnar",
+        "count": 12,
+        "note": "On 'I said yes' - flash ALL the ring/engagement shots on the drum hit."
       },
       {
         "kind": "photo",
@@ -258,14 +302,35 @@ DATA.storyboard = [
         "file": "Engage FB 1.jpg"
       }
     ],
-    "pending": "Tet photos (family, lanterns)."
+    "pending": "Tet photos (family, lanterns); the ring-photo set."
   },
   {
-    "part": "Final Chorus - the summit",
-    "tc": "2:22 - 2:46",
-    "lyric": "...you’re the wings I never found. / So let’s not land, let’s chase the sky, / arms wide open, watch us fly.",
-    "intent": "The mountain summits: videos + photos, arms wide above the clouds.",
+    "part": "Final Chorus (Verse 3) - the summit",
+    "tc": "2:22 - 2:51",
+    "lyric": "...you're the wings I never found. / So let's not land, let's chase the sky, / arms wide open, watch us fly.",
+    "intent": "The payoff: the summits (Yushan + Fansipan), together, intercut with more Vietnam travel. Arms wide, above the clouds - the biggest, longest section.",
     "assets": [
+      {
+        "kind": "stack",
+        "label": "Yushan summit (Taiwan, together)",
+        "folder": "Yushan summit",
+        "count": 40,
+        "note": "The Jade Mtn climb - the big summit stack."
+      },
+      {
+        "kind": "stack",
+        "label": "Fansipan summit (Vietnam, together)",
+        "folder": "Fansipan summit",
+        "count": 4,
+        "note": "Top of Indochina, the couple at the marker."
+      },
+      {
+        "kind": "stack",
+        "label": "More Vietnam travel (intercut)",
+        "folder": "Vietnam with Gunnar",
+        "count": 12,
+        "note": "Mix VN travel between the summit shots."
+      },
       {
         "kind": "video",
         "label": "Yushan night summit push",
@@ -300,47 +365,44 @@ DATA.storyboard = [
         "file": "IMG_2632.MOV",
         "id": "v27",
         "loc": "Fansipan summit"
-      },
-      {
-        "kind": "photo",
-        "label": "both, summit, arms wide above clouds",
-        "file": "FB Summit couple.jpg"
-      },
-      {
-        "kind": "photo",
-        "label": "solo, summit, arms wide",
-        "file": "FB Summit solo.jpg"
       }
     ],
     "pending": ""
   },
   {
-    "part": "Outro - wheels up, together",
-    "tc": "2:46 - 3:19",
-    "lyric": "Wheels up, into the blue, / my Dudu Bear, I fly with you.",
-    "intent": "A lovely shot of the two of them; camera drifts up to the blue sky. End.",
+    "part": "Outro - the jump callback, into the sky (+ instrumental)",
+    "tc": "2:51 - 3:05 (+ instrumental)",
+    "lyric": "Wheels up, into the blue, / my Dudu Bear, I fly with you.  [then instrumental to the end]",
+    "intent": "The callback: return to her OLD photos, then her OLD jumps, then the NEW jumps (how far she's come), and END on the footage of Jennie & Gunnar looking up at the sky. Hold on the instrumental.",
     "assets": [
       {
-        "kind": "video",
-        "label": "mountaintop hug, \"this view, with you\"",
-        "file": "IMG_2515.MOV",
-        "id": "v24",
-        "loc": "Sapa, Vietnam"
+        "kind": "stack",
+        "label": "Back to old photos",
+        "folder": "Old photos",
+        "count": 149,
+        "note": "Return to where we started."
       },
       {
-        "kind": "photo",
-        "label": "the two of them, dressed up",
-        "file": "FB Couple formal.jpg"
+        "kind": "stack",
+        "label": "Old jumps",
+        "folder": "Old jumping",
+        "count": 4,
+        "note": "Her early jump poses."
       },
       {
-        "kind": "video",
-        "label": "Ha Long kayak, huge smiles",
-        "file": "IMG_1900.MOV",
-        "id": "v20",
-        "loc": "Ha Long Bay"
+        "kind": "stack",
+        "label": "New jumps (the payoff we saved)",
+        "folder": "Travel highlights (first verse)",
+        "count": 51,
+        "note": "The saved jump shots - the growth pays off here."
+      },
+      {
+        "kind": "todo",
+        "label": "FINAL: Jennie & Gunnar footage, looking up to the sky",
+        "file": "(to add / to build)"
       }
     ],
-    "pending": "A shot that drifts up to the sky for the final frame."
+    "pending": "The final sky shot of the two of them."
   }
 ];
 
