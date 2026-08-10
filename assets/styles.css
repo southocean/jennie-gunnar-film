@@ -255,3 +255,5 @@ button{font:inherit;cursor:pointer}
   #tab-story{flex-direction:column}
   .pool{flex-basis:auto;max-width:none;max-height:40vh;border-right:none;border-bottom:1px solid var(--line)}
 }
+
+.ch-stacks{margin:0 0 8px;padding-top:2px}

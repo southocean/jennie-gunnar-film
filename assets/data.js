@@ -1,7 +1,7 @@
 /* Content data + first-draft story for the Jennie & Gunnar wedding film.
    Ratings here are Claude's first-pass defaults; users can override them in the app. */
 (function(){
-const DATA = { targetSec:135, appVersion:"3.1", appUpdated:"2026-08-10 - Edit plan re-timed to song breakdown + photo stacks" };
+const DATA = { targetSec:198, appVersion:"3.2", appUpdated:"2026-08-10 - Story Builder rebuilt on song sections (3:18) + stacks; captions removed" };
 /* The draft cuts live in Nam's Koofr folder now (page stays lightweight). Paste the Koofr share link here. */
 DATA.cutsFolderUrl = "";
 
@@ -1158,6 +1158,21 @@ DATA.stories.storytelling = { name:"Version 3 (Storytelling)", chapters:[
 ]};
 
 DATA.story = DATA.stories.draft1.chapters; /* back-compat */
+
+/* Music-first: chapters ARE the song sections, derived from the Edit-plan storyboard.
+   Clips (with ids) resolve to real thumbnails; the FB photo bulk rides along as stacks
+   (rendered per-chapter in app.js). No per-clip captions. */
+DATA.stories.song = {
+  name: "🎵 Song sections (music-first)",
+  chapters: (DATA.storyboard||[]).map(function(sec){
+    return {
+      title: sec.part + "  ·  " + sec.tc,
+      items: (sec.assets||[]).filter(function(a){ return a.id; }).map(function(a){
+        return { item:a.id, beat:"", dur:(String(a.id).charAt(0)==="v"?4:3) };
+      })
+    };
+  })
+};
 
 window.DATA = DATA;
 })();

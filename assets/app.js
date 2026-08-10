@@ -19,7 +19,7 @@ function buildVersion(chapters){
 }
 function defaultState(){
   const saved={}; Object.keys(DATA.stories).forEach(k=>{ saved[k]=buildVersion(DATA.stories[k].chapters); });
-  const active = saved.storytelling ? "storytelling" : (saved.jennie ? "jennie" : Object.keys(saved)[0]);
+  const active = saved.song ? "song" : (saved.storytelling ? "storytelling" : (saved.jennie ? "jennie" : Object.keys(saved)[0]));
   const st={saved:saved, active:active, ratings:{}, seq:99, theme:"light", version:4};
   st.chapters=saved[active].chapters; st.meta=saved[active].meta; return st;
 }
@@ -44,6 +44,8 @@ function load(){
   }catch(e){} }
   if(!st) st=defaultState();
   sanitizeState(st);
+  if(DATA.stories.song && !st.saved.song){ st.saved.song=buildVersion(DATA.stories.song.chapters); st.active="song"; } // one-time: add + switch to the music-first version
+  if(!st.saved[st.active]) st.active=Object.keys(st.saved)[0];
   st.chapters=st.saved[st.active].chapters; st.meta=st.saved[st.active].meta;
   try{ localStorage.setItem(LS_KEY, JSON.stringify({saved:st.saved,active:st.active,ratings:st.ratings,theme:st.theme,seq:st.seq,version:8})); }catch(e){}
   return st;
@@ -147,6 +149,7 @@ function renderPool(){
 
 /* ---------- story: chapters ---------- */
 function chById(id){ return state.chapters.find(c=>c.id===id); }
+function storySectionFor(ch){ const part=(ch.title||"").split("  ·  ")[0].trim(); return (DATA.storyboard||[]).find(function(s){return s.part===part;}); }
 function chapterTime(ch){ return ch.items.reduce((s,id)=>s+((state.meta[id]&&state.meta[id].dur)||0),0); }
 function renderStory(){
   const list=$("#storyList"); list.innerHTML="";
@@ -170,6 +173,13 @@ function renderStory(){
       if(ch.items.length>20){ const s=document.createElement("span"); s.className="more"; s.textContent="+"+(ch.items.length-20); strip.appendChild(s); }
       list.appendChild(strip);
     } else {
+      const _sec=storySectionFor(ch), _stks=_sec?(_sec.assets||[]).filter(a=>a.kind==='stack'):[];
+      if(_stks.length){ const sr=document.createElement("div"); sr.className="ep-stacks ch-stacks";
+        _stks.forEach(function(a){ const btn=document.createElement("button"); btn.className="ep-stack"; btn.title=a.note||"";
+          btn.innerHTML='<span class="ep-stack-pile"><i></i><i></i><i></i></span><span class="ep-stack-meta"><b>'+esc(a.label)+'</b><span class="ep-stack-cnt">'+a.count+' photos ▸</span><span class="ep-stack-folder">'+esc(a.folder)+'</span></span>';
+          btn.addEventListener("click",function(){ openStack(_sec,a); }); sr.appendChild(btn); });
+        list.appendChild(sr);
+      }
       const body=document.createElement("div"); body.className="ch-body"+(ch.items.length?"":" empty"); body.dataset.ch=ch.id;
       ch.items.forEach(id=>{ const m=byId[id]; if(!m)return; globalNum++; body.appendChild(beatCard(m,globalNum)); });
       list.appendChild(body);
@@ -186,12 +196,10 @@ function beatCard(m,num){
       <span class="bnum">${num}</span><span class="btype">${typeTag(m)} ${m.type==="video"?meta.dur+"s":"photo"}</span>
       <div class="bbot"><div class="bln">📍 ${m.loc||"-"}</div>${timelineBar(m)}</div></div>
     <div class="bbody">
-      <textarea placeholder="beat / caption…">${(meta.beat||"").replace(/</g,"&lt;")}</textarea>
       <div class="bctrl">⏱<input class="bdurin" type="number" min="1" max="60" value="${meta.dur}">s
         <button class="bi" title="Full notes">ⓘ</button><button class="bx" title="Remove">✕</button></div>
     </div>`;
   hoverCycle($("img",el),framesOf(m));
-  const ta=$("textarea",el); ta.addEventListener("input",()=>{meta.beat=ta.value;save();});
   const di=$(".bdurin",el); di.addEventListener("input",()=>{meta.dur=Math.max(1,+di.value||1);if(m.type==="video")$(".btype",el).textContent=typeTag(m)+" "+meta.dur+"s";save();updateRuntime();updateChapterTimes();});
   $(".bi",el).addEventListener("click",()=>openModal(m.id));
   const bt=$(".bthumb",el); bt.title="Click for info · press and drag to reorder";
@@ -207,7 +215,7 @@ function updateRuntime(){
   const fill=$("#runFill"); fill.style.width=Math.min(100,total/target*100)+"%";
   fill.style.background= total>target*1.15 ? "linear-gradient(90deg,var(--danger),var(--gold))" : "linear-gradient(90deg,var(--accent2),var(--gold))";
   const h=$("#runHint");
-  h.textContent = total<80 ? "A touch short - room for a few more beats." : (total<=150 ? "Right in the sweet spot for a 2-2½ min film. ✨" : "Getting long - trim a few beat durations or clips.");
+  h.textContent = total<target*0.6 ? "Shorter than the song - room for more." : (total<=target*1.12 ? "About the song's length. ✨" : "Longer than the song - trim durations or clips.");
 }
 
 /* ---------- drag/drop across chapters + pool ---------- */
