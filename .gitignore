@@ -3,5 +3,10 @@ node_modules/
 Thumbs.db
 
 # Local-only FB photo thumbnails + manifest (personal; not for the public repo)
+jennie/media/fb/
+jennie/fb_stacks.js
 media/fb/
 assets/fb_stacks.js
+
+# Emma: the song is someone else's track - local planning copy only, never published
+emma/media/song.mp3

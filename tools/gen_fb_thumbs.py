@@ -4,7 +4,7 @@ from PIL import Image, ImageOps
 # Source = the synced "Jennies facebook" folder. Pass it as the first arg, else defaults to Downloads.
 SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.expanduser("~"), "Downloads", "Jennies facebook")
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(REPO, "media", "fb")
+OUT = os.path.join(REPO, "jennie", "media", "fb")
 IMG_EXT = (".jpg",".jpeg",".png")
 
 def slug(name):
@@ -36,8 +36,8 @@ for folder in sorted(os.listdir(SRC)):
         except Exception as e:
             print("skip", f, e)
     manifest[folder] = {"slug": sl, "files": files}
-    print(f"{folder:<34} -> media/fb/{sl}/  ({len(files)})")
+    print(f"{folder:<34} -> jennie/media/fb/{sl}/  ({len(files)})")
 
 js = "/* LOCAL-ONLY thumbnail manifest for FB photo stacks. Git-ignored - not pushed (public repo). */\nwindow.FB_STACKS = " + json.dumps(manifest, ensure_ascii=False, indent=1) + ";\n"
-open(os.path.join(REPO, "assets", "fb_stacks.js"), "w", encoding="utf-8").write(js)
+open(os.path.join(REPO, "jennie", "fb_stacks.js"), "w", encoding="utf-8").write(js)
 print("TOTAL thumbnails:", total, "| folders:", len(manifest))

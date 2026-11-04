@@ -1,8 +1,11 @@
-/* Jennie & Gunnar - wedding film story builder (v3: chapters, dark mode, timeline) */
+/* Wedding video workshop - shared story-builder engine (chapters, dark mode, timeline).
+   Each project page (jennie/, emma/) loads its own data.js + media/ and keeps its own saved state. */
 (function(){
 "use strict";
 const DATA = window.DATA;
-const LS_KEY = "jennie_story_v8";
+const LS_KEY = DATA.lsKey || "jennie_story_v8";
+const TAB_KEY = DATA.tabKey || "jg_tab";
+const LEGACY = LS_KEY==="jennie_story_v8"; /* only Jennie has older saves to migrate */
 const EVENTS = DATA.events;
 const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const byId = {};
@@ -20,12 +23,12 @@ let anaType = "video";
 let state = load();
 function buildVersion(chapters){
   const meta={}, chs=[];
-  chapters.forEach((ch,i)=>{ const items=[]; ch.items.forEach(b=>{ items.push(b.item); meta[b.item]={beat:b.beat||"",dur:b.dur|0}; }); chs.push({id:"ch"+i,title:ch.title,collapsed:false,items:items}); });
+  chapters.forEach((ch,i)=>{ const items=[]; ch.items.forEach(b=>{ items.push(b.item); meta[b.item]={beat:b.beat||"",dur:+b.dur||0}; }); chs.push({id:"ch"+i,title:ch.title,collapsed:false,items:items}); });
   return {chapters:chs, meta:meta};
 }
 function defaultState(){
   const saved={}; Object.keys(DATA.stories).forEach(k=>{ saved[k]=buildVersion(DATA.stories[k].chapters); });
-  const active = saved.song ? "song" : (saved.storytelling ? "storytelling" : (saved.jennie ? "jennie" : Object.keys(saved)[0]));
+  const active = (DATA.defaultStory&&saved[DATA.defaultStory]) ? DATA.defaultStory : saved.song ? "song" : (saved.storytelling ? "storytelling" : (saved.jennie ? "jennie" : Object.keys(saved)[0]));
   const st={saved:saved, active:active, ratings:{}, seq:99, theme:"light", version:4};
   st.chapters=saved[active].chapters; st.meta=saved[active].meta; return st;
 }
@@ -42,10 +45,10 @@ function load(){
   try{ const s=JSON.parse(localStorage.getItem(LS_KEY));
     if(s&&s.version===8&&s.saved){ if(!s.saved[s.active]) s.active=Object.keys(s.saved)[0]; st=s; }
   }catch(e){}
-  if(!st){ // migrate older saves: keep First-draft edits + ratings/theme, refresh Jennie's story to the new template
+  if(!st&&LEGACY){ // migrate older saves: keep First-draft edits + ratings/theme, refresh Jennie's story to the new template
     ["jennie_story_v7","jennie_story_v6","jennie_story_v5","jennie_story_v4"].some(function(k){ try{ const so=JSON.parse(localStorage.getItem(k)); if(so&&so.saved){ st=defaultState(); if(so.saved.draft1) st.saved.draft1=so.saved.draft1; if(so.ratings)st.ratings=so.ratings; if(so.theme)st.theme=so.theme; st.active="storytelling"; return true; } }catch(e){} return false; });
   }
-  if(!st){ try{ const old=JSON.parse(localStorage.getItem("jennie_story_v3"));
+  if(!st&&LEGACY){ try{ const old=JSON.parse(localStorage.getItem("jennie_story_v3"));
     if(old&&old.version===3&&old.chapters){ st=defaultState(); st.saved.draft1={chapters:old.chapters,meta:old.meta||{}}; st.active="draft1"; if(old.ratings)st.ratings=old.ratings; if(old.theme)st.theme=old.theme; }
   }catch(e){} }
   if(!st) st=defaultState();
@@ -69,26 +72,31 @@ function fmt(t){t=Math.max(0,Math.round(t));return Math.floor(t/60)+":"+String(t
 function posterOf(m){ return m.fb ? m.poster : (m.type==="video" ? `media/vid/${m.id}/poster.jpg` : `media/img/${m.id}.jpg`); }
 function framesOf(m){ return m.type==="video" ? [1,2,3,4,5].map(n=>`media/vid/${m.id}/f${n}.jpg`) : [posterOf(m)]; }
 function evOf(m){ return EVENTS[m.event] || {label:m.event||"-",color:"#999"}; }
+const DAY=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function hasTime(d){ return !!d && d.length>10; }
+function dayTime(d){ const x=new Date(d.replace(" ","T")), t=DATA.timeline||{}; // outside the trip window: plain date
+  if(t.start&&t.end&&(d<t.start||d>t.end)) return (+d.slice(8,10))+" "+MON[+d.slice(5,7)-1]; return DAY[x.getDay()]+" "+d.slice(11,16); }
 function monYear(d){ if(!d||d.length<7) return ""; return MON[+d.slice(5,7)-1]+" "+d.slice(0,4); }
-function dateLabel(m){ if(!m.date) return ""; return (m.dateApprox?"~":"")+monYear(m.date); }
+function dateLabel(m){ if(!m.date) return ""; return (m.dateApprox?"~":"")+(hasTime(m.date)?dayTime(m.date):monYear(m.date)); }
 function defaultDur(m){ return m.type==="video" ? (m.dur>8?6:(m.dur||5)) : 3; }
 /* relationship timeline anchors (dating screenshot has no EXIF, so earliest photo = start) */
-const REL_START="2023-10-22"; let REL_END="2026-07-20";
-(function(){ let mx=REL_START; [...DATA.videos,...DATA.images].forEach(m=>{ if(m.date&&m.date>mx) mx=m.date; });
+const TL=DATA.timeline||{};
+const REL_START=TL.start||"2023-10-22"; let REL_END=TL.end||"2026-07-20";
+if(!TL.end) (function(){ let mx=REL_START; [...DATA.videos,...DATA.images].forEach(m=>{ if(m.date&&m.date>mx) mx=m.date; });
   let t; try{ t=new Date().toISOString().slice(0,10); }catch(e){ t=mx; } REL_END = t>mx?t:mx; })();
-function dnum(d){ return Date.parse(d+"T00:00:00"); }
+function dnum(d){ return Date.parse(hasTime(d) ? d.replace(" ","T") : d+"T00:00:00"); }
 function posOf(m){ if(!m||!m.date) return null; const s=dnum(REL_START),e=dnum(REL_END),x=dnum(m.date); if(!(e>s)) return null; return Math.max(0,Math.min(1,(x-s)/(e-s))); }
 function timelineBar(m){ const p=posOf(m); if(p==null) return ""; const pc=(p*100).toFixed(1);
   return `<div class="tl" title="${dateLabel(m)}"><div class="tl-fill" style="width:${pc}%"></div><div class="tl-dot" style="left:${pc}%"></div></div>`; }
 function typeTag(m){ return m.type==="video" ? "🎬" : "🖼"; }
 function modalTimeline(m){ // labeled scale: first date --> now, with this clip marked at its date
-  const p=posOf(m), startLbl=monYear(REL_START)||"the start";
-  if(p==null) return `<div class="mtl"><div class="mtl-scale"><div class="mtl-track"><div class="mtl-fill" style="width:0"></div></div><div class="mtl-ends"><span>First date · ${startLbl}</span><span>Now</span></div></div><div class="mtl-note">no date on this clip</div></div>`;
+  const p=posOf(m), startLbl=TL.startLabel||("First date · "+(monYear(REL_START)||"the start")), endLbl=TL.endLabel||"Now";
+  if(p==null) return `<div class="mtl"><div class="mtl-scale"><div class="mtl-track"><div class="mtl-fill" style="width:0"></div></div><div class="mtl-ends"><span>${startLbl}</span><span>${endLbl}</span></div></div><div class="mtl-note">no date on this clip</div></div>`;
   const pc=(p*100).toFixed(1), fpc=Math.max(9,Math.min(91,p*100)).toFixed(1), lbl=dateLabel(m);
   return `<div class="mtl"><div class="mtl-scale">
     <div class="mtl-flag" style="left:${fpc}%"><span>${lbl}</span></div>
     <div class="mtl-track"><div class="mtl-fill" style="width:${pc}%"></div><div class="mtl-dot" style="left:${pc}%"></div></div>
-    <div class="mtl-ends"><span>First date · ${startLbl}</span><span>Now</span></div>
+    <div class="mtl-ends"><span>${startLbl}</span><span>${endLbl}</span></div>
   </div></div>`;
 }
 const HEAD_H=36;
@@ -198,11 +206,11 @@ function beatCard(m,num){
       <span class="bnum">${num}</span><span class="btype">${typeTag(m)} ${m.type==="video"?meta.dur+"s":"photo"}</span>
       <div class="bbot"><div class="bln">📍 ${m.loc||"-"}</div>${timelineBar(m)}</div></div>
     <div class="bbody">
-      <div class="bctrl">⏱<input class="bdurin" type="number" min="1" max="60" value="${meta.dur}">s
+      <div class="bctrl">⏱<input class="bdurin" type="number" min="0.5" max="60" step="0.1" value="${meta.dur}">s
         <button class="bi" title="Full notes">ⓘ</button><button class="bx" title="Remove">✕</button></div>
     </div>`;
   hoverCycle($("img",el),framesOf(m));
-  const di=$(".bdurin",el); di.addEventListener("input",()=>{meta.dur=Math.max(1,+di.value||1);if(m.type==="video")$(".btype",el).textContent=typeTag(m)+" "+meta.dur+"s";save();updateRuntime();updateChapterTimes();});
+  const di=$(".bdurin",el); di.addEventListener("input",()=>{meta.dur=Math.max(0.5,+di.value||1);if(m.type==="video")$(".btype",el).textContent=typeTag(m)+" "+meta.dur+"s";save();updateRuntime();updateChapterTimes();});
   $(".bi",el).addEventListener("click",()=>openModal(m.id));
   const bt=$(".bthumb",el); bt.title="Click for info · press and drag to reorder";
   bt.addEventListener("click",()=>{ if(clickBlocked())return; openModal(m.id); });
@@ -342,9 +350,9 @@ function fillEventSelects(){
   const opts=Object.entries(EVENTS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join("");
   $("#poolEvent").insertAdjacentHTML("beforeend",opts); $("#anaEvent").insertAdjacentHTML("beforeend",opts);
 }
-const TABS=["story","analysis","music","edit","about","cuts"];
+const TABS=$$(".tab").map(t=>t.dataset.tab);
 function switchTab(name){
-  if(TABS.indexOf(name)<0) return;
+  if(TABS.indexOf(name)<0||!$("#tab-"+name)) return;
   $$(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===name));
   $$(".tabpane").forEach(p=>p.classList.remove("active"));
   $("#tab-"+name).classList.add("active");
@@ -352,10 +360,10 @@ function switchTab(name){
   if(name==="music") renderMusic();
   if(name==="edit") renderEditPlan();
   if(name==="cuts") renderCuts();
-  try{ localStorage.setItem("jg_tab",name); }catch(e){}
+  try{ localStorage.setItem(TAB_KEY,name); }catch(e){}
 }
 function restoreTab(){
-  let t; try{ t=localStorage.getItem("jg_tab"); }catch(e){}
+  let t; try{ t=localStorage.getItem(TAB_KEY); }catch(e){}
   if(t && t!=="story" && TABS.indexOf(t)>=0) switchTab(t);
 }
 
@@ -367,7 +375,7 @@ function toggleTheme(){ state.theme=(state.theme==="dark"?"light":"dark"); apply
 function exportStory(){
   const nm=DATA.stories[state.active]?DATA.stories[state.active].name:state.active;
   const blob=new Blob([JSON.stringify({storyName:nm,active:state.active,chapters:state.chapters,meta:state.meta,ratings:state.ratings,theme:state.theme,version:4,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=("jennie-gunnar-"+state.active+".json"); a.click(); URL.revokeObjectURL(a.href);
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=((DATA.slug||"jennie-gunnar")+"-"+state.active+".json"); a.click(); URL.revokeObjectURL(a.href);
   toast("Exported “"+nm+"” - send this file back to collaborate.");
 }
 function importStory(file){
@@ -384,6 +392,7 @@ function importStory(file){
 
 /* ---------- about ---------- */
 function renderAbout(){
+  if(DATA.aboutHTML){ $("#aboutBody").innerHTML=DATA.aboutHTML; return; }
   $("#aboutBody").innerHTML=`<h2>How to use this together 💛</h2>
     <p>A shared workspace for shaping Jennie &amp; Gunnar's wedding film. Everything you change autosaves in your browser.</p>
     <h3>Story Builder</h3>
@@ -456,13 +465,14 @@ function renderMusic(){
 }
 
 /* ---------- edit plan (CapCut footprint) ---------- */
+const EP=DATA.editPlan||{};
 function editPlanText(){
-  const sb=DATA.storyboard||[]; let s="JENNIE & GUNNAR - EDIT PLAN (footprint for CapCut)\n";
-  s+="Song: Gravity v3 (3:19, 99.4 BPM). Portrait 9:16. Lyrics burned on screen, synced per section. No story captions. Every clip/photo used ONCE.\n";
+  const sb=DATA.storyboard||[]; let s=(EP.header||"JENNIE & GUNNAR - EDIT PLAN (footprint for CapCut)")+"\n";
+  s+=(EP.headerNote||"Song: Gravity v3 (3:19, 99.4 BPM). Portrait 9:16. Lyrics burned on screen, synced per section. No story captions. Every clip/photo used ONCE.")+"\n";
   sb.forEach(sec=>{ s+="\n["+sec.tc+"]  "+sec.part+"\n  lyric: "+sec.lyric.replace(/ \/ /g," / ")+"\n  show: "+sec.intent+"\n";
     sec.assets.forEach(a=>{
       if(a.kind==="stack") s+="   - [STACK] "+a.label+"  ->  "+(a.count||"?")+" photos from folder \""+a.folder+"\""+(a.note?"  ("+a.note+")":"")+"\n";
-      else s+="   - "+(a.kind==="todo"?"[TODO] ":(a.kind==="photo"?"[photo] ":"[video] "))+a.label+"  ->  "+(a.file||"")+"\n";
+      else s+="   - "+(a.kind==="todo"?"[TODO] ":(a.kind==="photo"?"[photo] ":(a.kind==="card"?"[card] ":"[video] ")))+(a.at?a.at+"  ":"")+a.label+"  ->  "+(a.file||"")+"\n";
     });
     if(sec.pending) s+="   PENDING: "+sec.pending+"\n";
   });
@@ -475,9 +485,11 @@ function renderEditPlan(){
     const stacks=sec.assets.filter(a=>a.kind==='stack');
     const rest=sec.assets.filter(a=>a.kind!=='stack');
     const stackHTML = stacks.length ? `<div class="ep-stacks">`+stashCardsHTML(stacks)+`</div>` : "";
-    const rows=rest.map(a=>`<tr class="${a.kind==='todo'?'ep-todo':''}"><td class="ep-lab">${a.kind==='todo'?'⚙ ':(a.kind==='photo'?'🖼 ':'🎬 ')}${esc(a.label)}</td><td class="ep-file">${esc(a.file||'')}</td></tr>`).join("");
-    return `<div class="ep-sec">
-      <div class="ep-head"><span class="ep-tc">${esc(sec.tc)}</span><strong>${esc(sec.part)}</strong></div>
+    const rows=rest.map(a=>{ const m=a.id&&byId[a.id];
+      const th=m?`<img class="ep-th" src="${posterOf(m)}" loading="lazy" alt="" data-id="${m.id}">`:"";
+      return `<tr class="${a.kind==='todo'?'ep-todo':''}">${a.at!=null?`<td class="ep-at">${esc(a.at)}</td>`:""}<td class="ep-lab">${th}${a.kind==='todo'?'⚙ ':(a.kind==='photo'?'🖼 ':(a.kind==='card'?'🔤 ':'🎬 '))}${esc(a.label)}</td><td class="ep-file">${esc(a.file||'')}</td></tr>`; }).join("");
+    return `<div class="ep-sec" data-si="${si}">
+      <div class="ep-head"><span class="ep-tc">${esc(sec.tc)}</span><strong>${esc(sec.part)}</strong>${sec.from!=null&&DATA.music?`<button class="btn small ghost ep-play" data-t="${sec.from}" title="Play the song from here">▶ ${fmt(sec.from)}</button>`:""}</div>
       <p class="ep-lyric">${esc(sec.lyric)}</p>
       <p class="hint ep-intent">${esc(sec.intent)}</p>
       ${stackHTML}
@@ -487,14 +499,45 @@ function renderEditPlan(){
   }).join("");
   box.innerHTML=`
     <h2>Edit plan 🎬 <span class="pill">footprint for CapCut</span></h2>
-    <p>Second-by-second map cut to the <strong>song section breakdown</strong> (portrait 9:16). <strong>Lyrics burned on screen</strong>, synced per section; <strong>no story captions</strong>. Photo-heavy sections carry a <strong>stack</strong> (a bulk of candidates from a Facebook folder) - click a stack to see it; on the timeline you flash through the pile on the beat and keep the best.</p>
+    ${EP.intro||`<p>Second-by-second map cut to the <strong>song section breakdown</strong> (portrait 9:16). <strong>Lyrics burned on screen</strong>, synced per section; <strong>no story captions</strong>. Photo-heavy sections carry a <strong>stack</strong> (a bulk of candidates from a Facebook folder) - click a stack to see it; on the timeline you flash through the pile on the beat and keep the best.</p>`}
+    ${DATA.music?songMapHTML():""}
     <div class="make-actions"><button class="btn" id="btnCopyEDL">⧉ Copy plan</button><button class="btn" id="btnDlEDL">⬇ Download plan (.txt)</button></div>
     ${cards}
-    <p class="hint">⚙ = to build / still to add. 🗂 stacks point at <code>Downloads/Jennies facebook/…</code>; once that media syncs into the pool, stacks show thumbnails and become drag-to-add.</p>`;
+    ${EP.footer!=null?EP.footer:`<p class="hint">⚙ = to build / still to add. 🗂 stacks point at <code>Downloads/Jennies facebook/…</code>; once that media syncs into the pool, stacks show thumbnails and become drag-to-add.</p>`}`;
   bindStashClicks($("#editBody"));
+  if(DATA.music) bindSongMap();
+  $$("#editBody .ep-th").forEach(im=>im.addEventListener("click",()=>openModal(im.dataset.id)));
   const copy=(t,ok)=>{ if(navigator.clipboard) navigator.clipboard.writeText(t).then(()=>toast(ok),()=>toast("Copy failed.")); };
   $("#btnCopyEDL").addEventListener("click",()=>copy(editPlanText(),"Edit plan copied."));
-  $("#btnDlEDL").addEventListener("click",()=>{ const b=new Blob([editPlanText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-edit-plan.txt"; a.click(); URL.revokeObjectURL(a.href); toast("Edit plan downloaded."); });
+  $("#btnDlEDL").addEventListener("click",()=>{ const b=new Blob([editPlanText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=(DATA.slug||"jennie-gunnar")+"-edit-plan.txt"; a.click(); URL.revokeObjectURL(a.href); toast("Edit plan downloaded."); });
+}
+
+/* ---------- song map: the track's energy per bar, its sections, and a player (edit plan) ---------- */
+function songMapHTML(){
+  const M=DATA.music, W=1000, H=120, dur=M.duration, lo=-36, hi=-8;
+  const x=t=>(t/dur*W).toFixed(1);
+  const y=e=>(H-Math.max(0,Math.min(1,(e-lo)/(hi-lo)))*(H-18)).toFixed(1);
+  const secs=(DATA.storyboard||[]).filter(s=>s.from!=null);
+  const bands=secs.map((s,i)=>`<rect x="${x(s.from)}" y="0" width="${((s.to-s.from)/dur*W).toFixed(1)}" height="${H}" class="sm-band ${i%2?"b":"a"}" data-t="${s.from}"><title>${esc(s.part)} · ${esc(s.tc)}</title></rect>`).join("");
+  const bars=M.bars.map((b,i)=>{ const z=M.bars[i+1]||dur, e=M.energy[i];
+    return `<rect x="${x(b)}" y="${y(e)}" width="${Math.max(1,(z-b)/dur*W-1.5).toFixed(1)}" height="${(H-y(e)).toFixed(1)}" class="sm-bar"><title>bar ${i+1} · ${fmt(b)} · ${e} dB</title></rect>`; }).join("");
+  const labels=secs.map(s=>`<span style="left:${(s.from/dur*100).toFixed(2)}%;width:${((s.to-s.from)/dur*100).toFixed(2)}%" data-t="${s.from}" title="${esc(s.part)}">${esc(s.short||s.part)}</span>`).join("");
+  return `<div class="songmap">
+    <div class="sm-head"><strong>${esc(M.title)}</strong> <span class="hint">${esc(M.meta||"")}</span></div>
+    <div class="sm-chart"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${bands}${bars}<line class="sm-ph" id="smPlayhead" x1="0" x2="0" y1="0" y2="${H}"/></svg>
+      <div class="sm-labels">${labels}</div></div>
+    ${M.src?`<audio id="smAudio" controls preload="none" src="${esc(M.src)}"></audio><p class="hint sm-noaudio" id="smNoAudio" hidden>${M.noAudio||"The track is not on this page."}</p>`:""}
+  </div>`;
+}
+function bindSongMap(){
+  const au=$("#smAudio"), ph=$("#smPlayhead"), dur=DATA.music.duration;
+  const seek=t=>{ if(!au||au.hidden) return; au.currentTime=+t; au.play().catch(()=>{}); };
+  $$("#editBody [data-t]").forEach(el=>el.addEventListener("click",()=>seek(el.dataset.t)));
+  if(!au) return;
+  au.addEventListener("error",()=>{ au.hidden=true; const n=$("#smNoAudio"); if(n) n.hidden=false; $$("#editBody .ep-play").forEach(b=>b.hidden=true); });
+  au.addEventListener("timeupdate",()=>{ const X=(au.currentTime/dur*1000).toFixed(1); ph.setAttribute("x1",X); ph.setAttribute("x2",X);
+    $$("#editBody .ep-sec").forEach(el=>{ const s=DATA.storyboard[+el.dataset.si]; el.classList.toggle("playing",!!s&&s.from!=null&&au.currentTime>=s.from&&au.currentTime<s.to); }); });
+  au.load();
 }
 
 /* ---------- watch the cuts (guarded by the global site gate) ---------- */
@@ -509,7 +552,7 @@ const CUTS=[
 function renderCuts(){
   const box=$("#cutsBody"); if(!box) return;
   const url=(DATA&&DATA.cutsFolderUrl)||"";
-  const items=CUTS.map(c=>`
+  const items=(DATA.cuts||CUTS).map(c=>`
     <div class="cut">
       <h3>${c.title}</h3>
       <p class="hint">${c.note}</p>
@@ -536,14 +579,15 @@ function buildShotList(){
 }
 function shotListText(){
   const {rows,total,beats}=buildShotList(); const nm=DATA.stories[state.active]?DATA.stories[state.active].name:state.active;
-  let s="JENNIE & GUNNAR - WEDDING FILM SHOT LIST\n"+nm+"  -  "+beats+" shots, "+fmt(total)+" total\n";
+  let s=(DATA.title||"Jennie & Gunnar").toUpperCase()+" - WEDDING FILM SHOT LIST\n"+nm+"  -  "+beats+" shots, "+fmt(total)+" total\n";
   rows.forEach(r=>{ if(r.type==="act") s+="\n== "+r.title+" ==\n";
     else s+=String(r.n).padStart(2," ")+".  ["+r.tc+"]  "+r.dur+"s  "+(r.kind==="video"?"[VIDEO] ":"[PHOTO] ")+r.file+"\n       "+(r.cap||"(no caption)")+"\n"; });
   return s;
 }
-function downloadShotList(){ const b=new Blob([shotListText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="jennie-gunnar-shotlist-"+state.active+".txt"; a.click(); URL.revokeObjectURL(a.href); toast("Shot list downloaded."); }
+function downloadShotList(){ const b=new Blob([shotListText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=(DATA.slug||"jennie-gunnar")+"-shotlist-"+state.active+".txt"; a.click(); URL.revokeObjectURL(a.href); toast("Shot list downloaded."); }
 function copyShotList(){ if(navigator.clipboard) navigator.clipboard.writeText(shotListText()).then(()=>toast("Shot list copied."),()=>toast("Copy failed - use Download.")); else toast("Use Download."); }
-function renderAll(){ renderPool(); renderStory(); if($("#tab-analysis").classList.contains("active")) renderAnalysis(); if($("#tab-music").classList.contains("active")) renderMusic(); if($("#tab-edit").classList.contains("active")) renderEditPlan(); if($("#tab-cuts").classList.contains("active")) renderCuts(); }
+function renderAll(){ renderPool(); renderStory(); const on=n=>{ const e=$("#tab-"+n); return e&&e.classList.contains("active"); };
+  if(on("analysis")) renderAnalysis(); if(on("music")) renderMusic(); if(on("edit")) renderEditPlan(); if(on("cuts")) renderCuts(); }
 function bind(){
   $$(".tab").forEach(t=>t.addEventListener("click",()=>switchTab(t.dataset.tab)));
   ["#poolSearch","#poolType","#poolEvent","#poolRating","#poolSort"].forEach(s=>$(s).addEventListener("input",renderPool));
@@ -559,31 +603,10 @@ function bind(){
   $$("[data-close]").forEach(el=>el.addEventListener("click",closeModal));
   document.addEventListener("keydown",e=>{ if(e.key==="Escape")closeModal(); });
 }
+function fillVersionSelect(){ const vs=$("#verSelect"); if(!vs||vs.options.length) return;
+  vs.innerHTML=Object.keys(DATA.stories).map(k=>`<option value="${k}">${esc(DATA.stories[k].name)}</option>`).join(""); }
+function fillCounts(){ const v=$("#cntVid"), i=$("#cntImg"); if(v) v.textContent=DATA.videos.length; if(i) i.textContent=DATA.images.length; }
 function renderAppVer(){ const el=$("#appVer"); if(el) el.textContent="v"+(DATA.appVersion||"?")+" · updated "+(DATA.appUpdated||"-"); }
 
-/* ---------- global gate: confirm not-Jennie + password (soft, client-side) ---------- */
-/* Password is stored only as a hash so the plaintext is not in the source. Unlock lasts for the browser session. */
-function hashStr(s){ let h=5381; for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))>>>0; return h; }
-const GATE_HASH=160275652; // djb2 of the password, lowercased and trimmed
-function initGate(){
-  const g=$("#gate"); if(!g) return;
-  try{ if(sessionStorage.getItem("jg_gate")==="1"){ g.remove(); return; } }catch(e){}
-  document.body.style.overflow="hidden";
-  const ack=$("#gateAck"), pass=$("#gatePass"), btn=$("#gateBtn"), err=$("#gateErr");
-  const upd=()=>{ btn.disabled=!ack.checked; if(err) err.hidden=true; };
-  ack.addEventListener("change",upd);
-  const tryUnlock=()=>{
-    if(!ack.checked) return;
-    if(hashStr((pass.value||"").trim().toLowerCase())===GATE_HASH){
-      try{ sessionStorage.setItem("jg_gate","1"); }catch(e){}
-      document.body.style.overflow=""; g.remove();
-    } else { if(err) err.hidden=false; pass.value=""; pass.focus(); }
-  };
-  btn.addEventListener("click",tryUnlock);
-  pass.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); tryUnlock(); } });
-  ack.focus();
-}
-
-initGate();
-applyTheme(state.theme||"light"); fillEventSelects(); bind(); renderAbout(); renderAppVer(); initPoolSortable(); updateVersionButtons(); renderAll(); restoreTab();
+applyTheme(state.theme||"light"); fillVersionSelect(); fillCounts(); fillEventSelects(); bind(); renderAbout(); renderAppVer(); initPoolSortable(); updateVersionButtons(); renderAll(); restoreTab();
 })();
