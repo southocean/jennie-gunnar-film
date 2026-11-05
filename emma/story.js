@@ -2,7 +2,7 @@
 window.DATA = window.DATA || {};
 Object.assign(DATA, {
  title: "Emma", slug: "emma-polttarit", lsKey: "emma_story_v1", tabKey: "emma_tab",
- appVersion: "1.0", appUpdated: "2026-11-04 - first song-timed draft",
+ appVersion: "1.0", appUpdated: "2026-11-05 - first song-timed draft",
  targetSec: 179, defaultStory: "song",
  timeline: { start: "2026-10-02 22:00", end: "2026-10-04 19:00", startLabel: "Fri night", endLabel: "Sun evening" },
  music: { title: "Như Một Người Dưng (remix) - Chủ Tịch Mai x Giám Đốc Hà",
@@ -24,6 +24,15 @@ Object.assign(DATA, {
   <p>The second-by-second cut list for CapCut, with the song's loudness bar by bar. On Nam's computer the song plays there too.</p>
   <h3>No song tab</h3>
   <p>We're not writing music for this one: it's cut to an existing track.</p>`,
+ cutsIntro: '<p>Rendered drafts of the whole video. They play only on Nam\'s computer: they carry the song, which is someone else\'s track, so the files are not published with the site (<code>emma/media/cuts/</code> is git-ignored).</p>',
+ cuts: [{ title: "Mock v3 - after Nam's notes (3:13)",
+   note: "Map intro (cut-out faces, each one jittering on its own) → belly tray (ends with the teens buying, Emma walks off) → lunch → Emma swimming → Activate (lasers, throwing, LED wall, light floor, booth cards) → Quê Em → dinner (ends on the candle wish) → Suomenlinna → the dance (IMG_2527) on the drop → the cork pops, freeze, music fades → credits on black in silence → the music slams back in: bloopers → Emma & Joakim. Cut list: mock/cutlist_v3.txt.",
+   file: "Emma-wedding-video/mock/emma_mock_v3.mp4", src: "media/cuts/emma_mock_v3.mp4",
+   noVideo: "This draft only plays on Nam's computer (it carries the song). Open C:\projects\friends\Emma-wedding-video\mock\emma_mock_v3.mp4 there." },
+  { title: "Mock v2 (2:48, superseded)",
+   note: "The first mock: minimaps, the wrong dance take (IMG_2526), bloopers straight after the freeze.",
+   file: "Emma-wedding-video/mock/emma_mock_v2.mp4", src: "media/cuts/emma_mock_v2.mp4",
+   noVideo: "Only on Nam's computer." }],
  storyboard: [
  {
   "part": "Cold open · Friday night",

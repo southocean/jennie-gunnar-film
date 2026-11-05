@@ -556,6 +556,7 @@ function renderCuts(){
     <div class="cut">
       <h3>${c.title}</h3>
       <p class="hint">${c.note}</p>
+      ${c.src?`<video class="cut-video" controls preload="metadata" playsinline src="${c.src}"></video><p class="hint cut-novideo" hidden>${c.noVideo||"This video only plays on the planning computer."}</p>`:""}
       <p class="cut-file">📄 ${c.file}</p>
     </div>`).join("");
   const linkBlock = url
@@ -563,10 +564,11 @@ function renderCuts(){
     : `<p class="hint" style="color:var(--danger)">The Koofr folder link is not set yet. Paste the share link into <code>DATA.cutsFolderUrl</code> in <code>assets/data.js</code> (or send it to me) and it will appear here as a button.</p>`;
   box.innerHTML=`
     <h2>Draft cuts 🎬</h2>
-    <p>To keep this site lightweight, the video files live in the shared <strong>Koofr</strong> folder, not on the page. The cuts below are in that folder; open it to watch or download. (The whole site is already behind the password, so no extra spoiler gate here.)</p>
-    ${linkBlock}
+    ${DATA.cutsIntro!=null?DATA.cutsIntro:`<p>To keep this site lightweight, the video files live in the shared <strong>Koofr</strong> folder, not on the page. The cuts below are in that folder; open it to watch or download. (The whole site is already behind the password, so no extra spoiler gate here.)</p>
+    ${linkBlock}`}
     ${items}
     <p class="hint">Work in progress - not final. Watch, then tell me what to change: reorder beats, swap clips, rewrite captions, adjust the music.</p>`;
+  $$("#cutsBody .cut-video").forEach(v=>v.addEventListener("error",()=>{ v.hidden=true; v.nextElementSibling.hidden=false; }));
 }
 /* ---------- boot ---------- */
 /* ---------- shot list (kept for reference / export) ---------- */
